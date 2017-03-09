@@ -10,7 +10,7 @@ node {
     sh 'echo pwd'
 
   stage 'Linting'
-  sh "gulp lint"
+  sh "(cd ~/var/lib/jenkins/jobs/StackRoute_Immersive_Zukti/jobs/zukti/branches/master/workspace && node node_modules/gulp/bin/gulp.js lint)"
 
   stage 'Testing'
   sh "npm run test"
