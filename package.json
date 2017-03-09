@@ -63,7 +63,6 @@
     "read-json": "^1.0.3",
     "redis": "^2.6.5",
     "segmentize": "^0.4.1",
-    "semantic-ui": "^2.2.7",
     "semantic-ui-css": "^2.2.4",
     "semantic-ui-react": "^0.63.5",
     "sentiment": "^3.0.1",
