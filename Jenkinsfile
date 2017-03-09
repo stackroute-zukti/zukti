@@ -3,7 +3,7 @@ node {
   sh "env"
 
   stage 'Checkout Repository'
-  git url: 'https://github.com/stackroute-zukti', branch: "Wave-15_Jukti"
+  git url: 'https://github.com/stackroute-zukti', branch: "master"
 
   stage 'Installing Dependencies'
   sh "npm prune"
