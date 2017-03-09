@@ -7,6 +7,7 @@ node {
 
   stage 'Installing Dependencies'
     sh "npm install"
+    sh 'echo pwd'
 
   stage 'Linting'
   sh "gulp lint"
