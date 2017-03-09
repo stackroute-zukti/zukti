@@ -3,7 +3,7 @@ node {
   sh "env"
 
   stage 'Checkout Repository'
-  git url: "https://github.com/stackroute-zukti/zukti.git", branch: "master"
+  git url: 'https://github.com/stackroute-zukti/zukti.git', branch: "master"
 
   stage 'Installing Dependencies'
     sh "npm install"
