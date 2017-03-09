@@ -6,6 +6,7 @@ node {
   git url: 'https://github.com/stackroute-zukti/zukti.git', branch: "master"
 
   stage 'Installing Dependencies'
+echo pwd
     sh "npm install"
 
   stage 'Linting'

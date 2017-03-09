@@ -68,6 +68,7 @@
     "sentiment": "^3.0.1",
     "socket.io": "^1.7.2",
     "supertest": "^3.0.0",
+    "gulp": "^3.9.1",
     "validator": "^6.2.1"
   },
   "devDependencies": {
