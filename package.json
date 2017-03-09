@@ -68,9 +68,6 @@
     "sentiment": "^3.0.1",
     "socket.io": "^1.7.2",
     "supertest": "^3.0.0",
-    "gulp": "^3.9.1",
-    "gulp-eslint": "^3.0.1",
-    "gulp-htmlhint": "^0.3.1",
     "validator": "^6.2.1"
   },
   "devDependencies": {
@@ -82,6 +79,7 @@
     "babel-preset-stage-0": "^6.5.0",
     "css-loader": "^0.25.0",
     "eslint-plugin-react": "^6.5.0",
+    "gulp": "^3.9.1",
     "gulp-eslint": "^3.0.1",
     "gulp-htmlhint": "^0.3.1",
     "html-webpack-plugin": "^2.24.0",
