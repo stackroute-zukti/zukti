@@ -6,8 +6,7 @@ node {
   git url: "https://github.com/stackroute-zukti/zukti.git", branch: "master"
 
   stage 'Installing Dependencies'
-  sh "npm prune"
-  sh "npm install"
+    sh "npm install"
 
   stage 'Linting'
   sh "gulp lint"
