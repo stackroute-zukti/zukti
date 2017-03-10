@@ -59,8 +59,8 @@ else{
     let types = query.types;
 
 // @vibakar: add keyword to redis
-  let addKeywordToRedis = function(username,keyword){
-    client.hmset(username, 'keywords', keyword, 'user', username, function(err, reply) {
+  let addKeywordToRedis = function(username,keyword,intent){
+    client.hmset(username, 'keywords', keyword, 'intents', intent, function(err, reply) {
         if (err) {
             console.log(err);
         } else {
@@ -123,7 +123,7 @@ else{
       /* @yuvashree: added two more attributes for specifying the user and thier requested type type */
       getKeywordResponse(keywords, email, types, sendResponse, spellResponse.flag, spellResponse.question);
       // @vibakar: adding keyword to redis
-      addKeywordToRedis(username,keywords[0]);
+      addKeywordToRedis(username,keywords[0],intents[0]);
     }
      else {
        // @vibakar: checking whether the keywords arry contains 'this,it,that'
@@ -147,14 +147,14 @@ else{
                         // function to get response when both  intents and keywords are present
                         /* @yuvashree: added two more attributes for specifying the user and thier requested type type */
                         getQuestionResponse(intents, keywords, email, types, answerFoundCallback, noAnswerFoundCallback, spellResponse.flag, spellResponse.question);
-                        addKeywordToRedis(username,keywords[keywords.length-1]);
+                        addKeywordToRedis(username,keywords[keywords.length-1],intents[0]);
                     }
                 });
           }else{
             // function to get response when both  intents and keywords are present
             /* @yuvashree: added two more attributes for specifying the user and thier requested type type */
             getQuestionResponse(intents, keywords, email, types, answerFoundCallback, noAnswerFoundCallback, spellResponse.flag, spellResponse.question);
-            addKeywordToRedis(username,keywords[0]);
+            addKeywordToRedis(username,keywords[0],intents[0]);
           }
     }
   }

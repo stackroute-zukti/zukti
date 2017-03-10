@@ -5,6 +5,7 @@ let User = require('./../../../models/user');
 
 module.exports = function(intents, keywords, email, types, answerFoundCallback, noAnswerFoundCallback, flag, correctedQuestion) {
     /* @yuvashree: find domain from db using email id */
+    console.log('flag in que'+flag);
     User.findOne({
         $or: [
             {

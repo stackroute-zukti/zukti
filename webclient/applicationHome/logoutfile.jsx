@@ -22,7 +22,9 @@ export default class LogoutFile extends React.Component {
     render() {
         return (
             <div style={{
-                backgroundImage: "url('../../images/intro-bg.jpg')"
+                backgroundImage: "url('../../images/intro-bg.gif')",
+                width: '100%',
+                height: '100%'
             }}>
                 <Grid container={'true'} centered={'true'}>
                     <Grid.Row/>
@@ -64,7 +66,9 @@ export default class LogoutFile extends React.Component {
                     <Grid.Row/>
                     <Grid.Row/>
                     <Grid.Row>
-                        <h2>{LogoutPage.Logout.Heading3}</h2>
+                        <h2 style={{
+                            color: 'wheat'
+                        }}>{LogoutPage.Logout.Heading3}</h2>
                     </Grid.Row>
                     <Grid.Row/>
                     <Grid.Row/>
@@ -79,6 +83,16 @@ export default class LogoutFile extends React.Component {
                     <Grid.Row/>
                     <Grid.Row/>
                 </Grid>
+                <div style={{
+                 position: 'absolute',
+                 top: '0px',
+                 left: '0px',
+                 backgroundRepeat: 'no-repeat',
+                 backgroundImage: "url('../../images/logo.gif')",
+                 width: '50%',
+                 height: '50%',
+                 zIndex: 2
+             }}></div>
             </div>
         );
     }
