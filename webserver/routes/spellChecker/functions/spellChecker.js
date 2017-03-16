@@ -1,4 +1,7 @@
 module.exports = function (question) {
+	if(typeof word !== 'string') {
+    throw new Error('Not a String');
+  }
 	let natural = require('natural');
 	let Spellchecker = require('./hunspell-spellchecker');
 	let fs = require('fs');

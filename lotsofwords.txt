@@ -153,4 +153,4 @@ react abstracts away the DOM from you, giving a simpler programming model and be
  uses virtual DOM which is JavaScript object. This will improve apps performance since JavaScript virtual DOM is faster than the regular DOM.
  can be used on client and server side.Component and Data patterns improve readability which helps to maintain larger apps. can be used with other frameworks.
  uses JSX for templating instead of regular JavaScript. It is not necessary to use it, but there are some pros that comes with it.
-  view download link video record show display blog webpage website for necessiated gof
+  view download link video record show display blog webpage website for necessiated gof has scope of

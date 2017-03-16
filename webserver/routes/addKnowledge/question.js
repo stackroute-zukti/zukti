@@ -11,6 +11,7 @@ router.post('/verifyQuestion', function(req, res) {
     lexicon();
     let keywordLexicon = [];
     let intentLexicon = [];
+    /* @yuvashree: fetching intents and lexicons from redis */
     function lexicon()
     {
       client.hkeys('keywords', function(err, reply) {
@@ -21,6 +22,8 @@ router.post('/verifyQuestion', function(req, res) {
           callBack();
       });
     }
+
+    /* @yuvashree: call back to process the question */
     function callBack()
     {
     let questionInfo = processQuestion(question,keywordLexicon,intentLexicon);

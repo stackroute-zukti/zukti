@@ -123,6 +123,7 @@ webserver/config/database.js
 webserver/config/passport.js
 webserver/config/replyForKeyword.json
 webserver/config/testing.json
+webserver/service.js
 webserver/images/*
 webserver/lexicon/getLexicons.js
 webserver/lexicon/intentLexicon.json
@@ -159,6 +160,7 @@ webserver/routes/getReply/functions/processQuestion.js
 webserver/routes/getReply/functions/saveAnalyticsData.js
 webserver/routes/getReply/functions/saveUnansweredQuery.js
 webserver/routes/getReply/functions/saveUserQueries.js
+webserver/routes/getReply/functions/stackoverflow.json
 webserver/routes/getReply/reply.js
 webserver/routes/intent/functions/addNewSameAsIntent.js
 webserver/routes/intent/functions/CreateIntent.js

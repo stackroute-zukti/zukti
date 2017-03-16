@@ -14,7 +14,30 @@ export default class AssistantGinniOptions extends React.Component {
         this.upvoteAnswer = this.upvoteAnswer.bind(this);
         this.downVoteAnswer = this.downVoteAnswer.bind(this);
         this.savedQuery = this.savedQuery.bind(this);
+        this.getSiblings = this.getSiblings.bind(this);
+        this.recommend = this.recommend.bind(this);
     }
+
+    recommend(recommendations) {
+      this.props.onRecommend(recommendations);
+    }
+
+    /* @sangeetha: functions to recieve recommendations */
+       getSiblings(keywords) {
+         console.log(keywords);
+         Axios.get('/recommendations/getSiblings', {
+           params: {
+             keywords: keywords
+           }
+         }).then((response) => {
+           this.recommend(response.data.siblings[0]);
+           console.log('recommendation results: ', response.data.siblings[0]);
+         }).catch((error) => {
+           console.log(error);
+         });
+       }
+
+    //@sangeetha: passing keywords to fetch sibilings
     upvoteAnswer(type, value) {
         if (this.state.likeEnabled) {
             Axios.post('/qa/rateAnswer', {
@@ -28,6 +51,7 @@ export default class AssistantGinniOptions extends React.Component {
             });
         }
         this.setState({likeEnabled: false, likeDislikeMsg: 'Liked'});
+        this.getSiblings(this.props.keywords);
     }
     downVoteAnswer(type, value) {
         if (this.state.dislikeEnabled) {

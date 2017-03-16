@@ -3,6 +3,9 @@ let filter = new Filter();
 //  @Mayanka  initial swear count is zero
 let count = 0;
 module.exports = function (word) {
+  if(typeof word !== 'string') {
+    throw new Error('Not a String');
+  }
   //  @Mayanka  Mayanka :  cleaning the sentence will replace the swear word with '*'
 
   let findAbuse = filter.clean(word);

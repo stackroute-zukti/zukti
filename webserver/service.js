@@ -6,6 +6,9 @@ let mongoose = require('mongoose');
 let configDB = require('./config/database');
 let config = require('../webpack.config');
 let getLexicons = require('./lexicon/getLexicons');
+let request = require('request');
+let zlib = require('zlib');
+let fs = require('fs');
 
 function createApp() {
     let app = express();
@@ -51,12 +54,17 @@ function setupZuktiRoutes(app) {
     app.use('/bookmarks', require('./routes/bookmarks/bookmarks'));
     /* @ramvignesh: route to set user's current domain */
     app.use('/user', require('./routes/user/user'));
+    /* @sangeetha: requiring the recommendations route */
+    app.use('/recommendations', require('./routes/recommendations/recommendations'));
     // app.use('/redis', require('./routes/redis/redis'));
     /* @keerthana: route to test graph */
     app.get('/graphie', function(req, res) {
         res.sendfile('graph.html');
     });
-
+    /* @rajalakshmi: route to displayCode */
+      app.get('/code', function(req, res) {
+        res.sendfile('code.html');
+    });
     return app;
 }
 
@@ -145,11 +153,47 @@ function setupMongooseConnections() {
     });
 }
 
+
+/* @vibakar & Threka: getting question datas from stackoverflow */
+function getDataFromStackOverflow(){
+           var reqData = {
+               url: "http://api.stackexchange.com/questions?order=desc&sort=activity&tagged=design-pattern&site=stackoverflow&filter=!OfZM.T6xJbOFQb0GkH_I.StjO.)AK)..v-9a4UqI1HX",
+               method:"get",
+               headers: {'Accept-Encoding': 'gzip'}
+           }
+           var gunzip = zlib.createGunzip();
+           var json = "";
+           gunzip.on('data', function(data){
+               json += data.toString();
+           });
+           gunzip.on('end', function(){
+             var obj = JSON.parse(json);
+             var questionArray = [];
+             var count = 0;
+             for(var i=0;i<obj.items.length;i++){
+               count++;
+               questionArray.push(obj.items[i]);
+               if(count===obj.items.length){
+                 fs.writeFile(__dirname+"/routes/getReply/functions/stackoverflow.json", JSON.stringify(questionArray), function(err) {
+                 if(err) {
+                   return console.log(err);
+                 }
+                 console.log("The file was saved!");
+               });
+               }
+             }
+           });
+           request(reqData)
+               .pipe(gunzip)
+}
+getDataFromStackOverflow();
+
 // function setupRedisStore() {
 //   console.log('inside service setupRedisStore...');
 //   let getLexicons = require('./lexicon/getLexicons');
 //   getLexicons();
 // }
+
 
 // app constructor function is exported
 module.exports = {

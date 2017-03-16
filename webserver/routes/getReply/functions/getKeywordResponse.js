@@ -28,6 +28,7 @@ module.exports = function(keywords, email, types, sendResponse, otherDomainRespo
         let inOtherDomain = '';
         let differentDomain = '';
         getIntent();
+        /* @navinprasad: find the base node */
         function getIntent()
         {
           if(types.length === 0)
@@ -47,41 +48,57 @@ module.exports = function(keywords, email, types, sendResponse, otherDomainRespo
         // query to extract data
         /* @yuvashree: modified query for multiple relationships and different domain for normal question */
         if (types.length === 0) {
-            query = `UNWIND ${JSON.stringify(keywords)} AS token
-                 MATCH (n:concept)
-                 WHERE n.name = token
-                 OPTIONAL MATCH (n)-[r:same_as]->(main)
-                 WITH COLLECT(main) AS baseWords
-                 UNWIND baseWords AS token
-                 MATCH p=(token)-[:part_of|:subconcept|:actor_of|:same_as*]->(:concept{name:'${domain}'})
-                 WITH length(p) AS max,baseWords AS baseWords
-                 UNWIND baseWords AS bw
-                 match p=(bw)-[:part_of|:subconcept|:actor_of|:same_as*]->(:concept{name:'${domain}'})
-                 WHERE length(p) = max
-                 WITH bw as bw
-                 MATCH (n)<-[rel:answer]-(q:question)-->(bw) where n:blog or n:video or n:image or n:code
-                 WITH bw as bw,n as n ,rel as rel
-                 ORDER BY CASE WHEN rel.likes=0 AND rel.dislikes=0 THEN rel.likes ELSE (rel.likes/(rel.likes+rel.dislikes)) END DESC
-                 RETURN LABELS(n)as contentType ,COLLECT(distinct n.value) `;
+          query = `UNWIND ${JSON.stringify(keywords)} AS token
+              MATCH (n:concept)
+              WHERE n.name = token
+              OPTIONAL MATCH (n)-[r:same_as]->(main)
+              WITH COLLECT(main) AS baseWords
+              UNWIND baseWords AS token
+              MATCH p=(token)-[:part_of|:subconcept|:actor_of|:same_as*]->(:concept{name:'${domain}'})
+              WITH length(p) AS max,baseWords AS baseWords
+              UNWIND baseWords AS bw
+              match p=(bw)-[:part_of|:subconcept|:actor_of|:same_as*]->(:concept{name:'${domain}'})
+              WHERE length(p) = max
+              WITH bw as bw
+              MATCH (n)<-[:answer]-(q:question)-->(bw) where n:blog or n:video or n:image or n:code
+              WITH n AS n
+              RETURN LABELS(n) AS contentType, COLLECT(distinct n.value),
+              COLLECT(ANY(user IN n.likes WHERE user='${email}')),
+              COLLECT(ANY(user IN n.dislikes WHERE user='${email}')),
+              CASE
+                  WHEN SIZE(n.likes)=0 AND SIZE(n.dislikes)=0 THEN 0
+                  WHEN SIZE(n.likes)=0 AND SIZE(n.dislikes)>0 THEN -SIZE(n.dislikes)
+                  WHEN SIZE(n.likes)>0 AND SIZE(n.dislikes)>=0 THEN (SIZE(n.likes)*100)/(SIZE(n.likes)+SIZE(n.dislikes))
+              END
+             AS rating
+             ORDER BY rating DESC`;
         }
         /* @yuvashree: modified query for multiple relationships and different domain for type specific question */
         else {
-            query = `UNWIND ${JSON.stringify(keywords)} AS token
-               MATCH (n:concept)
-               WHERE n.name = token
-               OPTIONAL MATCH (n)-[r:same_as]->(main)
-               WITH COLLECT(main) AS baseWords
-               UNWIND baseWords AS token
-               MATCH p=(token)-[:part_of|:subconcept|:actor_of|:same_as*]->(:concept{name:'${domain}'})
-               WITH length(p) AS max,baseWords AS baseWords
-               UNWIND baseWords AS bw
-               match p=(bw)-[:part_of|:subconcept|:actor_of|:same_as*]->(:concept{name:'${domain}'})
-               WHERE length(p) = max
-               WITH bw as bw
-               MATCH (n)<-[rel:answer]-(q:question)-->(bw) where labels(n) = '${type[0]}'
-               WITH bw as bw,n as n ,rel as rel
-               ORDER BY rel.rating DESC
-               RETURN LABELS(n)as contentType ,COLLECT(distinct n.value) `;
+          query = `UNWIND ${JSON.stringify(keywords)} AS token
+            MATCH (n:concept)
+            WHERE n.name = token
+            OPTIONAL MATCH (n)-[r:same_as]->(main)
+            WITH COLLECT(main) AS baseWords
+            UNWIND baseWords AS token
+            MATCH p=(token)-[:part_of|:subconcept|:actor_of|:same_as*]->(:concept{name:'${domain}'})
+            WITH length(p) AS max,baseWords AS baseWords
+            UNWIND baseWords AS bw
+            match p=(bw)-[:part_of|:subconcept|:actor_of|:same_as*]->(:concept{name:'${domain}'})
+            WHERE length(p) = max
+            WITH bw as bw
+            MATCH (n)<-[:answer]-(q:question)-->(bw) where labels(n) = '${type[0]}'
+            WITH n AS n,
+            RETURN LABELS(n) AS contentType, COLLECT(distinct n.value),
+            COLLECT(ANY(user IN n.likes WHERE user='${email}')),
+            COLLECT(ANY(user IN n.dislikes WHERE user='${email}')),
+            CASE
+             WHEN SIZE(n.likes)=0 AND SIZE(n.dislikes)=0 THEN 0
+             WHEN SIZE(n.likes)=0 AND SIZE(n.dislikes)>0 THEN -SIZE(n.dislikes)
+             WHEN SIZE(n.likes)>0 AND SIZE(n.dislikes)>=0 THEN (SIZE(n.likes)*100)/(SIZE(n.likes)+SIZE(n.dislikes))
+            END
+            AS rating
+            ORDER BY rating DESC`;
              }
         let session = getNeo4jDriver().session();
         session.run(query).then(function(result) {
@@ -112,6 +129,8 @@ module.exports = function(keywords, email, types, sendResponse, otherDomainRespo
                     }
                 });
                 resultObj.time = new Date().toLocaleString();
+            /* @sangeetha: keywords for recommendations */
+                resultObj.keywords = keywords;
                 if (hasAtleastSomeContent) {
                   //  @Mayanka: If spell check done show this message
                     if (flag == 1) {

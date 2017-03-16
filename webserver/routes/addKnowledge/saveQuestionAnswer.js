@@ -14,6 +14,8 @@ module.exports = function(req, questionsAnswerSavedCallback) {
     lexicon();
     let keywordLexicon = [];
     let intentLexicon = [];
+
+    /* @yuvashree: fetching intents and lexicons from redis */
     function lexicon()
     {
       client.hkeys('keywords', function(err, reply) {
@@ -24,6 +26,8 @@ module.exports = function(req, questionsAnswerSavedCallback) {
           callBack();
       });
     }
+
+    /* @yuvashree: call back to process the question */
     function callBack()
     {
     let questionInfo = processQuestion(question,keywordLexicon,intentLexicon);
