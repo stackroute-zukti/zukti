@@ -2,6 +2,7 @@ let Cookie = require('react-cookie');
 // get response of the question asked by user from neo4j database
 let getNeo4jDriver = require('../../../neo4j/connection');
 let User = require('./../../../models/user');
+let client = require('./redis');
 
 module.exports = function(intents, keywords, email, types, answerFoundCallback, noAnswerFoundCallback, flag, correctedQuestion) {
     /* @yuvashree: find domain from db using email id */
@@ -22,54 +23,73 @@ module.exports = function(intents, keywords, email, types, answerFoundCallback, 
         }
         let domain = data.local.loggedinDomain;
         let query = '';
-        /* @yuvashree: modified query for multiple relationships and different domain for normal question */
+        let intent = '';
+        let type = '';
+        let keyword = '';
+        getIntent();
+        function getIntent()
+        {
+          if(types.length === 0)
+          {
+            client.hmget('intents', intents[intents.length-1],function(err, reply) {
+            console.log(reply);
+            intent = reply;
+            intentCallBack(intent);
+            });
+          }
+          else {
+            client.hmget('types', types[types.length-1],function(err, reply) {
+            console.log(reply);
+            type = reply;
+            });
+            client.hmget('intents', intents[intents.length-1],function(err, reply) {
+            console.log(reply);
+            intent = reply;
+            intentCallBack(intent);
+            });
+          }
+      }
+        function intentCallBack(intent)
+        {
         if (types.length === 0) {
-            query = `UNWIND ${JSON.stringify(intents)} AS token
-              MATCH (n:intent)
-              WHERE n.name = token
-              OPTIONAL MATCH (n)-[r:same_as]->(main)
-              WITH  LAST(COLLECT(main.name)) AS intent
-              UNWIND ${JSON.stringify(keywords)} AS token
+        /* @yuvashree: modified query for multiple relationships and different domain for normal question */
+          console.log('here');
+            query = `UNWIND ${JSON.stringify(keywords)} AS token
+            MATCH (n:concept)
+            WHERE n.name = token
+            OPTIONAL MATCH (n)-[r:same_as]->(main)
+            WITH COLLECT(main) AS baseWords
+            UNWIND baseWords AS token
+            MATCH p=(token)-[:part_of|:subconcept|:actor_of|:same_as*]->(:concept{name:'${domain}'})
+            WITH length(p) AS max,baseWords AS baseWords
+            UNWIND baseWords AS bw
+            match p=(bw)-[:part_of|:subconcept|:actor_of|:same_as*]->(:concept{name:'${domain}'})
+            WHERE length(p) = max WITH COLLECT(bw) AS bws
+            UNWIND bws AS keywords
+            OPTIONAL MATCH (keywords)<-[r]-(q:question)-[rel:answer]->(a)
+            WHERE TYPE(r)='${intent[0]}'
+            WITH a as a, rel as rel,keywords as keywords
+            OPTIONAL MATCH  (keywords)<-[subconcept]-(c:concept)
+            WHERE TYPE(subconcept)='${intent[0]}'
+            WITH a as a, c as c
+            RETURN LABELS(a),COLLECT(distinct a.value),LABELS(c),COLLECT(distinct c.name) `;
+        }
+          /* @yuvashree: modified query for multiple relationships and different domain for type specific question */
+          else {
+            query = `UNWIND ${JSON.stringify(keywords)} AS token
               MATCH (n:concept)
               WHERE n.name = token
               OPTIONAL MATCH (n)-[r:same_as]->(main)
-              WITH COLLECT(main) AS baseWords,intent AS intent
+              WITH COLLECT(main) AS baseWords
               UNWIND baseWords AS token
               MATCH p=(token)-[:part_of|:subconcept|:actor_of|:same_as*]->(:concept{name:'${domain}'})
-              WITH length(p) AS max,baseWords AS baseWords,intent AS intent
-              UNWIND baseWords AS bw
-              match p=(bw)-[:part_of|:subconcept|:actor_of|:same_as*]->(:concept{name:'${domain/* @yuvashree: modified query for multiple relationships and different domain for type specific question */}'})
-              WHERE length(p) = max WITH COLLECT(bw) AS bws,intent AS intent
-              UNWIND bws AS keywords
-              MATCH (keywords)<-[r]-(q:question)-[rel:answer]->(a)
-              WHERE TYPE(r)=intent
-              WITH a as a, rel as rel
-              RETURN LABELS(a),COLLECT(a.value) `;
-        } else {
-            query = `UNWIND ${JSON.stringify(types)} AS token
-              MATCH (n:type)
-              WHERE n.name = token
-              OPTIONAL MATCH (n)-[r:same_as]->(main)
-              WITH  LAST(COLLECT(main.name)) AS type
-              UNWIND ${JSON.stringify(intents)} AS token
-              MATCH (n:intent)
-              WHERE n.name = token
-              OPTIONAL MATCH (n)-[r:same_as]->(main)
-              WITH  LAST(COLLECT(main.name)) AS intent, type as type
-              UNWIND ${JSON.stringify(keywords)} AS token
-              MATCH (n:concept)
-              WHERE n.name = token
-              OPTIONAL MATCH (n)-[r:same_as]->(main)
-              WITH COLLECT(main) AS baseWords,intent AS intent,type as type
-              UNWIND baseWords AS token
-              MATCH p=(token)-[:part_of|:subconcept|:actor_of|:same_as*]->(:concept{name:'${domain}'})
-              WITH length(p) AS max,baseWords AS baseWords,intent AS intent,type as type
+              WITH length(p) AS max,baseWords AS baseWords
               UNWIND baseWords AS bw
               match p=(bw)-[:part_of|:subconcept|:actor_of|:same_as*]->(:concept{name:'${domain}'})
-              WHERE length(p) = max WITH COLLECT(bw) AS bws,intent AS intent,type as type
+              WHERE length(p) = max WITH COLLECT(bw) AS bws
               UNWIND bws AS keywords
               MATCH (keywords)<-[r]-(q:question)-[rel:answer]->(a)
-              WHERE TYPE(r)=intent and labels(a)=type
+              WHERE TYPE(r)='${intent[0]}' and labels(a)='${type[0]}'
               WITH a as a, rel as rel
               RETURN LABELS(a),COLLECT(a.value) `
         }
@@ -79,8 +99,20 @@ module.exports = function(intents, keywords, email, types, answerFoundCallback, 
             session.close();
             //  @Mayanka: No records found
             if (result.records.length === 0) {
-                noAnswerFoundCallback();
-            } else {
+              /* @Sindhujaadevi: To find if the question is from different domain or not */
+            client.hmget('keywords', keywords[keywords.length-1],function(err, reply) {
+            keyword = reply;
+            if (domain !== keyword) {
+                      foundNoAnswer = 'you are in ' + domain + ' domain. Please refer ' + keyword + ' domain for the answer';
+                      noAnswerFoundCallback(foundNoAnswer);
+                  }
+            else{
+              foundNoAnswer = answerNotFoundReply[Math.floor(Math.random() * answerNotFoundReply.length)];
+                      noAnswerFoundCallback(foundNoAnswer);
+            }
+            });
+
+          } else {
                 let answerObj = {};
                 answerObj.time = new Date().toLocaleString();
                 //  @Mayanka: If spell check done show this message
@@ -88,19 +120,34 @@ module.exports = function(intents, keywords, email, types, answerFoundCallback, 
                     answerObj.extras = 'Showing results for : ' +
                         "\"" + correctedQuestion + "\"" + ' instead';
                 }
+                console.log(query);
                 let resultArray = result.records.forEach((record) => {
                     let field = record._fields;
-                    answerObj[field[0][0]] = field[1].map((value, index) => {
-                        if (value !== '') {
-                            return {value: value};
-                        }
-                    });
-                });
+                    if(field[0] !== null)
+                    {
+                      answerObj[field[0][0]] = field[1].map((value, index) => {
+                      if (value !== '') {
+                          return {value: value};
+                      }
+                  });
+                }
+                else {
+                  if(field[2] !== null)
+                  {
+                  field[3] = {
+                    value:field[3].join(",")
+                  }
+                  console.log(field[2][0]);
+                  answerObj[field[2][0]] = field[3];
+                }
+                }
+              });
                 // sending the answer to callback
                 answerFoundCallback(answerObj);
             }
         }).catch(function(error) {
             console.log(error);
         });
+      }
     });
 };

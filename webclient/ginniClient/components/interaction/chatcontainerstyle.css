@@ -131,3 +131,14 @@
     margin-top: -15px;
     min-height: 510px;
 }
+
+#viewuserchat
+{
+  background-color:teal;
+  color:white;
+  text-align:center;
+}
+#viewuserchatcontent
+{
+  text-align: justify;
+}

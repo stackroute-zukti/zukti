@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="text/css">
+        #container {
+            /* max-width: 400px; */
+            height: 1500px;
+        }
+    </style>
+    <title>Zukti's Onto</title>
+</head>
+
+<body>
+    <div id="container"></div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.templates/beta1/jquery.tmpl.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/sigma.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/plugins/sigma.exporters.svg.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/plugins/sigma.layout.forceAtlas2.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/plugins/sigma.layout.noverlap.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/plugins/sigma.neo4j.cypher.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/plugins/sigma.parsers.gexf.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/plugins/sigma.parsers.json.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/plugins/sigma.pathfinding.astar.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/plugins/sigma.plugins.animate.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/plugins/sigma.plugins.dragNodes.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/plugins/sigma.plugins.filter.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/plugins/sigma.plugins.neighborhoods.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/plugins/sigma.plugins.relativeSize.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/plugins/sigma.renderers.customEdgeShapes.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/plugins/sigma.renderers.customShapes.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/plugins/sigma.renderers.edgeDots.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/plugins/sigma.renderers.edgeLabels.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/plugins/sigma.renderers.parallelEdges.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/plugins/sigma.renderers.snapshot.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/plugins/sigma.statistics.HITS.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/sigma.js/1.2.0/sigma.require.js"></script>
+    <script>
+        var entry = {
+            "nodes": [],
+            "edges": []
+        };
+        var count = 1;
+        function AjaxCall(json) {
+        $.ajax({
+            url: "http://192.168.1.137:7474/db/data/cypher",
+            type: 'POST',
+            data: {
+                "query": "match (n) return n"
+            },
+            beforeSend: function(request) {
+                request.setRequestHeader("Authorization", "Basic " + btoa("neo4j:neo4js"));
+            },
+            success: function(data) {
+                var len = data.data.length;
+                for (var obj of data.data) {
+                    var node = {};
+                    node.id = obj[0].metadata.id + "";
+                    node.label = obj[0].data.name;
+                    node.x = Math.random();
+                    node.y = Math.random();
+                    node.size = 5;
+                    if (obj[0].metadata.labels == 'concept') {
+                      node.color = '#4da6ff';
+                    }
+                    else if (obj[0].metadata.labels == 'blog') {
+                      node.color = '#9966ff';
+                    }
+                    else if (obj[0].metadata.labels == 'intent') {
+                      node.color = '#29a329';
+                    }
+                    else if (obj[0].metadata.labels == 'question') {
+                      node.color = '#ff3333';
+                    }
+                    else if (obj[0].metadata.labels == 'text') {
+                      node.color = '#ff4d94';
+                    }
+                    else if (obj[0].metadata.labels == 'video') {
+                      node.color = '#ffbb33';
+                    }
+                    else if (obj[0].metadata.labels == 'image') {
+                      node.color = 'teal';
+                    }
+                    entry.nodes.push(node);
+                    $.ajax({
+
+                        url: `http://192.168.1.137:7474/db/data/node/${obj[0].metadata.id}/relationships/out`,
+                        type: 'GET',
+                        beforeSend: function(request) {
+                            request.setRequestHeader("Authorization", "Basic " + btoa("neo4j:neo4js"));
+                        },
+                        success: function(data) {
+                            for (var obj of data) {
+                                var edge = {};
+                                edge.id = obj.metadata.id + "";
+                                edge.source = obj.start.substr(obj.start.length - 4);
+                                edge.target = obj.end.substr(obj.end.length - 4);
+                                edge.label = obj.metadata.type;
+                                edge.type = 'curvedArrow';
+                                edge.color = 'grey'
+                                entry.edges.push(edge);
+                            }
+                            if (count == len) {
+                              DrawGraph(entry);
+                            }
+                            else {
+                              count++;
+                            }
+
+                        },
+                        error: function(err) {
+                            console.log('error occurred on AJAX');
+                        }
+
+                    });
+                }
+            },
+            error: function(err) {
+                console.log('error occurred on AJAX');
+                console.log(err);
+            }
+        });
+      }
+      function DrawGraph(data) {
+
+        s = new sigma({
+            graph: data,
+            renderer: {
+                container: document.getElementById('container'),
+                type: 'canvas'
+            },
+            settings: {
+                edgeLabelSize: 'proportional',
+                minArrowSize: 5
+            }
+        });
+        var dragListener = sigma.plugins.dragNodes(s, s.renderers[0]);
+
+        dragListener.bind('startdrag', function(event) {
+            console.log(event);
+        });
+        dragListener.bind('drag', function(event) {
+            console.log(event);
+        });
+        dragListener.bind('drop', function(event) {
+            console.log(event);
+        });
+        dragListener.bind('dragend', function(event) {
+            console.log(event);
+        });
+
+      }
+      AjaxCall();
+    </script>
+</body>
+
+</html>

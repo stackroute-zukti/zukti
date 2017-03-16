@@ -1,5 +1,6 @@
 import React from 'react';
-import {Feed, Label} from 'semantic-ui-react';
+import Embedly from 'react-embedly';
+import {Feed, Label, Modal} from 'semantic-ui-react';
 import {hashHistory} from 'react-router';
 import AssistantGinniUrlDisplay from './assistantGinniUrlDisplay';
 import AssistantGinniVideoDisplay from './assistantGinniVideoDisplay';
@@ -7,10 +8,14 @@ import AssistantGinniMoreTextDisplay from './assistantGinniMoreTextDisplay';
 import AssistantGinniPlainText from './assistantGinniPlainText';
 import AssistantGinniOptions from './assistantGinniOptions';
 import AssistantGinniKeywordResponse from './assistantGinniKeywordResponse';
-import VideoPlayer from './videoPlayer';
 import UnfurlLink from './unfurlLink';
 import './chatcontainerstyle.css';
 import CodeAssistant from '../../../Multi_Lingual/Wordings.json';
+import ReactPlayer from 'react-player';
+let Beautify = require('js-beautify').js_beautify;
+import Cookie from 'react-cookie';
+import Axios from 'axios';
+
 export default class AssistantGinniMixedReply extends React.Component {
     // props validation
     static propTypes = {
@@ -24,7 +29,9 @@ export default class AssistantGinniMixedReply extends React.Component {
         this.displayBlogs = this.displayBlogs.bind(this);
         this.playVideo = this.playVideo.bind(this);
         this.logoutAfterWarning = this.logoutAfterWarning.bind(this);
-    }
+        this.redirectDomain = this.redirectDomain.bind(this);
+       }
+
     displayMoreText() {
         let textResponseArray = this.props.data.text;
         textResponseArray.shift();
@@ -34,6 +41,7 @@ export default class AssistantGinniMixedReply extends React.Component {
         });
         this.props.handleGinniReply(ginniReply);
     }
+    /* @sundaresan: video display */
     displayVideos() {
         let ginniReply = [<AssistantGinniPlainText value = 'Here is a top rated video for you' />];
         ginniReply.push(<AssistantGinniVideoDisplay
@@ -51,13 +59,38 @@ export default class AssistantGinniMixedReply extends React.Component {
     logoutAfterWarning(){
      hashHistory.push('/');
   }
+  /* @Sindhujaadevi: redirecting user to other domain */
+  redirectDomain(){
+    let differentDomain = this.props.differentDomain;
+      Axios({
+              method: 'PUT',
+              url: '/user/setlogindomain',
+              data: { email: Cookie.load('email'), domain: differentDomain}
+            }).then(function (response) {
+              console.log(`User's current domain load in`+ differentDomain);
+            });
+            Cookie.save('domain', differentDomain);
+            Cookie.save('differentDomain', differentDomain);
+            let url = '/question/askQuestion';
+            let message = {};
+            message.time = new Date().toLocaleString();
+            message.value = this.props.question;
+            Axios.post(url, {
+                username: this.props.username,
+                question: message
+            }).then((response) => {
+              console.log('done');});
+      hashHistory.push('/chat/'+differentDomain);
+      window.location.reload();
+  }
   /* @yuvashree: added function to play video on clicking the button */
     playVideo() {
         let videoUrl = this.props.data.video[0].value;
-        this.props.handleGinniReply([< VideoPlayer url = {videoUrl} />]);
     }
     render() {
+          let differentDomain = this.props.differentDomain;
           let text = '';
+          let data = '';
            //  : Initialize swear word count */
           let abuseCount = this.props.abuseCount;
            //  @Mayanka: check if swear is present in the current query
@@ -71,9 +104,7 @@ export default class AssistantGinniMixedReply extends React.Component {
             return (
                 <Feed id="ginniview">
                     <Feed.Event>
-                        <Feed.Label image='../../images/geniebot.jpg'/>
                         <Feed.Content>
-                            <Feed.Summary date={this.props.data.time} user={CodeAssistant.Interaction.name}/>
                             <Feed.Extra warning style = {{color :" red"}}>
                                {CodeAssistant.FinalWarning.message}
                              </Feed.Extra>
@@ -89,9 +120,7 @@ export default class AssistantGinniMixedReply extends React.Component {
             return (
                 <Feed id="ginniview">
                     <Feed.Event>
-                        <Feed.Label image='../../images/geniebot.jpg'/>
                         <Feed.Content>
-                            <Feed.Summary date={this.props.data.time} user={CodeAssistant.Interaction.name}/>
                             <Feed.Extra>
                             </Feed.Extra>
                             <Feed.Extra text style = {{color :" red"}}>
@@ -103,10 +132,40 @@ export default class AssistantGinniMixedReply extends React.Component {
             );
             warningCount = warningCount - 1;
           }
+          /* @Sindhujaadevi: asking user for suggessions */
+          else if(this.props.inOtherDomain === true){
+            return (
+                  <Feed id="ginniview">
+                  <Feed.Event>
+                      <Feed.Content id = 'ginniviewKeyword'>
+                          <Feed.Summary>You just asked a question of ' {this.props.differentDomain} 'domain </Feed.Summary>
+                          <Feed.Extra onClick={this.redirectDomain}>Click here to go to '{this.props.differentDomain} 'domain</Feed.Extra>
+                      </Feed.Content>
+                  </Feed.Event>
+                </Feed>
+            );
+          }
            // @Mayanka: proper reply if no swear word
   else {
+    /* @yuvashree: for getting subconcepts */
+    let subconcepts = '';
+    if(this.props.data.concept) {
+      subconcepts = this.props.data.concept.value;
+      console.log(subconcepts);
+      return (
+            <Feed id="ginniview">
+            <Feed.Event>
+                <Feed.Content id = 'ginniviewKeyword'>
+                    <Feed.Summary> {subconcepts} </Feed.Summary>
+                </Feed.Content>
+            </Feed.Event>
+          </Feed>
+      );
+    }
+    /* subconcept code ends here */
+
+    /* @yuvashree: edited code for text view */
         let text = '';
-        /* @yuvashree: edited code for text view */
         if(this.props.data.text) {
           text = this.props.data.text[0].value;
           return (
@@ -138,9 +197,6 @@ export default class AssistantGinniMixedReply extends React.Component {
                                      type='text' value={text}/>
                            </Label.Group>
                        </Feed.Extra>
-                          <Feed.Extra id='assistantViewUserDate'>
-                              {this.props.data.time}
-                          </Feed.Extra>
                     </Feed.Content>
                 </Feed.Event>
               </Feed>
@@ -164,15 +220,15 @@ export default class AssistantGinniMixedReply extends React.Component {
                  </Feed.Summary>
                     <Feed.Extra id='assistantViewUserDate'>
                       <AssistantGinniOptions question={this.props.question}
-                        type='text' value={text}/>  {this.props.data.time}
+                        type='text' value={text}/>
                     </Feed.Extra>
               </Feed.Content>
           </Feed.Event>
         </Feed>
         );
       }
-        let blog = '';
         /* @yuvashree: edited code for displaying blogs */
+        let blog = '';
         if(this.props.data.blog) {
           blog = this.props.data.blog[0].value;
           console.log(blog);
@@ -196,18 +252,14 @@ export default class AssistantGinniMixedReply extends React.Component {
                                 type='text' value={text}/>
                       </Label.Group>
                     </Feed.Extra>
-                        <Feed.Extra id='assistantViewUserDate'>
-                            {this.props.data.time}
-                        </Feed.Extra>
                   </Feed.Content>
               </Feed.Event>
             </Feed>
         );
       }
-      let video = '';
       /* @yuvashree: edited code for displaying videos */
       if(this.props.data.video) {
-        video = this.props.data.video[0].value;
+        let video = this.props.data.video[0].value;
         console.log(video);
       return (
             <Feed id="ginniview">
@@ -225,20 +277,53 @@ export default class AssistantGinniMixedReply extends React.Component {
                             ? <Label onClick={this.displayVideos}
                               basic color='orange' id='cursor'>Videos</Label>
                             : ''}
-                            {/* @yuvashree: added button to play video */}
-                            <Label onClick={this.playVideo} basic color='orange' id='cursor'>Play video</Label>
+                            <Modal
+                              closeOnRootNodeClick={false}
+                              closeIcon='close'
+                              trigger={<Label onClick={this.playVideo} basic color='orange' id='cursor'>Play video</Label>}>
+                              <Feed id='assistantView'>
+                                  <Feed.Event>
+                                    <Feed.Content>
+                                        <Feed.Extra >
+                                          <ReactPlayer height={455} width={810} url={this.props.data.video[0]} playing={false} controls={true}/>
+                                        </Feed.Extra>
+                                    </Feed.Content>
+                                  </Feed.Event>
+                                </Feed>
+                            </Modal>
                               <AssistantGinniOptions question={this.props.question}
                                 type='text' value={text}/>
                     </Label.Group>
                 </Feed.Extra>
-                      <Feed.Extra id='assistantViewUserDate'>
-                          {this.props.data.time}
-                      </Feed.Extra>
                 </Feed.Content>
             </Feed.Event>
           </Feed>
       );
         }
+        /* @rajalakshmi: edited code for displaying code snippets */
+        else if(this.props.data.code){
+             let code = this.props.data.code[0].value;
+               let value = Beautify(code, {indent_size: 1 });
+               return (
+                     <Feed id="ginniview">
+                         <Feed.Event>
+                         <Feed.Content id = 'ginniviewKeyword'>
+                             <Feed.Extra>
+                               <p>
+                               Click on the Code button to view the Content.
+                               </p>
+                                <Label.Group>
+                                   <Modal closeOnRootNodeClick={false} closeIcon ='close'  trigger ={<Label basic color='orange' id='cursor' >Code</Label>}><pre>{value}</pre></Modal>
+
+                                        <AssistantGinniOptions question={this.props.question}
+                                          type='text' value={code}/>
+                                </Label.Group>
+                            </Feed.Extra>
+                         </Feed.Content>
+                     </Feed.Event>
+                   </Feed>
+               );
+             }
       }
     }
   }

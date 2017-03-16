@@ -1,0 +1,47 @@
+let client = require('./redis');
+let nlp = require('nlp_compromise');
+let pos = require('pos');
+
+module.exports = function(question, username, lexicon) {
+    let tags = nlp.sentence(question).tags();
+    let replacingPronoun = '';
+    let v = 0;
+    for(let j = 0; j < tags.length; j = j + 1)
+      {
+        console.log(tags[j]);
+        if(tags[j] === 'Pronoun')
+        {
+          if(j < tags.length - 1 && (tags[j + 1] === 'Preposition' || tags[j + 1] === 'Determiner'))
+          {
+            tags[j] = 'Noun';
+          }
+          else if(j < tags.length - 2 && (tags[j + 2] === 'Preposition'
+          || tags[j + 2] === 'Determiner')) {
+              tags[j] = 'Noun';
+          }
+        }
+        if(tags[j] === 'Pronoun')
+        {
+          v = j;
+        }
+      }
+    if (tags.includes('Pronoun')) {
+      /* @vibakar: replacing Pronoun with redis keyword */
+        client.hget(username, 'keywords', function(err, value) {
+            if (value) {
+                let replacingArray = nlp.sentence(question).text().split(' ');
+                replacingArray[v] = value;
+                replacingPronoun = replacingArray.join(' ');
+                console.log('replaced :' + replacingPronoun);
+                lexicon(replacingPronoun);
+            } else {
+                replacingPronoun = question;
+                lexicon(replacingPronoun);
+            }
+        });
+    }
+    else {
+      replacingPronoun = question;
+      lexicon(replacingPronoun);
+    }
+};
