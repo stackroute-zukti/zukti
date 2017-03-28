@@ -75,7 +75,7 @@
     "striptags": "^3.0.1",
     "supertest": "^3.0.0",
     "validator": "^6.2.1",
-    "zlib": "^1.0.5"
+    
   },
   "devDependencies": {
     "babel-core": "^6.16.0",
