@@ -2,7 +2,7 @@ let getNeo4jDriver = require('../neo4j/connection');
 let fs = require('fs');
 /* redis client */
 let redis = require('redis');
-let client = redis.createClient(); // Creating redis client with default port name and host name as 127.0.0.1 and 6379 respectively
+let client = redis.createClient('127.0.0.1', '6379'); // Creating redis client with default port name and host name as 127.0.0.1 and 6379 respectively
 
 // delete require.cache[require.resolve('./intentLexicon.json')];
 function createLexiconFiles(result) {
