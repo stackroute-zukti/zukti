@@ -71,6 +71,8 @@
     "segmentize": "^0.4.1",
     "semantic-ui-react": "^0.63.5",
     "sentiment": "^3.0.1",
+    "sinon": "^2.1.0",
+    "sinon-mongoose": "^1.3.0",
     "socket.io": "^1.7.2",
     "striptags": "^3.0.1",
     "supertest": "^3.0.0",
