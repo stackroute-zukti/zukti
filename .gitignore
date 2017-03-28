@@ -1,6 +1,0 @@
-node_modules
-*.log
-*.mp4
-*.gpg
-*.csv
-webclient/dist
