@@ -13,6 +13,6 @@ node {
   sh "(cd ~/jobs/StackRoute_Immersive_Zukti/jobs/zukti/branches/master/workspace)"
 
   stage 'Testing'
-  sh "npm run test"
+  sh "mocha test"
 
 }
