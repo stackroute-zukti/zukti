@@ -1,14 +1,9 @@
 /* @navinprasad: test cases for saved queries*/
 let should = require('chai').should();
-let supertest = require('supertest');
 let sinon = require('sinon');
 let sinonMongoose = require('sinon-mongoose');
 let expect = require('chai').expect;
-let app = require("./../webserver/service.js");
 let SavedQueries = require('./../webserver/models/savedqueries.js');
-let url = supertest('http://localhost:8080/');
-
-
 describe('Saved Queries', () => {
 
     it('should save the queries', (done) => {

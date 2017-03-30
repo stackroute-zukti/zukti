@@ -1,12 +1,12 @@
 /* @navinprasad: test cases for broadcast */
 let should = require('chai').should();
-let supertest = require('supertest');
+//let supertest = require('supertest');
 let sinon = require('sinon');
 let sinonMongoose = require('sinon-mongoose');
 let expect = require('chai').expect;
-let app = require("./../webserver/service.js");
+//let app = require("./../webserver/service.js");
 let Broadcast = require('./../webserver/models/broadcast.js');
-let url = supertest('http://localhost:8080/');
+//let url = supertest('http://localhost:8080/');
 
 describe('Broadcast message', () => {
 

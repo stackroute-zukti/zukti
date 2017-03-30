@@ -4,9 +4,9 @@ let supertest = require('supertest');
 let sinon = require('sinon');
 let sinonMongoose = require('sinon-mongoose');
 let expect = require('chai').expect;
-let app = require("./../webserver/service.js");
+//let app = require("./../webserver/service.js");
 let UserBookmarks = require('./../webserver/models/userBookmarks.js');
-let url = supertest('http://localhost:8080/');
+//let url = supertest('http://localhost:8080/');
 
 describe('Bookmarked messages', () => {
 

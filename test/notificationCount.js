@@ -1,14 +1,9 @@
 /* @navinprasad: test cases for notification count */
 let should = require('chai').should();
-let supertest = require('supertest');
 let sinon = require('sinon');
 let sinonMongoose = require('sinon-mongoose');
 let expect = require('chai').expect;
-let app = require("./../webserver/service.js");
 let NotificationCount = require('./../webserver/models/notificationCount.js');
-let url = supertest('http://localhost:8080/');
-
-
 describe('Notification Count', () => {
 
     it('should save the notification', (done) => {

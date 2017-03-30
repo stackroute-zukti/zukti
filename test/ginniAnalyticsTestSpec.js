@@ -1,13 +1,9 @@
 /* @navinprasad: test cases for ginni analytics */
 let should = require('chai').should();
-let supertest = require('supertest');
 let sinon = require('sinon');
 let sinonMongoose = require('sinon-mongoose');
 let expect = require('chai').expect;
-let app = require("./../webserver/service.js");
 let GinniAnalytics = require('./../webserver/models/ginniAnalytics.js');
-let url = supertest('http://localhost:8080/');
-
 describe('ginni analytics', () => {
 
     it('should save the questions asked and unanswered questions', (done) => {

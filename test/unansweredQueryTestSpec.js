@@ -1,13 +1,9 @@
 /* @navinprasad: test cases for unanswered query*/
 let should = require('chai').should();
-let supertest = require('supertest');
 let sinon = require('sinon');
 let sinonMongoose = require('sinon-mongoose');
 let expect = require('chai').expect;
-let app = require("./../webserver/service.js");
 let UnansweredQuery = require('./../webserver/models/unansweredQuery.js');
-let url = supertest('http://localhost:8080/');
-
 describe('Unanswered Query', () => {
 
     it('should get all the unanswered query', (done) => {
