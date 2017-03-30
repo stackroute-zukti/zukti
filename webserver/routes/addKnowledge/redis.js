@@ -1,2 +1,2 @@
-let redis = require('redis').createClient('8888', '127.0.0.1');
+let redis = require('redis').createClient();
 module.exports = redis;
