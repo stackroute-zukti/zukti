@@ -1,6 +1,6 @@
 Code-Assistant
 
-Hello!!
+Hello
 Steps to be followed before using the bot
 -----------------------------------------
 1)npm install
