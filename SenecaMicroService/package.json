@@ -1,0 +1,23 @@
+{
+  "name": "questionseneca",
+  "version": "1.0.0",
+  "description": "Seneca Microservice for Question Processing",
+  "main": "user-microservice.js",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "keywords": [
+    "seneca",
+    "express",
+    "microservice"
+  ],
+  "author": "Simanta",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "express": "^4.15.2",
+    "log4js": "^1.1.1",
+    "nlp_compromise": "^6.5.3",
+    "pos": "^0.4.2",
+    "seneca": "^3.3.0"
+  }
+}

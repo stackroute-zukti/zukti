@@ -1,0 +1,9 @@
+node_modules
+*.log
+*.mp4
+*.gpg
+webclient/dist
+webserver/CsvFiles/*
+SenecaMicroService/node_modules
+graphDBBackup
+sample csv
