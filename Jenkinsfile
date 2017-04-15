@@ -3,16 +3,16 @@ node {
   sh "env"
 
   stage 'Checkout Repository'
-  git url: 'https://gitlab-dev.stackroute.in/wave13/Code-Asst', branch: "Wave-15_Jukti"
+  git url: 'https://github.com/stackroute-zukti/zukti.git', branch: "wave-17"
 
   stage 'Installing Dependencies'
-  sh "npm prune"
-  sh "npm install"
+    sh "npm install"
+    sh 'echo pwd'
 
   stage 'Linting'
-  sh "gulp lint"
+  sh "(cd ~/jobs/StackRoute_Immersive_Zukti/jobs/zukti/branches/master/workspace)"
 
   stage 'Testing'
-  sh "npm run test"
+  sh "npm test"
 
 }
