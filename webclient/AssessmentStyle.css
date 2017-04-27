@@ -1,10 +1,8 @@
-* {
-  box-sizing: border-box;
-}
-html, .wrapper, #app, div[data-reactroot] {
+
+.ui.card,  .leftmenucontentdiv,  div[data-reactroot] {
   height: 100%;
 }
-.wrapper {
+.ui.card,  .leftmenucontentdiv {
   width: 100%;
   font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   font-size: 9px;
@@ -12,8 +10,8 @@ html, .wrapper, #app, div[data-reactroot] {
   color: #222;
   margin: 0;
   padding: 0;
-  overflow-y: scroll;
 }
+
 h1 {
   font-weight: normal;
   font-size: 2.25em;
