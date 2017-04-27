@@ -28,6 +28,7 @@ import AdminProfilePage from './ginniAdmin/components/admin/adminProfile';
 import Cookie from 'react-cookie';
 import MailNotSend from './applicationHome/mailnotsend.jsx';
 import PageNotFound from './pagenotfound.jsx';
+import './AssessmentStyle.css';
 injectTapEventPlugin();
 // route protection - if the token is empty then it should not move forward or backward into the application and it should not display any user information
 let requireAuth = function(nextState, replace) {

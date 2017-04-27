@@ -4,10 +4,16 @@ let fetchConcepts = require('./functions/fetchConcepts');
 let createConcept = require('./functions/createConcept');
 let getConceptsAndRelations = require('./functions/getConceptsAndRelations');
 let renameConcepts = require('./functions/renameConcept');
+<<<<<<< HEAD
 //#sindhuja:filtering concept based on domain
 router.post('/', function(req, res) {
   let domain=req.body.d;
   console.log(domain);
+=======
+
+router.post('/', function(req, res) {
+    let domain = req.body.dynDomain;
+>>>>>>> c140f30a3e08eb5216153d3b980cefb1a4b61624
     let resultCallback = function(concepts) {
         res.json({
             concepts

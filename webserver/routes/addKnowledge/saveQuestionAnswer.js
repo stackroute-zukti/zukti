@@ -12,6 +12,8 @@ module.exports = function(req, questionsAnswerSavedCallback) {
     let blogs = req.body.blogs;
     let texts = req.body.texts;
     let videos = req.body.videos;
+    let domain = req.body.dynDomain;
+    console.log('domain in "saveQuestionAnswer.jsx"',req.body.dynDomain);
     lexicon();
     let keywordLexicon = [];
     let intentLexicon = [];
@@ -57,7 +59,6 @@ module.exports = function(req, questionsAnswerSavedCallback) {
             textsQuery = textsQuery + `MERGE (q)-[:answer]-> (:text {value:${JSON.stringify(text)},likes:[],dislikes:[]}) `;
         }
     });
-    let domain = 'design pattern';
     /* @yuvashree: added code to fetch the base intent to create a new question and answer */
         client.hmget('intents', intents[intents.length-1],function(err, reply) {
         mainIntent = reply;
