@@ -5,13 +5,14 @@ let createConcept = require('./functions/createConcept');
 let getConceptsAndRelations = require('./functions/getConceptsAndRelations');
 let renameConcepts = require('./functions/renameConcept');
 
-router.get('/', function(req, res) {
+router.post('/', function(req, res) {
+    let domain = req.body.dynDomain;
     let resultCallback = function(concepts) {
         res.json({
             concepts
         });
     };
-    fetchConcepts(resultCallback);
+    fetchConcepts(resultCallback,domain);
 });
 
 // @vibakar: adding new concept to existing concept

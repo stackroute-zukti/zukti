@@ -4,6 +4,7 @@ import AssistanView from '../interaction/assistantChatContainer';
 import Notifications from '../notification/notifications';
 import BookmarkList from '../bookmarks/bookmarkList';
 import LogOut from '../logout/logout.jsx';
+import Assessment from '../assessment/assessment';
 export default class LeftMenuContent extends React.Component {
     constructor(props) {
         super(props);
@@ -46,6 +47,11 @@ export default class LeftMenuContent extends React.Component {
             case 'LogOut':
                 {
                     return <LogOut/>
+                }
+            case 'assessment':
+                {
+                    console.log('++++++++++');
+                    return <Assessment restart={this.props.restart}/>
                 }
         }
     }

@@ -30,7 +30,7 @@ export default class LeftMenu extends Component {
             photo: '',
             counter: 0,
             isTourActive: false,
-      			tourStep: 1
+                tourStep: 1
         };
         this.onSubmitEmail = this.onSubmitEmail.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
@@ -42,6 +42,7 @@ export default class LeftMenu extends Component {
     //  @Mayanka: call retriveChat to check history
     componentWillMount(){
       this.retriveChat();
+     
     }
     //  @Mayanka: if chat history is empty start the user-tour
   setTourState() {
@@ -53,7 +54,12 @@ export default class LeftMenu extends Component {
         });
       }
     }
+    restart()
+    {
+      this.setState({activeItem: assessment, counter: this.state.counter});
+    }
     handleItemClick = ((e, {name}) => {
+      console.log('handleClickItem//e',e)
         if (this.state.activeItem === 'notifications') {
             let url = '/getbroadcastmessage/updateCount';
             this.state.counter = 0;
@@ -140,7 +146,6 @@ export default class LeftMenu extends Component {
               }
           }).catch((err) => {
           });
-
           }
   render() {
     //  @Mayanka: style element for user-tour
@@ -216,7 +221,11 @@ export default class LeftMenu extends Component {
                         <Icon name='alarm' color='teal'/>
                         {LeftMenuPage.LeftMenu.Menu4}
                     </Menu.Item>
-
+                    <Menu.Item name='assessment' active={activeItem === 'assessment'}
+                      onClick={this.handleItemClick}>
+                        <Icon name='pencil square' color='teal'/>
+                        {LeftMenuPage.LeftMenu.Menu6}
+                    </Menu.Item>
                 </Sidebar>
                 <Sidebar.Pusher id="sidebarpusher">
                     <Segment id="segmentleftbar">
@@ -252,7 +261,7 @@ export default class LeftMenu extends Component {
                             </Menu>
                         </div>
                         <div id='leftmenucontentdiv'>
-              <LeftMenuContent sidebarItemSelected={activeItem} domain={this.props.params.domain}/>
+              <LeftMenuContent sidebarItemSelected={activeItem}  restart={this.restart.bind(this)} domain={this.props.params.domain}/>
                         </div>
                     </Segment>
                 </Sidebar.Pusher>

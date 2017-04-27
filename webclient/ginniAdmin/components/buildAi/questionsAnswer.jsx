@@ -3,6 +3,7 @@ import {Card, Radio, Button, Icon} from 'semantic-ui-react';
 import Axios from 'axios';
 import InputQuestion from './inputQuestion';
 import ReplyContentInput from './replyContentInput';
+import Cookie from 'react-cookie';
 export default class QuestionsAnswer extends React.Component {
     constructor(props) {
         super(props);
@@ -68,8 +69,9 @@ export default class QuestionsAnswer extends React.Component {
           this.setState({errorMessage: 'There must be a atleast one answer'});
           return;
         }
+        let dynDomain = Cookie.load('domain').toLowerCase();
         Axios.post('/qa/addQuestionAnswer', {question: this.state.question,
-          texts: this.state.texts, videos: this.state.videos, blogs: this.state.blogs}).
+          texts: this.state.texts, videos: this.state.videos, blogs: this.state.blogs, dynDomain:dynDomain}).
         then((response)=> {
           this.setState({question: ' ', texts: [' '], videos: [' '], blogs: [' '],
           noAnswerError: '', invalidQuestionError: ''});

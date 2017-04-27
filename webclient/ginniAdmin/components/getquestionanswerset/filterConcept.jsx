@@ -3,6 +3,8 @@ import {Form, Dropdown, Input} from 'semantic-ui-react';
 import Axios from 'axios';
 import Config from '../../../../config/url';
 import './questionanswer.css';
+import Cookie from 'react-cookie';
+
 export default class FilterConcept extends React.Component {
     constructor(props) {
         super(props);
@@ -13,8 +15,9 @@ export default class FilterConcept extends React.Component {
     }
     // show the dropdown with concepts from neo4j databse
     componentDidMount() {
+        let dynDomain = Cookie.load('domain').toLowerCase();
         let url = Config.url + '/concept';
-        Axios.get(url).then((response) => {
+        Axios.post(url,{dynDomain:dynDomain}).then((response) => {
             let concepts = response.data.concepts;
             concepts.forEach((concepts) => {
                 this.state.options.push({text: concepts, value: concepts});
