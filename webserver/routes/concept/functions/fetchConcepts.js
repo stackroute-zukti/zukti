@@ -2,22 +2,13 @@ let getNeo4jDriver = require('../../../neo4j/connection');
 let log4js = require('log4js');
 let logger = log4js.getLogger();
 module.exports = function(resultCallback,domain) {
-<<<<<<< HEAD
+
   //#sindhuja filter concepts based on domain
     // get all intent which have same_as to themselves these are our baseIntents
     if(domain=='react')
     {
     let query = 'MATCH (m:concept {name:"'+domain+'"})<-[:subconcept_of]-(n)<-[:subconcept_of]-(sn) return collect (distinct sn.name)';
-=======
     // get all intent which have same_as to themselves these are our baseIntents
-    var query;
-    if(domain==='react'){
-        query='MATCH (m:concept {name:"'+domain+'"})<-[:subconcept_of]-(n)<-[:subconcept_of]-(sn) return collect (distinct sn.name)'
-    }
-    else if(domain==='design pattern'){
-        query='match(n:concept)<-[:subconcept_of]-(m:concept)<-[:part_of]-(s)<-[:subconcept_of]-(d) where n.name="'+domain+'" return  distinct collect(d.name)'
-    }
->>>>>>> c140f30a3e08eb5216153d3b980cefb1a4b61624
     let session = getNeo4jDriver().session();
 
     session.run(query)

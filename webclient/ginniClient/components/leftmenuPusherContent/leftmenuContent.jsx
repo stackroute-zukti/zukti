@@ -49,18 +49,18 @@ export default class LeftMenuContent extends React.Component {
                 {
                     return <LogOut/>
                 }
-<<<<<<< HEAD
+
                 case 'Book':
                     {
                         return <Books/>
                     }
-=======
+
             case 'assessment':
                 {
                     console.log('++++++++++');
                     return <Assessment restart={this.props.restart}/>
                 }
->>>>>>> c140f30a3e08eb5216153d3b980cefb1a4b61624
+
         }
     }
 }

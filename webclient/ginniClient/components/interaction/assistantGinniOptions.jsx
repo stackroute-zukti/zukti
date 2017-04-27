@@ -20,12 +20,11 @@ export default class AssistantGinniOptions extends React.Component {
         this.getSiblings = this.getSiblings.bind(this);
         this.recommend = this.recommend.bind(this);
         this.revertFunction = this.revertFunction.bind(this);
-<<<<<<< HEAD
-        this.recommendme=this.recommendme.bind(this);
-=======
+
+
+
         this.recommendateme=this.recommendateme.bind(this);
 
->>>>>>> 36793d2e2833daed0904787f4a756e8d07743ba3
     }
 
    recommend(recommendations) {
@@ -70,12 +69,9 @@ export default class AssistantGinniOptions extends React.Component {
             console.log(error);
         });
 
-<<<<<<< HEAD
-        this.setState({likeEnabled: true, dislikeEnabled: false});
 
-=======
        this.setState({likeEnabled: true, dislikeEnabled: false});
->>>>>>> 36793d2e2833daed0904787f4a756e8d07743ba3
+
 
  }
     downVoteAnswer(type, value) {
@@ -104,7 +100,7 @@ export default class AssistantGinniOptions extends React.Component {
 
      this.setState({dislikeEnabled: true, likeEnabled: false});
 
-<<<<<<< HEAD
+
     }
 recommendme()
 {
@@ -113,12 +109,10 @@ recommendme()
     this.getSiblings(this.props.keywords);
   }
 }
-    savedQuery(message)
-=======
-   }
+
 
    savedQuery(message)
->>>>>>> 36793d2e2833daed0904787f4a756e8d07743ba3
+
     {
       let question = this.props.question;
       let savedResponse = this.props.value;
@@ -255,22 +249,10 @@ recommendme()
                                     this.revertFunction
                                 } />} content='already disliked' size='mini'/>
                             : ''}
-<<<<<<< HEAD
-                            {!this.state.likeEnabled  && this.state.dislikeEnabled
-                                    ? <Popup trigger={< Icon circular name = 'thumbs down' color = 'red'
-                                        onClick = {
-                                            this.revertFunction
-                                        } />} content='already disliked' size='mini'/>
-                                    : ''}
-                                    {this.state.likeEnabled
-                                            ? <Popup trigger={< Icon circular name = 'idea' color = 'red'
-                                                onClick = {
-                                                    this.recommendme
-                                                } />} content='recommendation' size='mini'/>
-                                            : ''}
 
-            </Feed.Meta>
-=======
+
+
+
                             {/*#Pradeep_Kumar 20-04-2017 (Added Recommendation button to enable the recommendateme function)*/}
                              {this.state.likeEnabled
                                        ? <Popup trigger={< Icon circular name = 'crosshairs' color = 'green'
@@ -280,7 +262,7 @@ recommendme()
                                        : ''}
 
            </Feed.Meta>
->>>>>>> 36793d2e2833daed0904787f4a756e8d07743ba3
+
         );
     }
 }

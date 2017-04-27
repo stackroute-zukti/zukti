@@ -42,7 +42,7 @@ export default class LeftMenu extends Component {
     //  @Mayanka: call retriveChat to check history
     componentWillMount(){
       this.retriveChat();
-     
+
     }
     //  @Mayanka: if chat history is empty start the user-tour
   setTourState() {
@@ -221,20 +221,18 @@ export default class LeftMenu extends Component {
                         <Icon name='alarm' color='teal'/>
                         {LeftMenuPage.LeftMenu.Menu4}
                     </Menu.Item>
-<<<<<<< HEAD
+
                     <Menu.Item name='Book' active={activeItem === 'Book'}
                       onClick={this.handleItemClick}>
                         <Icon name='leanpub' color='teal'/>
                         {LeftMenuPage.LeftMenu.Menu6}
                     </Menu.Item>
 
-=======
                     <Menu.Item name='assessment' active={activeItem === 'assessment'}
                       onClick={this.handleItemClick}>
                         <Icon name='pencil square' color='teal'/>
-                        {LeftMenuPage.LeftMenu.Menu6}
+                        {LeftMenuPage.LeftMenu.Menu7}
                     </Menu.Item>
->>>>>>> c140f30a3e08eb5216153d3b980cefb1a4b61624
                 </Sidebar>
                 <Sidebar.Pusher id="sidebarpusher">
                     <Segment id="segmentleftbar">

@@ -120,13 +120,11 @@ export default class AssistantView extends React.Component {
                                     <a onClick={this.moreFunction}>{' '}{this.state.msg}{' '}
                                     </a>
                                 </ul>
-<<<<<<< HEAD
-                                {/* <a onClick ={this.recommendationFunction}>
-=======
+
                                 {/* #Pradeep_Kumar 26-04-2017 (removed the turn-off button)*/}
                                 {/* <a onClick ={this.recommendationFunction} >
 
->>>>>>> 36793d2e2833daed0904787f4a756e8d07743ba3
+
                                     Turn Off Recommendations
                                 </a> */}
                             </Feed.Summary>
