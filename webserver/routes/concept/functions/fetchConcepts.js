@@ -2,6 +2,7 @@ let getNeo4jDriver = require('../../../neo4j/connection');
 let log4js = require('log4js');
 let logger = log4js.getLogger();
 module.exports = function(resultCallback,domain) {
+  //#sindhuja filter concepts based on domain
     // get all intent which have same_as to themselves these are our baseIntents
     if(domain=='react')
     {

@@ -30,7 +30,11 @@
         function AjaxCall() {
             let query = localStorage.getItem("query");
             $.ajax({
+<<<<<<< HEAD
                 url: "http://192.168.1.209:7474/db/data/cypher",
+=======
+                url: "http://192.168.1.10:7474/db/data/cypher",
+>>>>>>> 36793d2e2833daed0904787f4a756e8d07743ba3
                 type: 'POST',
                 data: {
                     "query": query

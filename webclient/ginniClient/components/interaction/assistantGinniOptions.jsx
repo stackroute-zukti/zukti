@@ -20,14 +20,19 @@ export default class AssistantGinniOptions extends React.Component {
         this.getSiblings = this.getSiblings.bind(this);
         this.recommend = this.recommend.bind(this);
         this.revertFunction = this.revertFunction.bind(this);
+<<<<<<< HEAD
         this.recommendme=this.recommendme.bind(this);
+=======
+        this.recommendateme=this.recommendateme.bind(this);
+
+>>>>>>> 36793d2e2833daed0904787f4a756e8d07743ba3
     }
 
-    recommend(recommendations) {
+   recommend(recommendations) {
       this.props.onRecommend(recommendations);
     }
 
-    /* @sangeetha: functions to recieve recommendations */
+   /* @sangeetha: functions to recieve recommendations */
        getSiblings(keywords) {
          console.log('entering into getsibling ',JSON.stringify(keywords));
          Axios.get('/recommendations/getSiblings', {
@@ -41,10 +46,10 @@ export default class AssistantGinniOptions extends React.Component {
          });
        }
 
-    //@sangeetha: passing keywords to fetch sibilings
+   //@sangeetha: passing keywords to fetch sibilings
     upvoteAnswer(type, value) {
 
-          Axios.post('/qa/rateAnswer', {
+         Axios.post('/qa/rateAnswer', {
               action:'liked' ,
               type: this.props.type,
               value: this.props.value,
@@ -65,13 +70,17 @@ export default class AssistantGinniOptions extends React.Component {
             console.log(error);
         });
 
+<<<<<<< HEAD
         this.setState({likeEnabled: true, dislikeEnabled: false});
 
+=======
+       this.setState({likeEnabled: true, dislikeEnabled: false});
+>>>>>>> 36793d2e2833daed0904787f4a756e8d07743ba3
 
-    }
+ }
     downVoteAnswer(type, value) {
 
-          Axios.post('/qa/rateAnswer', {
+         Axios.post('/qa/rateAnswer', {
               action: 'disliked',
               type: this.props.type,
               value: this.props.value,
@@ -93,9 +102,9 @@ export default class AssistantGinniOptions extends React.Component {
           console.log(error);
       });
 
-      this.setState({dislikeEnabled: true, likeEnabled: false});
+     this.setState({dislikeEnabled: true, likeEnabled: false});
 
-
+<<<<<<< HEAD
     }
 recommendme()
 {
@@ -105,6 +114,11 @@ recommendme()
   }
 }
     savedQuery(message)
+=======
+   }
+
+   savedQuery(message)
+>>>>>>> 36793d2e2833daed0904787f4a756e8d07743ba3
     {
       let question = this.props.question;
       let savedResponse = this.props.value;
@@ -123,7 +137,7 @@ recommendme()
     //@Deepika : response changed to normal mode in neo4j and db
     revertFunction(){
 
-      if(this.state.likeEnabled === true && this.state.dislikeEnabled === false ){
+     if(this.state.likeEnabled === true && this.state.dislikeEnabled === false ){
         this.setState({likeEnabled: false, dislikeEnabled: false});
         Axios.post('/qa/rateAnswer', {
             action:'like reverted' ,
@@ -170,6 +184,15 @@ recommendme()
         });
       }
     }
+    //#Pradeep_Kumar 20-04-2017( loading the cookies saved at continueRecommend() )
+    recommendateme()
+    {
+      let recm = Cookie.load('recommendations');
+      if(recm === 'true'){
+        this.getSiblings(this.props.keywords);
+      }
+
+    }
     componentWillMount()
     {
       this.setState({ email: Cookie.load('email')});
@@ -180,20 +203,21 @@ recommendme()
         this.setState({likeEnabled: this.props.likes, dislikeEnabled: this.props.dislikes});
 
 
-      }
+     }
       if(this.props.likes == false && this.props.dislikes == false){
         this.setState({likeEnabled: this.props.likes, dislikeEnabled: this.props.dislikes});
       }
 
-    }
+   }
+
     /* @threkashri: edited code for displaying option */
     render() {
         let likeDislikeMsg = this.state.likeDislikeMsg;
         return (
 
-            <Feed.Meta>
+           <Feed.Meta>
 
-                {!this.state.saved ? <Popup trigger={< Icon circular name = 'save' color = 'blue'
+               {!this.state.saved ? <Popup trigger={< Icon circular name = 'save' color = 'blue'
                    onClick={this.savedQuery} />} content='save this message' size='mini'/> : ''}
                 {this.state.saved ? <Label as='a' inverted color='teal' circular>Saved</Label> : ''}
                  {!this.state.likeEnabled  &&  !this.state.dislikeEnabled
@@ -231,6 +255,7 @@ recommendme()
                                     this.revertFunction
                                 } />} content='already disliked' size='mini'/>
                             : ''}
+<<<<<<< HEAD
                             {!this.state.likeEnabled  && this.state.dislikeEnabled
                                     ? <Popup trigger={< Icon circular name = 'thumbs down' color = 'red'
                                         onClick = {
@@ -245,6 +270,17 @@ recommendme()
                                             : ''}
 
             </Feed.Meta>
+=======
+                            {/*#Pradeep_Kumar 20-04-2017 (Added Recommendation button to enable the recommendateme function)*/}
+                             {this.state.likeEnabled
+                                       ? <Popup trigger={< Icon circular name = 'crosshairs' color = 'green'
+                                           onClick = {
+                                               this.recommendateme
+                                          } />} content='Recommendation' size='mini'/>
+                                       : ''}
+
+           </Feed.Meta>
+>>>>>>> 36793d2e2833daed0904787f4a756e8d07743ba3
         );
     }
 }

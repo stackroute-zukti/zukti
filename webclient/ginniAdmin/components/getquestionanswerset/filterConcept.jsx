@@ -12,6 +12,7 @@ export default class FilterConcept extends React.Component {
             options: []
         };
     }
+    //#sindhuja:filtering concept according to domain
     // show the dropdown with concepts from neo4j databse
     componentDidMount() {
       var domain=Cookie.load('domain').toLowerCase();

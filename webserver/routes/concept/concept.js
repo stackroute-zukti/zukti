@@ -4,6 +4,7 @@ let fetchConcepts = require('./functions/fetchConcepts');
 let createConcept = require('./functions/createConcept');
 let getConceptsAndRelations = require('./functions/getConceptsAndRelations');
 let renameConcepts = require('./functions/renameConcept');
+//#sindhuja:filtering concept based on domain
 router.post('/', function(req, res) {
   let domain=req.body.d;
   console.log(domain);
