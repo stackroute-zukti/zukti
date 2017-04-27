@@ -25,7 +25,7 @@ export default class AssistantView extends React.Component {
         this.setSiblingArray = this.setSiblingArray.bind(this);
         this.discardRecommend = this.discardRecommend.bind(this);
         this.continueRecommend = this.continueRecommend.bind(this);
-        this.recommendationFunction = this.recommendationFunction.bind(this);
+        //this.recommendationFunction = this.recommendationFunction.bind(this);
         this.open = this.open.bind(this);
         this.close = this.close.bind(this);
     }
@@ -44,10 +44,10 @@ export default class AssistantView extends React.Component {
         this.setSiblingArray();
     }
 
-    recommendationFunction()
-    {
-        this.setState({flag: true});
-    }
+    // recommendationFunction()
+    // {
+    //     this.setState({flag: true});
+    // }
 
     setSiblingArray()
     {
@@ -119,9 +119,9 @@ export default class AssistantView extends React.Component {
                                     <a onClick={this.moreFunction}>{' '}{this.state.msg}{' '}
                                     </a>
                                 </ul>
-                                <a onClick ={this.recommendationFunction}>
+                                {/* <a onClick ={this.recommendationFunction}>
                                     Turn Off Recommendations
-                                </a>
+                                </a> */}
                             </Feed.Summary>
                         </Feed.Content>
                     </Feed.Event>

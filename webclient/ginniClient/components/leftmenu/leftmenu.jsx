@@ -216,6 +216,11 @@ export default class LeftMenu extends Component {
                         <Icon name='alarm' color='teal'/>
                         {LeftMenuPage.LeftMenu.Menu4}
                     </Menu.Item>
+                    <Menu.Item name='Book' active={activeItem === 'Book'}
+                      onClick={this.handleItemClick}>
+                        <Icon name='leanpub' color='teal'/>
+                        {LeftMenuPage.LeftMenu.Menu6}
+                    </Menu.Item>
 
                 </Sidebar>
                 <Sidebar.Pusher id="sidebarpusher">

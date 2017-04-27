@@ -20,6 +20,7 @@ export default class AssistantGinniOptions extends React.Component {
         this.getSiblings = this.getSiblings.bind(this);
         this.recommend = this.recommend.bind(this);
         this.revertFunction = this.revertFunction.bind(this);
+        this.recommendme=this.recommendme.bind(this);
     }
 
     recommend(recommendations) {
@@ -65,10 +66,7 @@ export default class AssistantGinniOptions extends React.Component {
         });
 
         this.setState({likeEnabled: true, dislikeEnabled: false});
-        let recm = Cookie.load('recommendations');
-        if(recm === 'true'){
-          this.getSiblings(this.props.keywords);
-        }
+
 
     }
     downVoteAnswer(type, value) {
@@ -99,7 +97,13 @@ export default class AssistantGinniOptions extends React.Component {
 
 
     }
-
+recommendme()
+{
+  let recm = Cookie.load('recommendations');
+  if(recm === 'true'){
+    this.getSiblings(this.props.keywords);
+  }
+}
     savedQuery(message)
     {
       let question = this.props.question;
@@ -227,6 +231,18 @@ export default class AssistantGinniOptions extends React.Component {
                                     this.revertFunction
                                 } />} content='already disliked' size='mini'/>
                             : ''}
+                            {!this.state.likeEnabled  && this.state.dislikeEnabled
+                                    ? <Popup trigger={< Icon circular name = 'thumbs down' color = 'red'
+                                        onClick = {
+                                            this.revertFunction
+                                        } />} content='already disliked' size='mini'/>
+                                    : ''}
+                                    {this.state.likeEnabled
+                                            ? <Popup trigger={< Icon circular name = 'idea' color = 'red'
+                                                onClick = {
+                                                    this.recommendme
+                                                } />} content='recommendation' size='mini'/>
+                                            : ''}
 
             </Feed.Meta>
         );

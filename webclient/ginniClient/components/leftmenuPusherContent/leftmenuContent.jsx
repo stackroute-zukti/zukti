@@ -3,6 +3,7 @@ import DefaultPage from './defaultpageclient';
 import AssistanView from '../interaction/assistantChatContainer';
 import Notifications from '../notification/notifications';
 import BookmarkList from '../bookmarks/bookmarkList';
+import Books from '../book/readBook';
 import LogOut from '../logout/logout.jsx';
 export default class LeftMenuContent extends React.Component {
     constructor(props) {
@@ -47,6 +48,10 @@ export default class LeftMenuContent extends React.Component {
                 {
                     return <LogOut/>
                 }
+                case 'Book':
+                    {
+                        return <Books/>
+                    }
         }
     }
 }

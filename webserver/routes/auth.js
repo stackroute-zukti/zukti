@@ -3,6 +3,7 @@ const UnansweredQuery = require('../models/unansweredQuery');
 const nodemailer = require('nodemailer');
 const InsertQuestion = require('../insertQuestions');
 const multer = require('multer');
+const path=require('path');
 let name;
 let log4js = require('log4js');
 let logger = log4js.getLogger();
@@ -66,7 +67,7 @@ module.exports = function(app, passport) {
         }
       });
     });
-
+  
     app.get('/viewallonlineuser', function(req, res) {
             RegisteredUser.find(
               {'local.loggedinStatus': 'true', 'local.localType': 'Customer'},
@@ -521,6 +522,7 @@ module.exports = function(app, passport) {
     }), (req, res) => {
         res.json(req.user);
     });
+
     // the callback after google has authorized the user
     app.get('/auth/google/callback',
     passport.authenticate('google', {failureRedirect: '/#/'}), (req, res) => {
