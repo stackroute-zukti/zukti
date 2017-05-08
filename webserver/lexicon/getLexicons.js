@@ -61,9 +61,8 @@ for (let i = 0; i < answerTypes.length; i = i + 2) {
 module.exports = function() {
   /* query to get all concept words, types and intents */
   let query = `MATCH (m:intent)-[:same_as]->(n:intent) with collect(m.name) as intent,collect(n.name) as base
-  match (k:concept)-[:part_of|:subconcept_of|:actor_of|:same_as*]->(v:domain) with intent as intent,base as base,COLLECT(distinct k.name) as keyword,v.name as basekeyword
+  match (k:concept)-[:concept_of]->(v:domain) with intent as intent,base as base,COLLECT(distinct k.name) as keyword,v.name as basekeyword
    RETURN intent,base,keyword,basekeyword`;
-
  let session = getNeo4jDriver().session();
   session.run(query).then(function(result) {
       // Completed!

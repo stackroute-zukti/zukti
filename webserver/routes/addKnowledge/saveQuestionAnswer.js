@@ -12,8 +12,6 @@ module.exports = function(req, questionsAnswerSavedCallback) {
     let blogs = req.body.blogs;
     let texts = req.body.texts;
     let videos = req.body.videos;
-    let domain = req.body.dynDomain;
-    console.log('domain in "saveQuestionAnswer.jsx"',req.body.dynDomain);
     lexicon();
     let keywordLexicon = [];
     let intentLexicon = [];
@@ -44,21 +42,22 @@ module.exports = function(req, questionsAnswerSavedCallback) {
     blogs.forEach((item) => {
         let blog = item.trim();
         if (blog != '') {
-            blogsQuery = blogsQuery + `MERGE (q)-[:answer]-> (:blog {value:${JSON.stringify(blog)},likes:[],dislikes:[]}) `;
+            blogsQuery = blogsQuery + `MERGE (q)-[:answer_of]-> (:blog {value:${JSON.stringify(blog)},likes:[],dislikes:[]}) `;
         }
     });
     videos.forEach((item) => {
         let video = item.trim();
         if (video != '') {
-            videoQuery = videoQuery + `MERGE (q)-[:answer]-> (:video {value:${JSON.stringify(video)},likes:[],dislikes:[]}) `;
+            videoQuery = videoQuery + `MERGE (q)-[:answer_of]-> (:video {value:${JSON.stringify(video)},likes:[],dislikes:[]}) `;
         }
     });
     texts.forEach((item) => {
         let text = item.trim();
         if (text != '') {
-            textsQuery = textsQuery + `MERGE (q)-[:answer]-> (:text {value:${JSON.stringify(text)},likes:[],dislikes:[]}) `;
+            textsQuery = textsQuery + `MERGE (q)-[:answer_of]-> (:text {value:${JSON.stringify(text)},likes:[],dislikes:[]}) `;
         }
     });
+    let domain = 'design pattern';
     /* @yuvashree: added code to fetch the base intent to create a new question and answer */
         client.hmget('intents', intents[intents.length-1],function(err, reply) {
         mainIntent = reply;
@@ -71,10 +70,10 @@ module.exports = function(req, questionsAnswerSavedCallback) {
                           OPTIONAL MATCH (n)-[r:same_as]->(main)
                           WITH COLLECT(main) AS baseWords
                           UNWIND baseWords AS token
-                          MATCH p=(token)-[:part_of|:subconcept_of|:actor_of|:same_as*]->(:concept{name:'${domain}'})
+                          MATCH p=(token)-[:concept_of]->(:concept{name:'${domain}'})
                           WITH length(p) AS max,baseWords AS baseWords
                           UNWIND baseWords AS bw
-                          MATCH p=(token)-[:part_of|:subconcept_of|:actor_of|:same_as*]->(:concept{name:'${domain}'})
+                          MATCH p=(token)-[:concept_of]->(:concept{name:'${domain}'})
                           WHERE length(p) = max WITH COLLECT(bw) AS bws
                           UNWIND bws AS keywords
                           MERGE (q:question {value:${JSON.stringify(question)}})-[:${mainIntent}]->(keywords)
