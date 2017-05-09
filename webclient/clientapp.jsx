@@ -28,6 +28,8 @@ import AdminProfilePage from './ginniAdmin/components/admin/adminProfile';
 import Cookie from 'react-cookie';
 import MailNotSend from './applicationHome/mailnotsend.jsx';
 import PageNotFound from './pagenotfound.jsx';
+import './AssessmentStyle.css'
+import Dashboard from './ginniClient/components/dashboard/dashboard';
 injectTapEventPlugin();
 // route protection - if the token is empty then it should not move forward or backward into the application and it should not display any user information
 let requireAuth = function(nextState, replace) {
@@ -51,6 +53,7 @@ ReactDOM.render(
         <Route path="/clienthome" component={App}>
             <IndexRoute component={ClientHome} onEnter={requireAuth.bind(this)}/>
         </Route>
+        <Route path='/dash' component={Dashboard} onEnter={requireAuth.bind(this)}/>
         <Route path='/react' component={react} onEnter={requireAuth.bind(this)}/>
         <Route path='/design_pattern' component={designPattern} onEnter={requireAuth.bind(this)}/>
         <Route path='/newpassword' component={NewPassword}/>

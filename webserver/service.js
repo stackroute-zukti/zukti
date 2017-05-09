@@ -51,6 +51,8 @@ function setupZuktiRoutes(app) {
     app.use('/getknowledge', require('./routes/getKnowledge/getKnowledgeBase'));
     app.use('/retriveChat', require('./routes/retriveChats/chats'));
     app.use('/bookmarks', require('./routes/bookmarks/bookmarks'));
+    app.use('/assessment',require('./routes/assessment/assessmentroute'));
+    app.use('/dashboard',require('./routes/dashboard/dashboardroute'));
     /* @ramvignesh: route to set user's current domain */
     app.use('/user', require('./routes/user/user'));
     /* @sangeetha: requiring the recommendations route */

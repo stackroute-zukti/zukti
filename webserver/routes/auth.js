@@ -81,11 +81,13 @@ module.exports = function(app, passport) {
     /* LOCAL SIGNUP*/
     // local sign up route -  all the details entered by the user will be saved in database
     app.post('/signup', function(req, res) {
+      console.log("inside signup");
+      var rank=1;
         let newUser = new RegisteredUser();
         String.prototype.capitalizeFirstLetter = function() {
             return this.charAt(0).toUpperCase() + this.slice(1);
         };
-        rand = Math.floor((Math.random() * 100) + 54);
+          rand = Math.floor((Math.random() * 100) + 54);
         newUser.local.verificationID = RegisteredUser.generateHashVID(rand);
         newUser.local.name = req.body.firstName.toLowerCase().capitalizeFirstLetter() + ' '
         + req.body.lastName.toLowerCase().capitalizeFirstLetter();
@@ -98,14 +100,24 @@ module.exports = function(app, passport) {
         newUser.local.loggedinStatus = false;
         newUser.local.isEmailVerified = false;
         newUser.local.photos = 'defultImage.jpg';
-        res.cookie('profilepicture', newUser.local.photos);
-        newUser.save(function(err) {
-            if (err) {
-                res.send('Error in registration');
-            } else {
-                res.send('Successfully registered');
-            }
+        newUser.local.assessment.score=0;
+        newUser.local.assessment.totalQuestionsAttempted=0;
+        newUser.local.assessment.noOfFluke=0;
+        newUser.local.assessment.fluke=0;
+        RegisteredUser.count(function(err, c) {
+         console.log('Count is ' + c);
+         rank=c+rank;
+         console.log(rank);
+         newUser.local.assessment.rank=rank;
+         newUser.save(function(err) {
+             if (err) {
+                 res.send('Error in registration');
+             } else {
+                 res.send('Successfully registered');
+             }
+         });
         });
+        res.cookie('profilepicture', newUser.local.photos);
     });
     // adminsignup- all the details entered by admin in postman will be saved in database
     app.post('/adminsignup', function(req, res) {

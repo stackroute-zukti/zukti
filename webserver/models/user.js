@@ -1,4 +1,3 @@
-// load the things we need
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const CONFIG = require('../config/auth');
@@ -6,7 +5,7 @@ const bcrypt = require('bcrypt-nodejs');
 
 const userSchema = mongoose.Schema({
 
-    local: {
+   local: {
         token: String,
         firstname: String,
         lastname: String,
@@ -33,6 +32,13 @@ const userSchema = mongoose.Schema({
         abusecount: {
           type: Number,
           default: 0
+        },
+        assessment:{
+          score:Number,
+          totalQuestionsAttempted:Number,
+          noOfFluke:Number,
+          fluke:Number,
+          rank:Number
         }
     },
     facebook: {
@@ -42,7 +48,14 @@ const userSchema = mongoose.Schema({
         name: String,
         displayName: String,
         photos: String,
-        authType: String
+        authType: String,
+        assessment:{
+          score:Number,
+          totalQuestionsAttempted:Number,
+          noOfFluke:Number,
+          fluke:Number,
+          rank:Number
+        }
     },
     google: {
         id: String,
@@ -51,8 +64,16 @@ const userSchema = mongoose.Schema({
         name: String,
         displayName: String,
         photos: String,
-        authType: String
-    }
+        authType: String,
+        assessment:{
+          score:Number,
+          totalQuestionsAttempted:Number,
+          noOfFluke:Number,
+          fluke:Number,
+          rank:Number
+        }
+    },
+
 
 });
 // generating a hash

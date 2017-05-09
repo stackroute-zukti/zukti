@@ -30,8 +30,9 @@ export default class LeftMenu extends Component {
             photo: '',
             counter: 0,
             isTourActive: false,
-      			tourStep: 1
+                tourStep: 1
         };
+        this.onUserStats = this.onUserStats.bind(this);
         this.onSubmitEmail = this.onSubmitEmail.bind(this);
         this.onChangePassword = this.onChangePassword.bind(this);
         this.getNotificationCount = this.getNotificationCount.bind(this);
@@ -42,6 +43,7 @@ export default class LeftMenu extends Component {
     //  @Mayanka: call retriveChat to check history
     componentWillMount(){
       this.retriveChat();
+
     }
     //  @Mayanka: if chat history is empty start the user-tour
   setTourState() {
@@ -53,7 +55,12 @@ export default class LeftMenu extends Component {
         });
       }
     }
+    restart()
+    {
+      this.setState({activeItem: assessment, counter: this.state.counter});
+    }
     handleItemClick = ((e, {name}) => {
+      console.log('handleClickItem//e',e)
         if (this.state.activeItem === 'notifications') {
             let url = '/getbroadcastmessage/updateCount';
             this.state.counter = 0;
@@ -117,6 +124,11 @@ export default class LeftMenu extends Component {
             console.log(error);
         });
     }
+    //pops dashboard modal
+    onUserStats(){
+        hashHistory.push('/dash')
+    }
+    //pops edit profile modal
     onSubmitEmail() {
         hashHistory.push('/profile');
     }
@@ -140,7 +152,6 @@ export default class LeftMenu extends Component {
               }
           }).catch((err) => {
           });
-
           }
   render() {
     //  @Mayanka: style element for user-tour
@@ -216,7 +227,11 @@ export default class LeftMenu extends Component {
                         <Icon name='alarm' color='teal'/>
                         {LeftMenuPage.LeftMenu.Menu4}
                     </Menu.Item>
-
+                    <Menu.Item name='assessment' active={activeItem === 'assessment'}
+                      onClick={this.handleItemClick}>
+                        <Icon name='pencil square' color='teal'/>
+                        {LeftMenuPage.LeftMenu.Menu6}
+                    </Menu.Item>
                 </Sidebar>
                 <Sidebar.Pusher id="sidebarpusher">
                     <Segment id="segmentleftbar">
@@ -235,6 +250,9 @@ export default class LeftMenu extends Component {
                                 <Menu.Item position='right'>
                                     <Dropdown trigger={trigger} pointing='top right' icon={null}>
                                         <Dropdown.Menu >
+                                            <Dropdown.Item text='Dashboard' icon='building outline'
+                                              disabled={(!this.state.usertype)}
+                                              onClick={this.onUserStats}/>
                                             <Dropdown.Item text='Edit Profile' icon='user'
                                               disabled={(!this.state.usertype)}
                                               onClick={this.onSubmitEmail}/>
@@ -252,7 +270,7 @@ export default class LeftMenu extends Component {
                             </Menu>
                         </div>
                         <div id='leftmenucontentdiv'>
-              <LeftMenuContent sidebarItemSelected={activeItem} domain={this.props.params.domain}/>
+              <LeftMenuContent sidebarItemSelected={activeItem}  restart={this.restart.bind(this)} domain={this.props.params.domain}/>
                         </div>
                     </Segment>
                 </Sidebar.Pusher>
