@@ -3,8 +3,10 @@ const UnansweredQuery = require('../models/unansweredQuery');
 const nodemailer = require('nodemailer');
 const InsertQuestion = require('../insertQuestions');
 const multer = require('multer');
+const path=require('path');
 let name;
 let log4js = require('log4js');
+let getNeo4jDriver = require('../neo4j/connection');
 let logger = log4js.getLogger();
 module.exports = function(app, passport) {
     let rand, mailOptions, host, link;
@@ -81,45 +83,45 @@ module.exports = function(app, passport) {
     /* LOCAL SIGNUP*/
     // local sign up route -  all the details entered by the user will be saved in database
     app.post('/signup', function(req, res) {
-      console.log("inside signup");
-      var rank=1;
-        let newUser = new RegisteredUser();
-        String.prototype.capitalizeFirstLetter = function() {
-            return this.charAt(0).toUpperCase() + this.slice(1);
-        };
-          rand = Math.floor((Math.random() * 100) + 54);
-        newUser.local.verificationID = RegisteredUser.generateHashVID(rand);
-        newUser.local.name = req.body.firstName.toLowerCase().capitalizeFirstLetter() + ' '
-        + req.body.lastName.toLowerCase().capitalizeFirstLetter();
-        newUser.local.email = req.body.email;
-        newUser.local.password = RegisteredUser.generateHash(req.body.password);
-        newUser.local.firstname = req.body.firstName.toLowerCase().capitalizeFirstLetter();
-        newUser.local.lastname = req.body.lastName.toLowerCase().capitalizeFirstLetter();
-        newUser.local.localType = 'Customer';
-        newUser.local.authType = 'local';
-        newUser.local.loggedinStatus = false;
-        newUser.local.isEmailVerified = false;
-        newUser.local.photos = 'defultImage.jpg';
-        newUser.local.assessment.score=0;
-        newUser.local.assessment.totalQuestionsAttempted=0;
-        newUser.local.assessment.noOfFluke=0;
-        newUser.local.assessment.fluke=0;
-        RegisteredUser.count(function(err, c) {
-         console.log('Count is ' + c);
-         rank=c+rank;
-         console.log(rank);
-         newUser.local.assessment.rank=rank;
-         newUser.save(function(err) {
-             if (err) {
-                 res.send('Error in registration');
-             } else {
-                 res.send('Successfully registered');
-             }
-         });
-        });
-        res.cookie('profilepicture', newUser.local.photos);
-    });
-    // adminsignup- all the details entered by admin in postman will be saved in database
+        console.log("inside signup");
+        var rank=1;
+          let newUser = new RegisteredUser();
+          String.prototype.capitalizeFirstLetter = function() {
+              return this.charAt(0).toUpperCase() + this.slice(1);
+          };
+            rand = Math.floor((Math.random() * 100) + 54);
+          newUser.local.verificationID = RegisteredUser.generateHashVID(rand);
+          newUser.local.name = req.body.firstName.toLowerCase().capitalizeFirstLetter() + ' '
+          + req.body.lastName.toLowerCase().capitalizeFirstLetter();
+          newUser.local.email = req.body.email;
+          newUser.local.password = RegisteredUser.generateHash(req.body.password);
+          newUser.local.firstname = req.body.firstName.toLowerCase().capitalizeFirstLetter();
+          newUser.local.lastname = req.body.lastName.toLowerCase().capitalizeFirstLetter();
+          newUser.local.localType = 'Customer';
+          newUser.local.authType = 'local';
+          newUser.local.loggedinStatus = false;
+          newUser.local.isEmailVerified = false;
+          newUser.local.photos = 'defultImage.jpg';
+          newUser.local.assessment.score=0;
+          newUser.local.assessment.totalQuestionsAttempted=0;
+          newUser.local.assessment.noOfFluke=0;
+          newUser.local.assessment.fluke=0;
+          RegisteredUser.count(function(err, c) {
+           console.log('Count is ' + c);
+           rank=c+rank;
+           console.log(rank);
+           newUser.local.assessment.rank=rank;
+           newUser.save(function(err) {
+               if (err) {
+                   res.send('Error in registration');
+               } else {
+                   res.send('Successfully registered');
+               }
+           });
+          });
+          res.cookie('profilepicture', newUser.local.photos);
+      });
+          // adminsignup- all the details entered by admin in postman will be saved in database
     app.post('/adminsignup', function(req, res) {
         let newUser = new RegisteredUser();
         rand = Math.floor((Math.random() * 100) + 54);
@@ -237,7 +239,12 @@ module.exports = function(app, passport) {
                 if ((req.protocol + '://' + req.get('host')) === ('http://' + host)) {
                     logger.debug('Domain is matched. Information is from Authentic email');
                     if (profile[0].local.verificationID !== 0) {
-                        RegisteredUser.update({
+                      var query = 'merge (n:learner {emailid : "' + req.query.email + '"})';
+                          let session = getNeo4jDriver().session();
+                          session.run(query).then(function(result){
+                            console.log("email" + result)
+                          });
+                    RegisteredUser.update({
                             'local.email': req.query.email
                         }, {
                             $set: {
@@ -518,6 +525,11 @@ module.exports = function(app, passport) {
             }
         });
         res.redirect('/#/clienthome');
+        var query = 'merge (n:learner {emailid : "' + req.user.facebook.email + '"})';
+        let session = getNeo4jDriver().session();
+        session.run(query).then(function(result){
+          console.log("fbemail" + result)
+        });
     });
     // userprofile-in which all the user informations will be stored
     app.get('/userProfile', function(req, res) {
@@ -533,6 +545,7 @@ module.exports = function(app, passport) {
     }), (req, res) => {
         res.json(req.user);
     });
+
     // the callback after google has authorized the user
     app.get('/auth/google/callback',
     passport.authenticate('google', {failureRedirect: '/#/'}), (req, res) => {
@@ -556,6 +569,11 @@ module.exports = function(app, passport) {
             }
         });
         res.redirect('/#/clienthome');
+        var query = 'merge (n:learner {emailid : "' + req.user.google.email + '"})';
+        let session = getNeo4jDriver().session();
+        session.run(query).then(function(result){
+          console.log("gemail" + result)
+        });
     });
 
     let storage = multer.diskStorage({

@@ -7,6 +7,9 @@ let log4js = require('log4js');
 let logger = log4js.getLogger();
 module.exports = function(intents, keywords, email, types, answerFoundCallback, noAnswerFoundCallback, flag, correctedQuestion) {
     /* @yuvashree: find domain from db using email id */
+    logger.debug("from getQuestionResponse", intents)
+    logger.debug("from getQuestionResponse", JSON.stringify(keywords))
+
     User.findOne({
         $or: [
             {
@@ -51,72 +54,155 @@ module.exports = function(intents, keywords, email, types, answerFoundCallback, 
       }
         function intentCallBack(intent)
         {
+          let secounderyIntent;
+          let primaryIntent;
+         if (intent.includes("use")){
+           secounderyIntent="use";
+          ["when","why","how","where"].forEach(function(data){
+            if(intent.includes(data)){
+              primaryIntent=data;
+            }
+          })
+          if(primaryIntent){}
+          else {
+            primaryIntent="definition"
+          }
+           }
+          else if (intent.includes("compare")){
+                primaryIntent="compare"
+              }
+          else if (intent.includes("advantage")){
+            primaryIntent="advantages";
+          }
+          else if (intent.includes("disadvantage")){
+            primaryIntent="disadvantages";
+          }
+          else {
+            primaryIntent=intent[0];
+          }
           if (types.length === 0) {
+
           /* @yuvashree: modified query for multiple relationships and different domain for normal question */
-              query = `UNWIND ${JSON.stringify(keywords)} AS token
-              MATCH (n:concept)
-              WHERE n.name = token
-              OPTIONAL MATCH (n)-[r:same_as]->(main)
-              WITH COLLECT(main) AS baseWords
-              UNWIND baseWords AS token
-              MATCH p=(token)-[:part_of|:subconcept_of|:actor_of|:same_as*]->(:concept{name:'${domain}'})
-              WITH length(p) AS max,baseWords AS baseWords
-              with baseWords AS baseWords,max(max) as max
-              UNWIND baseWords AS bw
-              match p=(bw)-[:part_of|:subconcept_of|:actor_of|:same_as*]->(:concept{name:'${domain}'})
-              WHERE length(p) = max WITH COLLECT(bw) AS bws
-              UNWIND bws AS keywords
-              OPTIONAL MATCH (keywords)<-[r]-(q:question)-[rel:answer]->(a)
-              WHERE TYPE(r)='${intent[0]}'
-              WITH a as a, rel as rel,keywords as keywords
-              OPTIONAL MATCH  (keywords)<-[subconcept_of]-(c:concept)
-              WHERE TYPE(subconcept_of)='${intent[0]}'
-              WITH a as a, c as c
-              RETURN LABELS(a),COLLECT(distinct a.value),LABELS(c),COLLECT(distinct c.name),
-              COLLECT(ANY(user IN a.likes WHERE user='${email}')),
-              COLLECT(ANY(user IN a.dislikes WHERE user='${email}')),
-              CASE
-               WHEN SIZE(a.likes)=0 AND SIZE(a.dislikes)=0 THEN 0
-               WHEN SIZE(a.likes)=0 AND SIZE(a.dislikes)>0 THEN -SIZE(a.dislikes)
-               WHEN SIZE(a.likes)>0 AND SIZE(a.dislikes)>=0 THEN (SIZE(a.likes)*100)/(SIZE(a.likes)+SIZE(a.dislikes))
-              END
-              AS rating
-              ORDER BY rating DESC `;
+          if(secounderyIntent=="use"){
+            query = `UNWIND ${JSON.stringify(keywords)} AS token
+            match (n:concept) where n.name=token
+            OPTIONAL MATCH (n)-[r:same_as]-(main)
+            WITH COLLECT(main) AS baseWords
+            UNWIND baseWords AS token
+            MATCH p=(token)-[:concept_of*]-(:concept{name:"react"})
+            MATCH (n)-[:answer_of]-(q:question)-[:use]-(:use)-[:${primaryIntent}]-(token) where n:blog or n:video or n:text
+            RETURN LABELS(n) AS contentType, COLLECT(DISTINCT[n.value, ANY(user IN n.likes WHERE user='${email}'), ANY(user IN n.dislikes WHERE user='${email}')]),
+                CASE
+                    WHEN SIZE(n.likes)=0 AND SIZE(n.dislikes)=0 THEN 0
+                    WHEN SIZE(n.likes)=0 AND SIZE(n.dislikes)>0 THEN -SIZE(n.dislikes)
+                    WHEN SIZE(n.likes)>0 AND SIZE(n.dislikes)>=0 THEN (SIZE(n.likes)*100)/(SIZE(n.likes)+SIZE(n.dislikes))
+                END
+               AS rating
+               ORDER BY rating DESC`;
+          }
+          else if (primaryIntent=="compare") {
+            query = `UNWIND ["abs"] AS token
+            match (n:concept) where n.name='${keywords[1]}'
+            OPTIONAL MATCH (n)-[r:same_as]-(main)
+            WITH COLLECT(main) AS baseWords
+            UNWIND baseWords AS token
+            MATCH p=(token)-[:concept_of*]-(:concept{name:"react"})
+            MATCH (n)-[:answer_of]-(q:question)-[:compare]-(o:compare)-[:compare]-(token)  where n:blog or n:video or n:text
+            match (o)-[:compare]-(m) where m.name="${keywords[0]}"
+            RETURN LABELS(n) AS contentType, COLLECT(DISTINCT[n.value, ANY(user IN n.likes WHERE user='${email}'), ANY(user IN n.dislikes WHERE user='${email}')]),
+                CASE
+                    WHEN SIZE(n.likes)=0 AND SIZE(n.dislikes)=0 THEN 0
+                    WHEN SIZE(n.likes)=0 AND SIZE(n.dislikes)>0 THEN -SIZE(n.dislikes)
+                    WHEN SIZE(n.likes)>0 AND SIZE(n.dislikes)>=0 THEN (SIZE(n.likes)*100)/(SIZE(n.likes)+SIZE(n.dislikes))
+                END
+               AS rating
+               ORDER BY rating DESC`;
+          }
+          else{
+            query = `UNWIND ${JSON.stringify(keywords)} AS token
+            match (n:concept) where n.name=token
+            OPTIONAL MATCH (n)-[r:same_as]-(main)
+            WITH COLLECT(main) AS baseWords
+            UNWIND baseWords AS token
+            MATCH p=(token)-[:concept_of*]-(:concept{name:"react"})
+            MATCH (n)-[:answer_of]-(q:question)-[r]-(token) where type(r)="${primaryIntent}"
+            RETURN LABELS(n) AS contentType, COLLECT(DISTINCT[n.value, ANY(user IN n.likes WHERE user='${email}'), ANY(user IN n.dislikes WHERE user='${email}')]),
+                CASE
+                    WHEN SIZE(n.likes)=0 AND SIZE(n.dislikes)=0 THEN 0
+                    WHEN SIZE(n.likes)=0 AND SIZE(n.dislikes)>0 THEN -SIZE(n.dislikes)
+                    WHEN SIZE(n.likes)>0 AND SIZE(n.dislikes)>=0 THEN (SIZE(n.likes)*100)/(SIZE(n.likes)+SIZE(n.dislikes))
+                END
+               AS rating
+               ORDER BY rating DESC`;
+          }
+
           }
             /* @yuvashree: modified query for multiple relationships and different domain for type specific question */
             else {
               flagForType = true;
-              query = `UNWIND ${JSON.stringify(keywords)} AS token
-                MATCH (n:concept)
-                WHERE n.name = token
-                OPTIONAL MATCH (n)-[r:same_as]->(main)
-                WITH COLLECT(main) AS baseWords
-                UNWIND baseWords AS token
-                MATCH p=(token)-[:part_of|:subconcept_of|:actor_of|:same_as*]->(:concept{name:'${domain}'})
-                WITH length(p) AS max,baseWords AS baseWords
-                with baseWords AS baseWords,max(max) as max
-                UNWIND baseWords AS bw
-                match p=(bw)-[:part_of|:subconcept_of|:actor_of|:same_as*]->(:concept{name:'${domain}'})
-                WHERE length(p) = max WITH COLLECT(bw) AS bws
-                UNWIND bws AS keywords
-                MATCH (keywords)<-[r]-(q:question)-[rel:answer]->(a)
-                WHERE TYPE(r)='${intent[0]}' and labels(a)='${type[0]}'
-                WITH a as a, rel as rel
-                RETURN LABELS(a) AS contentType, COLLECT(DISTINCT[a.value, ANY(user IN a.likes WHERE user='${email}'),
-                ANY(user IN a.dislikes WHERE user='${email}')]),
-                CASE
-                 WHEN SIZE(a.likes)=0 AND SIZE(a.dislikes)=0 THEN 0
-                 WHEN SIZE(a.likes)=0 AND SIZE(a.dislikes)>0 THEN -SIZE(a.dislikes)
-                 WHEN SIZE(a.likes)>0 AND SIZE(a.dislikes)>=0 THEN (SIZE(a.likes)*100)/(SIZE(a.likes)+SIZE(a.dislikes))
-                END
-                AS rating
-                ORDER BY rating DESC `;
+
+                        /* @yuvashree: modified query for multiple relationships and different domain for normal question */
+                        if(secounderyIntent=="use"){
+                          query = `UNWIND ${JSON.stringify(keywords)} AS token
+                          match (n:concept) where n.name=token
+                          OPTIONAL MATCH (n)-[r:same_as]-(main)
+                          WITH COLLECT(main) AS baseWords
+                          UNWIND baseWords AS token
+                          MATCH p=(token)-[:concept_of*]-(:concept{name:"react"})
+                          MATCH (n)-[:answer_of]-(q:question)-[:use]-(:use)-[:${primaryIntent}]-(token) where  LABELS(n)='${type[0]}'
+                          RETURN LABELS(n) AS contentType, COLLECT(DISTINCT[n.value, ANY(user IN n.likes WHERE user='${email}'), ANY(user IN n.dislikes WHERE user='${email}')]),
+                              CASE
+                                  WHEN SIZE(n.likes)=0 AND SIZE(n.dislikes)=0 THEN 0
+                                  WHEN SIZE(n.likes)=0 AND SIZE(n.dislikes)>0 THEN -SIZE(n.dislikes)
+                                  WHEN SIZE(n.likes)>0 AND SIZE(n.dislikes)>=0 THEN (SIZE(n.likes)*100)/(SIZE(n.likes)+SIZE(n.dislikes))
+                              END
+                             AS rating
+                             ORDER BY rating DESC`;
+                        }
+                        else if (primaryIntent=="compare") {
+                          query = `UNWIND '["ads"]' AS token
+                          match (n:concept) where n.name='${keywords[1]}'
+                          OPTIONAL MATCH (n)-[r:same_as]-(main)
+                          WITH COLLECT(main) AS baseWords
+                          UNWIND baseWords AS token
+                          MATCH p=(token)-[:concept_of*]-(:concept{name:"react"})
+                          MATCH (n)-[:answer_of]-(q:question)-[:compare]-(o:compare)-[:compare]-(token)  where  LABELS(n)='${type[0]}'
+                          match (o)-[:compare]-(m) where m.name="${keyword[0]}"
+                          RETURN LABELS(n) AS contentType, COLLECT(DISTINCT[n.value, ANY(user IN n.likes WHERE user='${email}'), ANY(user IN n.dislikes WHERE user='${email}')]),
+                              CASE
+                                  WHEN SIZE(n.likes)=0 AND SIZE(n.dislikes)=0 THEN 0
+                                  WHEN SIZE(n.likes)=0 AND SIZE(n.dislikes)>0 THEN -SIZE(n.dislikes)
+                                  WHEN SIZE(n.likes)>0 AND SIZE(n.dislikes)>=0 THEN (SIZE(n.likes)*100)/(SIZE(n.likes)+SIZE(n.dislikes))
+                              END
+                             AS rating
+                             ORDER BY rating DESC`;
+                        }
+                        else{
+                          query = `UNWIND ${JSON.stringify(keywords)} AS token
+                          match (n:concept) where n.name=token
+                          OPTIONAL MATCH (n)-[r:same_as]-(main)
+                          WITH COLLECT(main) AS baseWords
+                          UNWIND baseWords AS token
+                          MATCH p=(token)-[:concept_of*]-(:concept{name:"react"})
+                          MATCH (n)-[:answer_of]-(q:question)-[r]-(token) where type(r)="${primaryIntent}", LABELS(n)='${type[0]}'
+                          RETURN LABELS(n) AS contentType, COLLECT(DISTINCT[n.value, ANY(user IN n.likes WHERE user='${email}'), ANY(user IN n.dislikes WHERE user='${email}')]),
+                              CASE
+                                  WHEN SIZE(n.likes)=0 AND SIZE(n.dislikes)=0 THEN 0
+                                  WHEN SIZE(n.likes)=0 AND SIZE(n.dislikes)>0 THEN -SIZE(n.dislikes)
+                                  WHEN SIZE(n.likes)>0 AND SIZE(n.dislikes)>=0 THEN (SIZE(n.likes)*100)/(SIZE(n.likes)+SIZE(n.dislikes))
+                              END
+                             AS rating
+                             ORDER BY rating DESC`;
+                        }
           }
         let session = getNeo4jDriver().session();
         session.run(query).then(function(resultObj) {
             // Completed!
             session.close();
             //  @Mayanka: No records found
+            logger.debug("resultObj.records")
+
+            logger.debug(resultObj.records)
             if (resultObj.records.length === 0) {
               /* @Sindhujaadevi: To find if the question is from different domain or not */
             client.hmget('keywords', keywords[keywords.length-1],function(err, reply) {
@@ -192,7 +278,7 @@ module.exports = function(intents, keywords, email, types, answerFoundCallback, 
                     let contentType = field[0][0];
 
                      field[1].map((value, index) => {
-                      let content = {value: value, likes: field[4][index], dislikes: field[5][index]};
+                      let content = {value: value};
                       if(contentType === 'blog') {
                         blogArray.push(content);
                       } else if(contentType === 'video') {

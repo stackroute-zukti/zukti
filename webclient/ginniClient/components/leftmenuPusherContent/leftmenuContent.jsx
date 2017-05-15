@@ -5,6 +5,7 @@ import Notifications from '../notification/notifications';
 import BookmarkList from '../bookmarks/bookmarkList';
 import LogOut from '../logout/logout.jsx';
 import Assessment from '../assessment/assessment';
+import DecideDimmer from '../assessment/decider'
 export default class LeftMenuContent extends React.Component {
     constructor(props) {
         super(props);
@@ -48,11 +49,17 @@ export default class LeftMenuContent extends React.Component {
                 {
                     return <LogOut/>
                 }
-            case 'assessment':
-                {
-                    console.log('++++++++++');
-                    return <Assessment restart={this.props.restart}/>
-                }
+            // case 'assessment':
+            //     {
+            //         console.log('++++++++++');
+            //         return <Assessment restart={this.props.restart}/>
+            //     }
+                case 'assessment':
+                    {
+
+                        console.log('++++++++++');
+                        return <DecideDimmer />
+                    }
         }
     }
 }

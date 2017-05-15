@@ -9,18 +9,20 @@ import Cookie from 'react-cookie';
 var questions = require('../../../../QuizData/quiz-data');
 var totalFluke = 0;
 var totalScore = 0;
+import {hashHistory} from 'react-router';
+
 //const QUESTIONS = questions.slice(0,10);
 const QUESTIONS=shuffleQuestions(questions)
-console.log(QUESTIONS);
 
 export default class Assessment extends Component {
 	  constructor(props) {
     super(props);
-		console.log('print',QUESTIONS)
-          console.log('The questions to be answered',QUESTIONS);
-					console.log(QUESTIONS.length);
+		// console.log('print',QUESTIONS)
+    //       console.log('The questions to be answered',QUESTIONS);
+		// 			console.log(QUESTIONS.length);
     this.state = {
         questions: QUESTIONS,
+				totallengthques:QUESTIONS.length,
       userAnswers: QUESTIONS.map(question => {
         return {
           tries: 0
@@ -31,6 +33,7 @@ export default class Assessment extends Component {
     };
     this.handleAnswerClick = this.handleAnswerClick.bind(this);
     this.nextStep = this.nextStep.bind(this);
+
   }
 
   handleAnswerClick(e) {
@@ -53,6 +56,8 @@ export default class Assessment extends Component {
       this.setState({
         userAnswers: answersFromUser
       });
+
+
 
       setTimeout(() => {
         const praise = document.querySelector('.praise');
@@ -107,7 +112,7 @@ export default class Assessment extends Component {
       tries4=0;
     }
     totalFluke=tries3+tries4;
-    console.log(totalFluke);
+    // console.log(totalFluke);
     this.storeData(totalScore);
   }
 
@@ -129,7 +134,7 @@ export default class Assessment extends Component {
                noOfFluke:totalFluke
                           },
                           success: function(response) {
-                              console.log(response);
+                            //   console.log(response);
 
                           },
                           error: function(err) {
@@ -144,7 +149,7 @@ export default class Assessment extends Component {
     }
 
   nextStep() {
-		console.log("inside nextstep");
+		// console.log("inside nextstep");
     document.querySelector('.correct-modal').classList.remove('modal-enter');
     document.querySelector('.bonus').classList.remove('show');
     const { questions, userAnswers, step, score } = this.state;
@@ -191,6 +196,8 @@ export default class Assessment extends Component {
             return (
               <Results
                 score={score}
+								totalQuestions={totalQuestions*10}
+
                 restartQuiz={this.restartQuiz.bind(this)}
                 userAnswers={userAnswers}
                 flukeCount={this.flukeCount.bind(this)}

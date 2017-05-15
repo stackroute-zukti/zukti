@@ -11,7 +11,6 @@
 Object.defineProperty(exports,"__esModule",{value:true});
 var shuffleQuestions=function shuffleQuestions(array){
   var ques=array.default
-  console.log(array.default);
   return ques.map(function(item,index,array){
     return array[Math.floor(Math.random() * ques.length)]
   }).filter(function(item,index,array){

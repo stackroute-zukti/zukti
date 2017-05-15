@@ -28,8 +28,14 @@ import AdminProfilePage from './ginniAdmin/components/admin/adminProfile';
 import Cookie from 'react-cookie';
 import MailNotSend from './applicationHome/mailnotsend.jsx';
 import PageNotFound from './pagenotfound.jsx';
+import 'react-datepicker/dist/react-datepicker.css';
 import './AssessmentStyle.css'
+import Decider from './ginniClient/components/assessment/seconddecider.jsx'
+import Assessment from './ginniClient/components/assessment/assessment.jsx'
 import Dashboard from './ginniClient/components/dashboard/dashboard';
+import TestInstruction from './ginniClient/components/assessment/testtimerinstruction.jsx'
+import Timer from './ginniClient/components/assessment/assessmenttimer.jsx'
+import Timeless from '././ginniClient/components/assessment/assessmenttimeless.jsx'
 injectTapEventPlugin();
 // route protection - if the token is empty then it should not move forward or backward into the application and it should not display any user information
 let requireAuth = function(nextState, replace) {
@@ -46,34 +52,45 @@ let requireAuth = function(nextState, replace) {
 ReactDOM.render(
     <MuiThemeProvider>
     <Router history={hashHistory}>
-        <Route path='/' component={ApplicationHome}/>
-        <Route path='/adminHome' component={App1}>
-            <IndexRoute component={AdminHome} onEnter={requireAuth.bind(this)}/>
-        </Route>
-        <Route path="/clienthome" component={App}>
-            <IndexRoute component={ClientHome} onEnter={requireAuth.bind(this)}/>
-        </Route>
-        <Route path='/dash' component={Dashboard} onEnter={requireAuth.bind(this)}/>
-        <Route path='/react' component={react} onEnter={requireAuth.bind(this)}/>
-        <Route path='/design_pattern' component={designPattern} onEnter={requireAuth.bind(this)}/>
-        <Route path='/newpassword' component={NewPassword}/>
-        <Route path='/login' component={LoginPage} />
-        <Route path='/forgotpassword' component={ForgotPassword} />
-        <Route path='/forgetmail' component={ForgetpasswordEmail} />
-        <Route path='/signup' component={Signup}/>
-        <Route path='/mail' component={SentMailPage} />
-        <Route path='/chat/:domain' component={LeftMenu} onEnter={requireAuth.bind(this)}/>
-        <Route path='/change' component={ChangePassword} onEnter={requireAuth.bind(this)}/>
-        <Route path='/profile' component={ClientProfile} onEnter={requireAuth.bind(this)}/>
-        <Route path='/adminprofile' component={AdminProfilePage} onEnter={requireAuth.bind(this)}/>
-        <Route path='/logout' component={Logout} onEnter={requireAuth.bind(this)}/>
-        <Route path='/log' component={LogoutAdmin} onEnter={requireAuth.bind(this)}/>
-        <Route path='/expiryLink' component={ExpiryLink}/>
-        <Route path='/successfullyregistered' component={SuccessfullyRegistered}/>
-        <Route path='/mailnotsend' component={MailNotSend}/>
-        <Route path='/logoutfile' component={LogoutFile}/>
+    <Route path='/' component={ApplicationHome}/>
+    <Route path='/adminHome' component={App1}>
+    <IndexRoute component={AdminHome} onEnter={requireAuth.bind(this)}/>
+    </Route>
+    <Route path="/clienthome" component={App}>
+    <IndexRoute component={ClientHome} onEnter={requireAuth.bind(this)}/>
+    </Route>
+    <Route path='/dash' component={Dashboard} onEnter={requireAuth.bind(this)}/>
+    <Route path='/decider' component={Decider} onEnter={requireAuth.bind(this)}/>
+    <Route path='/assess' component={Assessment} onEnter={requireAuth.bind(this)}/>
+    <Route path='/timer' component={Timer} onEnter={requireAuth.bind(this)}/>
+    <Route path='/timer1' component={Timeless} onEnter={requireAuth.bind(this)}/>
+    <Route path='/testinstruction' component={TestInstruction} onEnter={requireAuth.bind(this)}/>
 
-        <Route path='/404' component={PageNotFound} />
-        <Redirect from='*' to='/404' />
+
+
+
+
+
+    <Route path='/react' component={react} onEnter={requireAuth.bind(this)}/>
+    <Route path='/design_pattern' component={designPattern} onEnter={requireAuth.bind(this)}/>
+    <Route path='/newpassword' component={NewPassword}/>
+    <Route path='/login' component={LoginPage} />
+    <Route path='/forgotpassword' component={ForgotPassword} />
+    <Route path='/forgetmail' component={ForgetpasswordEmail} />
+    <Route path='/signup' component={Signup}/>
+    <Route path='/mail' component={SentMailPage} />
+    <Route path='/chat/:domain' component={LeftMenu} onEnter={requireAuth.bind(this)}/>
+    <Route path='/change' component={ChangePassword} onEnter={requireAuth.bind(this)}/>
+    <Route path='/profile' component={ClientProfile} onEnter={requireAuth.bind(this)}/>
+    <Route path='/adminprofile' component={AdminProfilePage} onEnter={requireAuth.bind(this)}/>
+    <Route path='/logout' component={Logout} onEnter={requireAuth.bind(this)}/>
+    <Route path='/log' component={LogoutAdmin} onEnter={requireAuth.bind(this)}/>
+    <Route path='/expiryLink' component={ExpiryLink}/>
+    <Route path='/successfullyregistered' component={SuccessfullyRegistered}/>
+    <Route path='/mailnotsend' component={MailNotSend}/>
+    <Route path='/logoutfile' component={LogoutFile}/>
+
+    <Route path='/404' component={PageNotFound} />
+    <Redirect from='*' to='/404' />
     </Router>
-</MuiThemeProvider>, document.getElementById('mountapp'));
+    </MuiThemeProvider>, document.getElementById('mountapp'));

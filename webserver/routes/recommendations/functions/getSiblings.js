@@ -5,9 +5,10 @@ let logger = log4js.getLogger();
 module.exports = function(keywords, callBack) {
   // logger.debug(keywords+".....1st line");
     let query = `UNWIND ${JSON.stringify(keywords)} AS token
-               MATCH(n:concept)-[:part_of|subconcept_of|actor_of]->(parent:concept)
+               MATCH(n:concept)-[:concept_of]->(parent:concept)
                WHERE n.name= token
-               MATCH (parent)<-[:part_of|subconcept_of|actor_of]-(child:concept)
+               MATCH (parent)<-[:concept_of]-(child:concept)
+               MATCH (child)-[:same_as]-(child)
                RETURN COLLECT(child.name)`;
 
     let session = getNeo4jDriver().session();

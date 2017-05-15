@@ -50,20 +50,13 @@ module.exports = function(keywords, email, types, sendResponse, otherDomainRespo
         /* @yuvashree: modified query for multiple relationships and different domain for normal question */
         if (types.length === 0) {
           query = `UNWIND ${JSON.stringify(keywords)} AS token
-              MATCH (n:concept)
-              WHERE n.name = token
-              OPTIONAL MATCH (n)-[r:same_as]->(main)
-              WITH COLLECT(main) AS baseWords
-              UNWIND baseWords AS token
-              MATCH p=(token)-[:part_of|:subconcept_of|:actor_of|:same_as*]->(:concept{name:'${domain}'})
-              WITH length(p) AS max,baseWords AS baseWords
-              with baseWords AS baseWords,max(max) as max
-              UNWIND baseWords AS bw
-              match p=(bw)-[:part_of|:subconcept_of|:actor_of|:same_as*]->(:concept{name:'${domain}'})
-              WHERE length(p) = max
-              WITH bw as bw
-              MATCH (n)<-[:answer]-(q:question)-->(bw) where n:blog or n:video or n:image or n:code
-              RETURN LABELS(n) AS contentType, COLLECT(DISTINCT[n.value, ANY(user IN n.likes WHERE user='${email}'), ANY(user IN n.dislikes WHERE user='${email}')]),
+          match (n:concept) where n.name=token
+OPTIONAL MATCH (n)-[r:same_as]-(main)
+          WITH COLLECT(main) AS baseWords
+          UNWIND baseWords AS token
+          MATCH p=(token)-[:concept_of*]-(:concept{name:"react"})
+          MATCH (n)-[:answer_of]-(q:question)-[:definition]-(token) where n:blog or n:video or n:text
+          RETURN LABELS(n) AS contentType, COLLECT(DISTINCT[n.value, ANY(user IN n.likes WHERE user='${email}'), ANY(user IN n.dislikes WHERE user='${email}')]),
               CASE
                   WHEN SIZE(n.likes)=0 AND SIZE(n.dislikes)=0 THEN 0
                   WHEN SIZE(n.likes)=0 AND SIZE(n.dislikes)>0 THEN -SIZE(n.dislikes)
@@ -75,19 +68,12 @@ module.exports = function(keywords, email, types, sendResponse, otherDomainRespo
         /* @yuvashree: modified query for multiple relationships and different domain for type specific question */
         else {
           query = `UNWIND ${JSON.stringify(keywords)} AS token
-            MATCH (n:concept)
-            WHERE n.name = token
-            OPTIONAL MATCH (n)-[r:same_as]->(main)
-            WITH COLLECT(main) AS baseWords
-            UNWIND baseWords AS token
-            MATCH p=(token)-[:part_of|:subconcept_of|:actor_of|:same_as*]->(:concept{name:'${domain}'})
-            WITH length(p) AS max,baseWords AS baseWords
-            with baseWords AS baseWords,max(max) as max
-            UNWIND baseWords AS bw
-            match p=(bw)-[:part_of|:subconcept_of|:actor_of|:same_as*]->(:concept{name:'${domain}'})
-            WHERE length(p) = max
-            WITH bw as bw
-            MATCH (n)<-[:answer]-(q:question)-->(bw) WHERE LABELS(n)='${type[0]}'
+          match (n:concept) where n.name=token
+OPTIONAL MATCH (n)-[r:same_as]-(main)
+          WITH COLLECT(main) AS baseWords
+          UNWIND baseWords AS token
+          MATCH p=(token)-[:concept_of*]-(:concept{name:"react"})
+          MATCH (n)-[:answer_of]-(q:question)-[:definition]-(token) WHERE LABELS(n)='${type[0]}'
             RETURN LABELS(n) AS contentType, COLLECT(DISTINCT[n.value, ANY(user IN n.likes WHERE user='${email}'), ANY(user IN n.dislikes WHERE user='${email}')]),
             CASE
              WHEN SIZE(n.likes)=0 AND SIZE(n.dislikes)=0 THEN 0

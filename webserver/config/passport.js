@@ -134,18 +134,29 @@ module.exports = function(passport) {
                     } else {
                         // if there is no user, create them
                         let newUser = new User();
+                        var rank=1;
                         newUser.facebook.id = profile.id;
                         newUser.facebook.token = token;
                         newUser.facebook.email = (profile.emails[0].value || '').toLowerCase();
                         newUser.facebook.displayName = profile.displayName.toLowerCase().capitalize();
                           newUser.facebook.photos = profile.photos[0].value;
                           newUser.facebook.authType = 'facebook';
-                        newUser.save(function(error) {
-                            if (error) {
-                                return done(error);
-                              }
-                            return done(null, newUser);
-                        });
+                          newUser.facebook.assessment.score=0;
+                          newUser.facebook.assessment.totalQuestionsAttempted=0;
+                          newUser.facebook.assessment.noOfFluke=0;
+                          newUser.facebook.assessment.fluke=0;
+                          User.count(function(err, c) {
+                           console.log('Count is ' + c);
+                           rank=c+rank;
+                           console.log(rank);
+                           newUser.facebook.assessment.rank=rank;
+                           newUser.save(function(err) {
+                               if (err) {
+                                   return done(error);
+                               }
+                                   return done(null,newUser);
+                           });
+                          });
                     }
                     return done(null, user);
                 });
@@ -195,6 +206,7 @@ module.exports = function(passport) {
                     /* if there is a user id already but no token
                     (user was linked at one point and then removed) */
                     if (!user.google.token) {
+                      logger.debug("DEWED");
                         user.google.token = token;
                         user.google.name = profile.displayName.toLowerCase().capitalize();
                         user.google.photos = profile.photos[0].value;
@@ -210,7 +222,9 @@ module.exports = function(passport) {
                     }
                     return done(null, user);
                 } else {
+                  logger.debug("token");
                     let newUser = new User();
+                    var rank=1;
                     newUser.google.id = profile.id;
                     newUser.google.token = token;
                     newUser.google.name = profile.displayName.toLowerCase().capitalize();
@@ -218,11 +232,21 @@ module.exports = function(passport) {
                     newUser.google.email = (profile.emails[0].value || '').toLowerCase();
                     // pull the first email
                     newUser.google.authType = 'google';
-                    newUser.save(function(error) {
-                        if (error) {
-                            return done(error);
-                          }
-                        return done(null, newUser);
+                    newUser.google.assessment.score=0;
+                    newUser.google.assessment.totalQuestionsAttempted=0;
+                    newUser.google.assessment.noOfFluke=0;
+                    newUser.google.assessment.fluke=0;
+                    User.count(function(err, c) {
+                     console.log('Count is ' + c);
+                     rank=c+rank;
+                     console.log(rank);
+                     newUser.google.assessment.rank=rank;
+                     newUser.save(function(err) {
+                         if (err) {
+                             return done(error);
+                         }
+                             return done(null,newUser);
+                     });
                     });
                 }
             });

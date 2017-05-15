@@ -3,7 +3,7 @@ let log4js = require('log4js');
 let logger = log4js.getLogger();
 module.exports = function(resultCallback) {
     // get all intent which have same_as to themselves these are our baseIntents
-    let query = `MATCH (n:concept) WHERE (n)-[:same_as|:part_of|:actor_of|:sub_concept]->(n)
+    let query = `MATCH (n:concept) WHERE (n)-[:concept_of]->(n)
                   RETURN COLLECT(n.name)`;
     let session = getNeo4jDriver().session();
 

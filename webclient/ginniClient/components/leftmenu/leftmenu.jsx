@@ -60,7 +60,7 @@ export default class LeftMenu extends Component {
       this.setState({activeItem: assessment, counter: this.state.counter});
     }
     handleItemClick = ((e, {name}) => {
-      console.log('handleClickItem//e',e)
+      // console.log('handleClickItem//e',e)
         if (this.state.activeItem === 'notifications') {
             let url = '/getbroadcastmessage/updateCount';
             this.state.counter = 0;
