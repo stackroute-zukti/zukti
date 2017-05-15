@@ -31,7 +31,7 @@ export default class Assessment extends Component {
     time: 0,
     play: false,
     timeType: 0,
-    title: ''
+    title: '',
   };
   this.state = {
     questions: QUESTIONS,
