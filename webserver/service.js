@@ -53,6 +53,7 @@ function setupZuktiRoutes(app) {
     app.use('/bookmarks', require('./routes/bookmarks/bookmarks'));
     app.use('/assessment',require('./routes/assessment/assessmentroute'));
     app.use('/dashboard',require('./routes/dashboard/dashboardroute'));
+    app.use('/book',require('./routes/book/book'));
     /* @ramvignesh: route to set user's current domain */
     app.use('/user', require('./routes/user/user'));
     /* @sangeetha: requiring the recommendations route */

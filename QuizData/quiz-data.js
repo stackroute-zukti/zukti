@@ -8,6 +8,7 @@ const questions = [
       "The previous two answers are correct."
     ],
     "correct": 3
+
   },
   {
     "question": "What are the three types of JavaScript errors?",

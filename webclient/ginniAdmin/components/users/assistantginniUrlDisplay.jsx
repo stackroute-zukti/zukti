@@ -51,7 +51,7 @@ export default class AssistantGinniMixedReply extends React.Component {
                             {this.props.message}
                         </Feed.Extra>
                         <Feed.Extra images>
-                      <Embedly url={this.props.url} apiKey="73f538bb83f94560a044bc6f0f33c5f6"/>
+                      <Embedly url={this.props.url} apiKey="ff6dc30026d7471787fd22c4bc23eef6"/>
                         </Feed.Extra>
                         <Feed.Meta>
                         <Popup trigger={< Icon circular name = 'flag' color = 'green' />}

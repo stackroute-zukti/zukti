@@ -60,7 +60,7 @@ export default class LeftMenu extends Component {
       this.setState({activeItem: assessment, counter: this.state.counter});
     }
     handleItemClick = ((e, {name}) => {
-      // console.log('handleClickItem//e',e)
+
         if (this.state.activeItem === 'notifications') {
             let url = '/getbroadcastmessage/updateCount';
             this.state.counter = 0;
@@ -227,10 +227,18 @@ export default class LeftMenu extends Component {
                         <Icon name='alarm' color='teal'/>
                         {LeftMenuPage.LeftMenu.Menu4}
                     </Menu.Item>
+
+
+                    <Menu.Item name='Book' active={activeItem === 'Book'}
+                      onClick={this.handleItemClick}>
+                        <Icon name='leanpub' color='teal'/>
+                        {LeftMenuPage.LeftMenu.Menu6}
+                    </Menu.Item>
+
                     <Menu.Item name='assessment' active={activeItem === 'assessment'}
                       onClick={this.handleItemClick}>
                         <Icon name='pencil square' color='teal'/>
-                        {LeftMenuPage.LeftMenu.Menu6}
+                        {LeftMenuPage.LeftMenu.Menu7}
                     </Menu.Item>
                 </Sidebar>
                 <Sidebar.Pusher id="sidebarpusher">

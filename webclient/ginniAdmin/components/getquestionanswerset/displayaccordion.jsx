@@ -20,11 +20,11 @@ export default class Display extends React.Component {
         });
         this.setState({texts: this.state.texts});
         let videos = this.props.answers.videos.map((data, index) => {
-            this.state.videos.push(<Embedly key = {index} url={data} apiKey="73f538bb83f94560a044bc6f0f33c5f6"/>)
+            this.state.videos.push(<Embedly key = {index} url={data} apiKey="ff6dc30026d7471787fd22c4bc23eef6"/>)
         });
         this.setState({videos: this.state.videos});
         let blogs = this.props.answers.blogs.map((data, index) => {
-            this.state.blogs.push(<Embedly key = {index} url={data} apiKey="73f538bb83f94560a044bc6f0f33c5f6"/>)
+            this.state.blogs.push(<Embedly key = {index} url={data} apiKey="ff6dc30026d7471787fd22c4bc23eef6"/>)
         });
         this.setState({blogs: this.state.blogs});
     }
@@ -40,13 +40,13 @@ export default class Display extends React.Component {
 
 
         let videos = nextProps.answers.videos.map((data, index) => {
-            this.state.videos.push(<Embedly key = {index} url={data} apiKey="73f538bb83f94560a044bc6f0f33c5f6"/>)
+            this.state.videos.push(<Embedly key = {index} url={data} apiKey="ff6dc30026d7471787fd22c4bc23eef6"/>)
         });
         this.setState({videos: this.state.videos});
 
 
         let blogs = nextProps.answers.blogs.map((data, index) => {
-            this.state.blogs.push(<Embedly key = {index} url={data} apiKey="73f538bb83f94560a044bc6f0f33c5f6"/>)
+            this.state.blogs.push(<Embedly key = {index} url={data} apiKey="ff6dc30026d7471787fd22c4bc23eef6"/>)
         });
         this.setState({blogs: this.state.blogs});
     }

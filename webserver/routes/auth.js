@@ -68,7 +68,7 @@ module.exports = function(app, passport) {
         }
       });
     });
-
+  
     app.get('/viewallonlineuser', function(req, res) {
             RegisteredUser.find(
               {'local.loggedinStatus': 'true', 'local.localType': 'Customer'},

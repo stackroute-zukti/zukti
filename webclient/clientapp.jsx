@@ -36,6 +36,8 @@ import Dashboard from './ginniClient/components/dashboard/dashboard';
 import TestInstruction from './ginniClient/components/assessment/testtimerinstruction.jsx'
 import Timer from './ginniClient/components/assessment/assessmenttimer.jsx'
 import Timeless from '././ginniClient/components/assessment/assessmenttimeless.jsx'
+import './AssessmentStyle.css';
+
 injectTapEventPlugin();
 // route protection - if the token is empty then it should not move forward or backward into the application and it should not display any user information
 let requireAuth = function(nextState, replace) {

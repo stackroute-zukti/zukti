@@ -8,35 +8,37 @@ const Quiz = ({ step, questions, totalQuestions, score, handleAnswerClick,format
   <Card.Content>
   <Card.Header>
   <span className="time">{format}</span>
-  {/* <Button onClick={settimer}>Start test</Button> */}
+{/* <Button onClick={settimer}>Start test</Button> */}
 
 
-  React
-  <div className='sider'>
-  </div>
+React
+<div className='sider'>
+</div>
 
-  </Card.Header>
-  <Card.Description>
-  <QuestionList
-  questions={questions}
-  handleAnswerClick={handleAnswerClick}
-  />
-  </Card.Description>
-  </Card.Content>
-  <Card.Content extra>
-  <div className='ui two buttons'>
-  <Label color='blue'>Question {step} of {totalQuestions}</Label>
-  <Label color='teal'>Current Score = {score}</Label>
-  </div>
-  <div className="correct-modal">
-  <div className="praise">Correct!</div>
-  <div className="bonus"></div>
-  </div>
-  </Card.Content>
+</Card.Header>
+<Card.Description>
+<QuestionList
+questions={questions}
+handleAnswerClick={handleAnswerClick}
+/>
+</Card.Description>
+</Card.Content>
+<Card.Content extra>
+<div className='ui two buttons'>
 
-  </Card>
-  </div>
-  );
+<Label color='blue'>Question {step} of {totalQuestions}</Label>
+<Label color='teal'>Current Score = {score}</Label>
+
+</div>
+<div className="correct-modal">
+<div className="praise">Correct!</div>
+<div className="bonus"></div>
+</div>
+</Card.Content>
+
+</Card>
+</div>
+);
 }
 
 Quiz.propTypes = {

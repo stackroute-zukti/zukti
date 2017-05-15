@@ -20,6 +20,9 @@ export default class AssistantGinniOptions extends React.Component {
         this.getSiblings = this.getSiblings.bind(this);
         this.recommend = this.recommend.bind(this);
         this.revertFunction = this.revertFunction.bind(this);
+
+
+
         this.recommendateme=this.recommendateme.bind(this);
 
     }
@@ -66,7 +69,9 @@ export default class AssistantGinniOptions extends React.Component {
             console.log(error);
         });
 
+
        this.setState({likeEnabled: true, dislikeEnabled: false});
+
 
  }
     downVoteAnswer(type, value) {
@@ -95,9 +100,19 @@ export default class AssistantGinniOptions extends React.Component {
 
      this.setState({dislikeEnabled: true, likeEnabled: false});
 
-   }
+
+    }
+recommendme()
+{
+  let recm = Cookie.load('recommendations');
+  if(recm === 'true'){
+    this.getSiblings(this.props.keywords);
+  }
+}
+
 
    savedQuery(message)
+
     {
       let question = this.props.question;
       let savedResponse = this.props.value;
@@ -234,6 +249,10 @@ export default class AssistantGinniOptions extends React.Component {
                                     this.revertFunction
                                 } />} content='already disliked' size='mini'/>
                             : ''}
+
+
+
+
                             {/*#Pradeep_Kumar 20-04-2017 (Added Recommendation button to enable the recommendateme function)*/}
                              {this.state.likeEnabled
                                        ? <Popup trigger={< Icon circular name = 'crosshairs' color = 'green'
@@ -243,6 +262,7 @@ export default class AssistantGinniOptions extends React.Component {
                                        : ''}
 
            </Feed.Meta>
+
         );
     }
 }

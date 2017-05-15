@@ -3,6 +3,7 @@ import DefaultPage from './defaultpageclient';
 import AssistanView from '../interaction/assistantChatContainer';
 import Notifications from '../notification/notifications';
 import BookmarkList from '../bookmarks/bookmarkList';
+import Books from '../book/readBook';
 import LogOut from '../logout/logout.jsx';
 import Assessment from '../assessment/assessment';
 import DecideDimmer from '../assessment/decider'
@@ -49,17 +50,16 @@ export default class LeftMenuContent extends React.Component {
                 {
                     return <LogOut/>
                 }
-            // case 'assessment':
-            //     {
-            //         console.log('++++++++++');
-            //         return <Assessment restart={this.props.restart}/>
-            //     }
-                case 'assessment':
+                case 'Book':
                     {
-
-                        console.log('++++++++++');
-                        return <DecideDimmer />
+                        return <Books/>
                     }
+                    case 'assessment':
+                        {
+
+                            return <DecideDimmer />
+                        }
+
         }
     }
 }

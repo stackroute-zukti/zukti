@@ -11,7 +11,7 @@ const Results = ({ userAnswers, score, restartQuiz, flukeCount,fullscoreresult,t
   const threeTries = triesTotal[3] && <div><strong>{triesTotal[3]}</strong> on the third try.</div>;
   const fourTries = triesTotal[4] && <div><strong>{triesTotal[4]}</strong> on the fourth try.</div>;
 
- {
+{
    flukeCount(triesTotal[3],triesTotal[4])};
   return (
    <div className="results-container">
@@ -20,37 +20,37 @@ const Results = ({ userAnswers, score, restartQuiz, flukeCount,fullscoreresult,t
      <Card.Content>
      <Card.Header>
 
- <strong>
+<strong>
    Quiz Results
    </strong><br/>
  </Card.Header>
 
- </Card.Content>
+</Card.Content>
 
- <Card.Content extra>
+<Card.Content extra>
 
- <strong>You answered...</strong><br/>
+<strong>You answered...</strong><br/>
    <strong> {oneTries} </strong>
    <strong>{twoTries} </strong>
    <strong> {threeTries}  </strong>
    <strong> {fourTries}</strong>
 
 
- <div className="results-total"><strong>Your Total Score is </strong><strong>{score}/{totalQuestions}</strong></div>
+<div className="results-total"><strong>Your Total Score is </strong><strong>{score}/{totalQuestions}</strong></div>
    <a><Button  color='green' align='center' onClick={restartQuiz}>Restart Assessment</Button></a> <br/><br/>
 
-   <a href="#/chat/react" ><Button color='red' align='center' icon='ticket'>End Assessment</Button></a>
+  <a href="#/chat/react" ><Button color='red' align='center' icon='ticket'>End Assessment</Button></a>
 
 
- </Card.Content>
+</Card.Content>
 
 </Card>
 
 
-   </div>
+  </div>
    </div>
 
- );
+);
 }
 
 Results.propTypes = {
