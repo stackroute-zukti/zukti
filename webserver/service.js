@@ -58,6 +58,8 @@ function setupZuktiRoutes(app) {
     app.use('/user', require('./routes/user/user'));
     /* @sangeetha: requiring the recommendations route */
     app.use('/recommendations', require('./routes/recommendations/recommendations'));
+    //assesment admin
+    app.use('/assesment',require('./routes/assessment/assesmentCreate'));
     // app.use('/redis', require('./routes/redis/redis'));
     /* @keerthana: route to test graph */
     app.get('/graphie', function(req, res) {

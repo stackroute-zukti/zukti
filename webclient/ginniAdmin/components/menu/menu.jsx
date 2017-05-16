@@ -51,6 +51,26 @@ export default class SidebarBot extends Component {
                         <Icon name='spy' color='teal'/>
                         {AdminMenu.AdminMenu.Topic4}
                     </Menu.Item>
+                    <Menu.Item >
+                    <Accordion>
+                    <Accordion.Title id="accordian">
+                      {AdminMenu.AdminMenu.Topic11}
+                      <Icon name='dropdown' color='teal' />
+                    </Accordion.Title>
+                    <Accordion.Content >
+                    <Menu.Item name='Add Domain' active={activeItem === 'Add Domain'}
+                        onClick={this.handleItemClick}>
+                        <Icon color='teal' name='add' size='mini'/>
+                        Add Domain
+                    </Menu.Item>
+                    <Menu.Item name='Add Question' active={activeItem === 'Add Question'}
+                        onClick={this.handleItemClick}>
+                        <Icon color='teal' name='edit' size='mini'/>
+                        Add Question
+                    </Menu.Item>
+                    </Accordion.Content>
+                    </Accordion>
+                    </Menu.Item>
                     <Menu.Item name='TrainBot' active={activeItem === 'TrainBot'}
                       onClick={this.handleItemClick}>
                         <Icon name='child' color='teal'/>
