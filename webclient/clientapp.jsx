@@ -91,6 +91,7 @@ ReactDOM.render(
     <Route path='/successfullyregistered' component={SuccessfullyRegistered}/>
     <Route path='/mailnotsend' component={MailNotSend}/>
     <Route path='/logoutfile' component={LogoutFile}/>
+    <Route path='/loginredirect' component={ApplicationHome} />
 
     <Route path='/404' component={PageNotFound} />
     <Redirect from='*' to='/404' />

@@ -57,7 +57,7 @@ export default class LeftMenu extends Component {
     }
     restart()
     {
-      this.setState({activeItem: assessment, counter: this.state.counter});
+      this.setState({activeItem: Assessment, counter: this.state.counter});
     }
     handleItemClick = ((e, {name}) => {
 
@@ -235,7 +235,7 @@ export default class LeftMenu extends Component {
                         {LeftMenuPage.LeftMenu.Menu6}
                     </Menu.Item>
 
-                    <Menu.Item name='assessment' active={activeItem === 'assessment'}
+                    <Menu.Item name='Assessment' active={activeItem === 'Assessment'}
                       onClick={this.handleItemClick}>
                         <Icon name='pencil square' color='teal'/>
                         {LeftMenuPage.LeftMenu.Menu7}

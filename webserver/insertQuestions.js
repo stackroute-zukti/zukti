@@ -1,10 +1,10 @@
-/* @santhosh: upload csv to add question and answers to neo4j graph */
+/*@santhosh: upload csv to add question and answers to neo4j graph */
 const fs = require('fs');
 const rl = require('readline');
 // let driver = require(__dirname + './neo4j/connection');
 let neo4j = require('neo4j-driver').v1;
 
-let driver = neo4j.driver('bolt://172.23.239.194', neo4j.auth.basic('neo4j', 'admin'));
+let driver = neo4j.driver('bolt://172.23.239.179', neo4j.auth.basic('neo4j', 'admin'));
 
 let log4js = require('log4js');
 let logger = log4js.getLogger();
