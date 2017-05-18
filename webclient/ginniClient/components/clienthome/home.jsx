@@ -42,7 +42,7 @@ which is stored when user login and redirect to apphome */
               url: '/signout',
               data: 'json'
             }).then(function (response) {
-              let socket = io();
+              //let socket = io();
               /* @ramvignesh: event to update the user list */
               socket.emit('updateUserList');
 
@@ -56,7 +56,7 @@ which is stored when user login and redirect to apphome */
     // redirects to chat page
     onSubmitEmail(e) {
         e.persist();
-      let socket = io();
+      //let socket = io();
       switch(e.target.alt) {
         case 'react':
         Axios({

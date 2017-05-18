@@ -1,0 +1,102 @@
+#inputbox
+{
+    width: 1210px;
+    border-width: medium;
+    border-style: solid;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 17px;
+    border-radius: 10px;
+}
+
+#messageContent
+{
+    height:488px;
+    width: 90%;
+    overflow-y:auto;
+    overflow-x:hidden;
+    padding-bottom: 95px;
+    background-color: white;
+}
+
+.messageOfGroupSender
+{
+    display: block;
+    margin-bottom: 1%;
+    margin-top: 2%;
+    clear: both;
+    color: #fff;
+    margin-left: 70%;
+    max-width: 50%;
+    background-color: #ccffb3 ;
+    overflow-x: hidden;
+    padding: 2px 4px 3px 4px;
+    border-radius: 10px;
+    padding-left: 10px;
+}
+
+.messageOfReceiver {
+    display: block;
+    float: right;
+    margin-bottom: 1%;
+    margin-top: 2%;
+    clear: both;
+    color: #fff;
+    background-color: #e0ebeb;
+    margin-left: 2%;
+    max-width: 50%;
+    overflow-x: hidden;
+    padding: 2px 4px 3px 4px;
+    border-radius: 10px;
+    padding-left: 10px;
+}
+
+.messageOfSender {
+    display: block;
+    margin-bottom: 1%;
+    margin-top: 2%;
+    clear: both;
+    color: #fff;
+    margin-left: 63%;
+    width: 30%;
+    background-color: #ccffb3 ;
+    overflow-x: hidden;
+    padding: 2px 4px 3px 4px;
+    border-radius: 10px;
+    padding-left: 10px;
+
+}
+
+h3
+{
+    color:white;
+}
+
+
+#message
+{
+    margin-top:20px;
+    height:auto;
+    margin-right:800px;
+}
+#displayMessage
+{
+    font-size: 17px;
+    font-family: serif;
+    text-align: justify;
+    word-break: break-all;
+    font-style: italic;
+    white-space: normal;
+    color: black;
+}
+
+#displayDate
+{
+   padding-top: 2%;
+}
+
+#displayTime
+{
+  text-align: right;
+  font-size: 12px;
+}

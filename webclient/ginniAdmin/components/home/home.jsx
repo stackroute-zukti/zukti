@@ -36,7 +36,7 @@ export default class FrontPage extends React.Component {
     //Set the loggedinDomainStatus to the Admin @ Deepika
     onSubmitEmail(e) {
       e.persist();
-      let socket = io();
+      //let socket = io();
       switch(e.target.alt) {
         case 'react':
         Axios({

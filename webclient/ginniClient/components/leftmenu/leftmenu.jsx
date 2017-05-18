@@ -1,21 +1,18 @@
 import React, {Component} from 'react';
 import LeftMenuContent from '../leftmenuPusherContent/leftmenuContent';
-import {
-    Sidebar,
-    Segment,
-    Image,
-    Icon,
-    Menu,
-    Popup,
-    Label,
-    Dropdown
-} from 'semantic-ui-react';
+import {Sidebar, Segment, Image, Icon, Menu, Popup, Label, Dropdown, Form, Button, List, Input, Grid, Header, Modal} from 'semantic-ui-react';
 import Axios from 'axios';
 import Cookie from 'react-cookie';
 import {hashHistory} from 'react-router';
 import Tour from "react-user-tour"
 import './leftmenu.css';
 import LeftMenuPage from '../../../Multi_Lingual/Wordings.json';
+// @ChatBot :  components import starting from here
+import DisplayListUs from '../discussion/DisplayListUs.jsx';
+import DisplayListCh from '../discussion/displayListCh.jsx';
+import '../discussion/sidebar.css';
+import ReactDOM from 'react-dom';
+// @ChatBot : component import ended here
 export default class LeftMenu extends Component {
     constructor(props) {
         super(props);
@@ -30,7 +27,24 @@ export default class LeftMenu extends Component {
             photo: '',
             counter: 0,
             isTourActive: false,
-                tourStep: 1
+            tourStep: 1,
+            leftMenuVisible: true,
+            sideMenuVisible: false,
+            activeUser:'',
+            activeMail:'',
+            chatType:'',
+            channelArray:[],
+            userNames:[],
+            communication:{},
+            socketUser:'',
+            socketMail:'',
+            senderMessage:{},
+            chatDetails:[],
+            channelMsg: {},
+            notification: {},
+            modalSwitch:false,
+            setChannel:false,
+            setUser:false
         };
         this.onUserStats = this.onUserStats.bind(this);
         this.onSubmitEmail = this.onSubmitEmail.bind(this);
@@ -39,6 +53,18 @@ export default class LeftMenu extends Component {
         this.getUserInformation = this.getUserInformation.bind(this);
         this.retriveChat = this.retriveChat.bind(this);
         this.setTourState = this.setTourState.bind(this);
+
+        // @ChatBot:  methods
+        this.handle=this.handle.bind(this);
+        this.getSenderMessage=this.getSenderMessage.bind(this);
+        this.getChatHistory = this.getChatHistory.bind(this);
+        this.getAllChannels = this.getAllChannels.bind(this);
+        this.modalOn = this.modalOn.bind(this);
+        this.modalOff = this.modalOff.bind(this);
+        this.onSubmitChannelName = this.onSubmitChannelName.bind(this);
+        this.handleChannel = this.handleChannel.bind(this);
+        this.createGeneral = this.createGeneral.bind(this);
+        // @ChatBot:  ended chat methods
     }
     //  @Mayanka: call retriveChat to check history
     componentWillMount(){
@@ -69,17 +95,207 @@ export default class LeftMenu extends Component {
             });
         }
         this.setState({activeItem: name, counter: this.state.counter});
+        if (name === 'discussion' || name === 'Back') {
+          this.setState({leftMenuVisible:!this.state.leftMenuVisible,
+            sideMenuVisible:!this.state.sideMenuVisible});
+        }
     });
-    componentDidMount() {
-        this.getUserInformation();
-        this.getNotificationCount();
-        this.getDomainInformation();
-        let socket = io();
-        socket.on('update label', (data) => {
+
+    // @ChatBot : functionality started from here
+
+    // @ChatBot : model window open and close
+    modalOn()
+    {
+      this.setState({modalSwitch:true})
+    }
+
+    modalOff()
+    {
+      this.setState({modalSwitch:false})
+    }
+    // @ChatBot : getting topic name
+    onSubmitChannelName(e)
+    {
+      e.preventDefault();
+      let message = ReactDOM.findDOMNode(this.refs.channelName).value;
+      if(message.trim() === '')
+      {
+        return;
+      }
+      ReactDOM.findDOMNode(this.refs.channelName).value = '';
+      Axios({
+        url: '/channel/addNewChannel',
+        method: 'post',
+        data: {channelName:message}})
+      .then(function(response)
+      {
+        this.getAllChannels();
+      }.bind(this))
+      .catch(function(error)
+      {
+        console.log(error);
+      }.bind(this));
+      this.setState({modalSwitch:false});
+    }
+    // @ChatBot : getting topic chat history
+    handleChannel(data)
+    {
+      socket.emit('change_channel',{prevChannel:this.state.activeUser,currentChannel:data.value});
+      this.setState({activeUser:data.value,chatType:data.type,setUser:false,setChannel:true});
+      Axios({
+        url: '/channel/getAllMessagesChannel',
+        method: 'post',
+        data: {channelName:data.value}})
+      .then(function(response)
+      {
+        this.setState({chatDetails:response.data.allmsgs});
+      }.bind(this))
+      .catch(function(error)
+      {
+      }.bind(this));
+    }
+
+    // @ChatBot : getting user chat history
+    handle(data)
+    {
+      this.setState({activeMail:data.email, activeUser:data.name, chatType:data.type,setChannel:false, setUser:true});
+      this.getChatHistory(data.email);
+    }
+
+    // @ChatBot : save message to mongoDB and emit message to particular user
+    getSenderMessage(senderMsg)
+    {
+      if(this.state.chatType == 'channel')
+      {
+        let msgArray=this.state.chatDetails;
+        let date=new Date();
+        socket.emit('send_to_channel',{channelName:this.state.activeUser,
+          newMsg:{date:date,message:senderMsg.message,
+          senderName:this.state.socketUser}});
+        msgArray.push({date:data.date,message:data.message,senderName:data.senderName});
+        this.setState({chatDetails:msgArray});
+      }
+      else
+      {
+        var tempArr = this.state.chatDetails
+        tempArr = tempArr.concat(senderMsg);
+        this.setState({chatDetails: tempArr});
+      }
+
+    }
+
+    // @ChatBot : getting All Topics name
+    getAllChannels()
+    {
+      Axios({
+        url: '/channel/getAllChannels',
+        method: 'post'})
+      .then(function(response)
+      {
+        socket.emit('display_channels',response.data.allChannels);
+      }.bind(this))
+      .catch(function(error)
+      {
+        console.log(error);
+      }.bind(this));
+    }
+
+    // @ChatBot :  creating default general topic
+    createGeneral()
+    {
+      Axios({
+        url: '/channel/createChannelsArray',
+        method: 'post'})
+      .then(function(response)
+      {
+        this.getAllChannels();
+      }.bind(this))
+      .catch(function(error)
+      {
+        console.log(error);
+      }.bind(this));
+
+    }
+
+    componentDidMount()
+    {
+        // @ChatBot :  method while page loading get chat history for general topic
+      this.createGeneral();
+      let data = ({value:'General',type:'channel'});
+      this.handleChannel(data);
+      let name = Cookie.load('username');
+      this.setState({socketUser:name});
+      let email = Cookie.load('email');
+      this.setState({socketMail:email})
+
+      // @ChatBot : getting Topics list from socket
+      socket.on('channels',(channelArray) =>
+      {
+        this.setState({channelArray:channelArray});
+      });
+
+      // @ChatBot : getting usernames from socket
+      socket.on('usernames', (data) =>
+      {
+          this.setState({userNames:data});
+      });
+
+      // @ChatBot :  display all messages of topics
+      socket.on("display_all_msgs", (data) =>
+      {
+        let msgArray=this.state.chatDetails;
+        msgArray.push({date:data.date,message:data.message,senderName:data.senderName});
+        this.setState({chatDetails:msgArray});
+      });
+
+      // @ChatBot : getting messages for user
+      socket.on('recieverMessage',(data) =>
+      {
+        if(this.state.chatType==='chat')
+        {
+          var tempArr= this.state.chatDetails;
+          tempArr = tempArr.concat({name:data.senderName,message:data.msg,date:data.date});
+          this.setState({chatDetails:tempArr});
+        }
+      });
+
+      //Not chat code
+      this.getUserInformation();
+      this.getNotificationCount();
+      this.getDomainInformation();
+      socket.on('update label', (data) =>
+      {
             this.state.counter = this.state.counter + 1;
             this.setState({counter: this.state.counter});
-        });
+      });
+      //end of other code
     }
+    // @ChatBot :  getting chat history of user
+    getChatHistory(data)
+    {
+      Axios({
+        url: '/chat/getChat',
+        method: 'POST',
+        data:{senderMail:this.state.socketMail, receiverMail:data}})
+      .then(function(response)
+      {
+        if(response.data.chat)
+        {
+          this.setState({chatDetails:response.data.chat});
+        }
+        else
+        {
+          this.setState({chatDetails:[]});
+        }
+       }.bind(this))
+      .catch(function(error)
+      {
+        console.log(error);
+      }.bind(this));
+
+    }
+    //// @ChatBot : chat functionality is ended here.
+
     getNotificationCount() {
         let url = '/getbroadcastmessage/count';
         Axios.get(url).then((response) => {
@@ -120,6 +336,7 @@ export default class LeftMenu extends Component {
                 email: response.data.user.local.email,
                 photo: response.data.user.local.photos, usertype: true});
             }
+            socket.emit('sendSocketName',{name:self.state.name,email:self.state.email});
         }).catch(function(error) {
             console.log(error);
         });
@@ -199,8 +416,47 @@ export default class LeftMenu extends Component {
         }
         return (
             <div id="leftbarmenu">
+            {/*chatBot: SideBar Code Started from here*/}
+              <Sidebar as={Menu} animation='slide along' width='thin' visible={this.state.sideMenuVisible} icon='labeled' vertical inverted>
+                    <Menu.Item name='Genie' active={activeItem === 'Genie'}
+                      onClick={this.handleItemClick}>
+                        <a href="#/clienthome">
+                            <Image src='../../images/ginianim.gif' size='tiny' avatar/></a>
+                    </Menu.Item>
+                    <Menu.Item name='Back' active={activeItem === 'Back'}
+                      onClick={this.handleItemClick}>
+                        <Icon name='home' color='teal'/>
+                        {LeftMenuPage.LeftMenu.Menu1}
+                    </Menu.Item>
+                <br />
+                <h3>
+                  Topics
+                  <Modal open={this.state.modalSwitch} trigger={<Popup trigger = {<Icon name='add' onClick={this.modalOn} color='teal' size='medium'/>} content = 'Create New Topic' position = 'right center'/>}>
+                    <Header icon='archive' content='Create New Topic' />
+                    <Modal.Content>
+                      <Segment inverted>
+                        <Form id='channelForm' onSubmit={this.onSubmitChannelName}>
+                          <input autoComplete="off" type='text' id="channelBox" name='channelName' ref='channelName' placeholder='Type Channel Name Here...'  />
+                        </Form>
+                        <br/>
+                        <Button color='green' onClick={this.onSubmitChannelName} style={{marginLeft:'600px'}}>
+                          <Icon name='sign in' /> Create
+                        </Button>
+                        <Button color='red' onClick={this.modalOff}>
+                          <Icon name='close' /> Close
+                        </Button>
+                      </Segment>
+                    </Modal.Content>
+                  </Modal>
+                </h3>
+                <DisplayListCh setChannel={this.state.setChannel} channelArray={this.state.channelArray} handle={this.handleChannel} activeUser={this.state.activeUser}/>
+                <br/><br/>
+                <h3>Online Users</h3>
+                <DisplayListUs setUser={this.state.setUser} allUsers={this.state.userNames} handle={this.handle} activeMail={this.state.activeMail} activeUser={this.state.activeUser} socketMail={this.state.socketMail}/>
+              </Sidebar>
+              {/*ChatBot: SideBar Code is Ended Here*/}
                 <Sidebar as={Menu} className='fixed' animation='slide along' width='thin'
-                   visible={true} icon='labeled' vertical inverted>
+                   visible={this.state.leftMenuVisible} icon='labeled' vertical inverted>
                     <Menu.Item name='Genie' active={activeItem === 'Genie'}
                       onClick={this.handleItemClick}>
                         <a href="#/clienthome">
@@ -213,7 +469,7 @@ export default class LeftMenu extends Component {
                     </Menu.Item>
                     <Menu.Item name='ChatBot' className="stop-1" active={activeItem === 'ChatBot'}
                       onClick={this.handleItemClick}>
-                        <Icon name='discussions' color='teal'/>
+                        <Icon name='chat' color='teal'/>
                         {LeftMenuPage.LeftMenu.Menu2}
                     </Menu.Item>
                     <Menu.Item name='Bookmarks' active={activeItem === 'Bookmarks'}
@@ -239,6 +495,11 @@ export default class LeftMenu extends Component {
                       onClick={this.handleItemClick}>
                         <Icon name='pencil square' color='teal'/>
                         {LeftMenuPage.LeftMenu.Menu7}
+                    </Menu.Item>
+                    <Menu.Item name='discussion' active={activeItem === 'discussion'}
+                      onClick={this.handleItemClick}>
+                        <Icon name='discussions' color='teal'/>
+                        {LeftMenuPage.LeftMenu.Menu8}
                     </Menu.Item>
                 </Sidebar>
                 <Sidebar.Pusher id="sidebarpusher">
@@ -278,7 +539,7 @@ export default class LeftMenu extends Component {
                             </Menu>
                         </div>
                         <div id='leftmenucontentdiv'>
-              <LeftMenuContent sidebarItemSelected={activeItem}  restart={this.restart.bind(this)} domain={this.props.params.domain}/>
+                            <LeftMenuContent chatHistory={this.state.chatDetails} activeUser={this.state.activeUser} socketUser={this.state.socketUser} type={this.state.chatType}  sidebarItemSelected={activeItem}  restart={this.restart.bind(this)} domain={this.props.params.domain} getSenderMessage={this.getSenderMessage} activeMail={this.state.activeMail} socketMail={this.state.socketMail}/>
                         </div>
                     </Segment>
                 </Sidebar.Pusher>

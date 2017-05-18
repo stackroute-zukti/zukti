@@ -49,7 +49,7 @@ export default class LoginPage extends React.Component
                     // if it is user it redirects to clienthome
                   else{
                     hashHistory.push('/clienthome');
-                    let socket = io();
+                    //let socket = io();
                     socket.emit('userLoginStatus', {value: 1});
 
                     /* @ramvignesh: event to update the user list */

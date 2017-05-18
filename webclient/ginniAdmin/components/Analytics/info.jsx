@@ -52,7 +52,7 @@ export default class Info extends React.Component {
           console.log(error);
         });
         //
-        let socket = io();
+        //let socket = io();
         socket.on('incrementQueryCount', (data) => {
           this.state.queryCount = this.state.queryCount + 1;
           this.setState({queryCount: this.state.queryCount});

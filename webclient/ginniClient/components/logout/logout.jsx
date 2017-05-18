@@ -18,12 +18,14 @@ export default class Logout extends React.Component
           url: '/signout',
           data: 'json'})
           .then(function(response) {
-            let socket = io();
+            //let socket = io();
             socket.emit('userLoginStatus', {value: -1}); // v1
 
             /* @ramvignesh: event to update the user list */
             socket.emit('updateUserList');
 
+            // @ChatBot: disconnect socket while logout
+            socket.disconnect();
             Cookie.remove('authType');
             Cookie.remove('token');
             Cookie.remove('profilepicture');
