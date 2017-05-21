@@ -41,16 +41,6 @@ export default class SidebarBot extends Component {
                         <Icon name='announcement' color='teal'/>
                         {AdminMenu.AdminMenu.Topic2}
                     </Menu.Item>
-                    <Menu.Item name='Users' active={activeItem === 'Users'}
-                      onClick={this.handleItemClick}>
-                        <Icon name='users' color='teal'/>
-                        {AdminMenu.AdminMenu.Topic3}
-                    </Menu.Item>
-                    <Menu.Item name='Analyze' active={activeItem === 'Analyze'}
-                      onClick={this.handleItemClick}>
-                        <Icon name='spy' color='teal'/>
-                        {AdminMenu.AdminMenu.Topic4}
-                    </Menu.Item>
                     <Menu.Item >
                     <Accordion>
                     <Accordion.Title id="accordian">
@@ -68,8 +58,23 @@ export default class SidebarBot extends Component {
                         <Icon color='teal' name='edit' size='mini'/>
                         Add Question
                     </Menu.Item>
+                    <Menu.Item name='EditTestQuestion' active={activeItem === 'EditTestQuestion'}
+                        onClick={this.handleItemClick}>
+                        <Icon color='teal' name='edit' size='mini'/>
+                        EditTestQuestion
+                    </Menu.Item>
                     </Accordion.Content>
                     </Accordion>
+                    </Menu.Item>
+                    <Menu.Item name='Users' active={activeItem === 'Users'}
+                      onClick={this.handleItemClick}>
+                        <Icon name='users' color='teal'/>
+                        {AdminMenu.AdminMenu.Topic3}
+                    </Menu.Item>
+                    <Menu.Item name='Analyze' active={activeItem === 'Analyze'}
+                      onClick={this.handleItemClick}>
+                        <Icon name='spy' color='teal'/>
+                        {AdminMenu.AdminMenu.Topic4}
                     </Menu.Item>
                     <Menu.Item name='TrainBot' active={activeItem === 'TrainBot'}
                       onClick={this.handleItemClick}>

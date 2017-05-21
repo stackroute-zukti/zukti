@@ -24,7 +24,7 @@ export default class TestConceptDropdown extends React.Component {
                   </label>
                   <Input>
                       <Dropdown fluid options={this.props.TestConcept}
-                       placeholder='Concept Name'
+                       placeholder=' Test Concept Name'
                         search selection onChange={this.handleTestConcept}
                         value={this.props.value}/>
                   </Input>

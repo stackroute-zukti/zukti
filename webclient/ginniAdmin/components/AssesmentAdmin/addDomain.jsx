@@ -1,6 +1,5 @@
 import React from 'react';
-import {Form, Grid, Button, Dropdown, Input, Icon, Divider} from 'semantic-ui-react';
-import './AdminAssesment.css';
+import {Form, Grid, Button, Dropdown, Input, Divider} from 'semantic-ui-react';
 import Config from '../../../../config/url';
 import Axios from 'axios';
 import Snackbar from 'material-ui/Snackbar';
@@ -28,6 +27,7 @@ export default class AddDomain extends React.Component {
     getTestDomainDropdown(){
     let url = Config.url + '/assesment/getTestDomain';
     Axios.get(url).then((response) => {
+      this.setState({TestDomain: []});
         let TestDomain = response.data._fields[0];
         TestDomain.forEach((TestDomain) => {
             this.state.TestDomain.push({text: TestDomain, value: TestDomain});
@@ -45,7 +45,7 @@ export default class AddDomain extends React.Component {
     }
     handleRequestClose = () => {
         this.setState({opensnackbar: false});
-    };
+    }
 
     getTestDomain(TestDomain) {
              this.setState({TestDomainValue: TestDomain});
@@ -63,13 +63,13 @@ export default class AddDomain extends React.Component {
                 this.getTestDomainDropdown();
                 this.refs.newTestDomain.value = '';
                 this.setState({domainValue: ''});
-                this.setState({opensnackbar: true, snackbarMsg: 'New Domain Added'});
+                this.setState({opensnackbar: true, snackbarMsg: 'New Test-Domain Added'});
 
             }).catch((error) => {
                 console.log(error);
             });
         } else {
-            this.setState({opensnackbar: true, snackbarMsg: 'Please fill all the fields'});
+            this.setState({opensnackbar: true, snackbarMsg: 'Please Test-Domain Name'});
         }
     }
 
@@ -80,7 +80,7 @@ export default class AddDomain extends React.Component {
         let TestConcept = this.refs.newTestConceptText.value;
         let TestDomain = this.state.TestDomainValue;
 
-        if (TestConcept) {
+        if (TestConcept&&TestDomain) {
           // Adding the new testconcept to the neo4j
             let url = Config.url + '/assesment/createTestConcept';
             Axios.post(url, {
@@ -97,7 +97,7 @@ export default class AddDomain extends React.Component {
                 console.log(error);
             });
         } else {
-            this.setState({opensnackbar: true, snackbarMsg: 'Please fill all the concept fields'});
+            this.setState({opensnackbar: true, snackbarMsg: 'Please fill Test-Concept fields'});
         }
     }
 // Adding new testdomain and testconcept
@@ -112,7 +112,7 @@ export default class AddDomain extends React.Component {
                   <Grid.Row >
                   <Grid.Column width={1}/>
                       <Grid.Column width={6}>
-                          <h4>ADD NEW DOMAIN</h4>
+                          <h4>ADD NEW TEST DOMAIN</h4>
                           <Divider/>
                       </Grid.Column>
                   </Grid.Row>
@@ -124,10 +124,10 @@ export default class AddDomain extends React.Component {
                                    <Form>
                                          <Form.Field>
                                    <label>
-                                       <h4 align="left">New Domain Name</h4>
+                                       <h4 align="left">New Test Domain Name</h4>
                                    </label>
                                    <input autoComplete='off' type='text' ref='newTestDomain'
-                                   placeholder='Type Domain Name'/>
+                                   placeholder='Type Test-Domain Name'/>
                                          </Form.Field>
                                    </Form>
 
@@ -139,7 +139,7 @@ export default class AddDomain extends React.Component {
                   <Grid.Row>
                       <Grid.Column width={1}/>
                         <Grid.Column width={6}>
-                  <Button color='facebook' fluid onClick={this.createNewTestDomain}>Add Domain</Button>
+                  <Button color='green' fluid onClick={this.createNewTestDomain}>Add Test Domain</Button>
                  </Grid.Column>
                   </Grid.Row>
                   <br/>
@@ -149,7 +149,7 @@ export default class AddDomain extends React.Component {
                   <Grid.Row >
                       <Grid.Column width={1}/>
                       <Grid.Column width={6}>
-                          <h4>ADD NEW CONCEPT</h4>
+                          <h4>ADD NEW TEST CONCEPT</h4>
                           <Divider/>
                       </Grid.Column>
 
@@ -164,10 +164,10 @@ export default class AddDomain extends React.Component {
                   <Form>
                         <Form.Field>
                   <label>
-                      <h4>New Concept Name</h4>
+                      <h4>New Test Concept Name</h4>
                   </label>
                   <input autoComplete='off' type='text' ref='newTestConceptText'
-                  placeholder='Type Domain Name'/>
+                  placeholder='Type Test-Concept Name'/>
                         </Form.Field>
                   </Form>
 
@@ -178,10 +178,12 @@ export default class AddDomain extends React.Component {
                   <Grid.Row>
                       <Grid.Column width={1}/>
                         <Grid.Column width={6}>
-                  <Button color='facebook' fluid onClick={this.createNewTestConcept}>Add Concept</Button>
+                  <Button color='green' fluid onClick={this.createNewTestConcept}>Add Test Concept</Button>
                 </Grid.Column>
                   </Grid.Row>
-
+                  <Grid.Column width={6}/>
+                  <Grid.Column width={6}/>
+                  <Grid.Column width={6}/>
           </Grid>
           <Snackbar open={this.state.opensnackbar}
                    message={this.state.snackbarMsg}
