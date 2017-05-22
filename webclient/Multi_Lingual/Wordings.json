@@ -19,7 +19,7 @@
 
   "ClientHome":{"Heading1":"I AM ZUKTI HERE TO ASSIST YOU IN","Heading2":"FOLLOWING TECHNOLOGIES","Topic1":"REACT","Topic2":"DESIGN PATTERN","Topic3":"JAVA","Topic4":"JAVASCRIPT","Topic5":"NODE","Topic6":"ADD BOT"},
 
-  "LeftMenu":{"Heading":"ZUKTI","Menu1":"Home","Menu2":"Let's Explore","Menu3":"Bookmarks","Menu4":"Notifications","Menu5":"Log out","Menu6":"Book","Menu7":"Assessment"},
+  "LeftMenu":{"Heading":"ZUKTI","Menu1":"Home","Menu2":"Let's Explore","Menu3":"Bookmarks","Menu4":"Notifications","Menu5":"Log out","Menu6":"Book","Menu7":"Assessment","Menu8":"Discussion"},
 
   "Bookmarks":{"Heading":"BOOKMARKED RESPONSES"},
 
@@ -39,7 +39,7 @@
 
   "LogoutPage":{"Heading1":"Are You Sure?You want to Logout?"},
 
-  "AdminMenu":{"Topic1":"Setup Q&A","Topic2":"Broadcast","Topic3":"Users","Topic4":"Analyze","Topic5":"Train Intent","Topic6":"Unanswered Queries","Topic7":"Logout","Topic8":"Manage Concepts","Topic9":"View Graph","Topic10":"Test Graph"},
+  "AdminMenu":{"Topic1":"Setup Q&A","Topic2":"Broadcast","Topic3":"Users","Topic4":"Analyze","Topic5":"Train Intent","Topic6":"Unanswered Queries","Topic7":"Logout","Topic8":"Manage Concepts","Topic9":"View Graph","Topic10":"Test Graph" ,"Topic11":"Manage Assessment"},
 
   "SetUp":{"Heading":"It is a set of questions and the corresponding bot replies. Zukti will understand user questions similar to those you’ve set up and reply with a appropiate answer."},
 

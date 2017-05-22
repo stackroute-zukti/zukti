@@ -17,7 +17,10 @@
     <!-- <link href="https://fonts.googleapis.com/css?family=EB+Garamond" rel="stylesheet"> -->
     <link href="https://fonts.googleapis.com/css?family=Acme" rel="stylesheet">
 
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+     <script>
+      var socket = io({transports: ['websocket'], upgrade: false});
+    </script>
 
     <style>
       #mountapp {
@@ -31,6 +34,5 @@
 </body>
 <script src="./dist/bundle.js" charset="utf-8"></script>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.2/semantic.min.css" />
 </html>

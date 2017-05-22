@@ -6,11 +6,10 @@ export default class TestDomainDropdown extends React.Component {
         super(props);
         this.handleTestDomain = this.handleTestDomain.bind(this);
     }
-
     handleTestDomain(e, {value}) {
         this.props.handleTestDomain(value);
     }
-    //Dropdown for testconcept
+    //Dropdown for testdomain
     render() {
         return (
           <Grid>
@@ -23,7 +22,7 @@ export default class TestDomainDropdown extends React.Component {
                   </label>
                   <Input>
                       <Dropdown fluid options={this.props.TestDomain}
-                       placeholder='Domain Name'
+                       placeholder='Test Domain Name'
                         search selection onChange={this.handleTestDomain}
                         value={this.props.value}/>
                   </Input>

@@ -75,6 +75,10 @@ function setupZuktiRoutes(app) {
     app.use('/assesment',require('./routes/assessment/assesmentCreate'));
     app.use('/aclroutes',require('./routes/acl/aclroutes'));
     // app.use('/redis', require('./routes/redis/redis'));
+
+    // @ChatBot : route to get and update topics and user chat history
+    app.use('/channel', require('./routes/discussion/channelRoutes'));
+    app.use('/chat', require('./routes/discussion/chatDetails'));
     /* @keerthana: route to test graph */
     app.get('/graphie', function(req, res) {
         res.sendfile('./webserver/views/graph.html');

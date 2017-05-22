@@ -8,6 +8,8 @@ import AddConcept from '../manageConcept/addConcepts';
 import RenameConcept from '../manageConcept/rename';
 import AddDomain from '../AssesmentAdmin/addDomain';
 import AddQuestion from '../AssesmentAdmin/AddQuestion';
+import EditTestQuestion from '../AssesmentAdmin/EditTestQuestion';
+
 import UnansweredQueries from '../unansweredqueries/unansweredqueries';
 import Graph from '../views/htmlGraph';
 import AclUI from '../acl/aclUI';
@@ -61,6 +63,10 @@ export default class Content extends React.Component {
                 {
                     return <AddQuestion/>;
                 }
+            case 'EditTestQuestion':
+            {
+                return <EditTestQuestion/>;
+            }
             // case 'Test Graph':
             //     {
             //         return <Graph/>;

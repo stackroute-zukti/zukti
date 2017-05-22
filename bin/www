@@ -4,7 +4,9 @@
 let app = require('../webserver/webapp.service')();
 let log4js = require('log4js');
 let logger = log4js.getLogger();
-
+let User = require('../webserver/models/user');
+let Channel= require('../webserver/models/channelSchema');
+let Chat= require('../webserver/models/chatSchema');
 // listening to port 8080
 let server = app.listen(8080, '0.0.0.0', function(err, result) {
     if (err) {
@@ -12,9 +14,13 @@ let server = app.listen(8080, '0.0.0.0', function(err, result) {
     }
     logger.debug("server started at 8080");
 });
-let io = require('socket.io')(server);
+let io = require('socket.io')(server).set('transports', ['websocket']);
 
 // socket.io demo
+var users={};
+var userNames = [];
+var receiver='';
+var notificationCount=0;
 io.on('connection', function(socket) {
     socket.emit('server event', {
         foo: 'bar'
@@ -40,4 +46,176 @@ io.on('connection', function(socket) {
         socket.broadcast.emit('sentiment score', data);
     });
 
+    // @ChatBot: leave from one topic and join in other topic
+    socket.join('General');
+    socket.on('change_channel',function(data){
+            socket.leave(data.prevChannel);
+            socket.join(data.currentChannel);
+    });
+
+    // @ChatBot: display topics for all users
+    socket.on('display_channels',function(channelArray){
+             io.sockets.emit('channels',channelArray);
+    });
+
+   // @ChatBot: send message to all topics and save in mongoDB
+    socket.on('send_to_channel',function(data){
+              var senderName = data.newMsg.senderName;
+              var channelName = data.channelName;
+              var message = data.newMsg.message;
+              var date = data.newMsg.date;
+
+              Channel.update({key:channelName},{$push:{
+                     value:{senderName:senderName,
+                       message:message,
+                       date:date
+                       }
+                   }},function(err,data){
+                     if(err){
+                       console.log(err);
+                     }
+                     else {
+                       console.log("Message added successfully in channel");
+                     }
+              })
+              io.sockets.to(channelName).emit('display_all_msgs',{channelName:channelName,message:message,date:date,senderName:senderName});
+    });
+
+   // @ChatBot: sending all usernames
+    socket.on('sendSocketName',function(data){
+      socket.nickname=data.email;
+      users[socket.nickname]=socket;
+      userNames.push({email:socket.nickname,name:data.name});
+      io.sockets.emit('usernames',userNames);
+    });
+
+    // @ChatBot: getting receiver name and socket name
+    socket.on('getSecondUserName',function(data){
+          socket.emit('sendSecondUserName',{senderName:socket.nickname,receiverName:data});
+    });
+
+    // @ChatBot: sendmessage to particular user and save in mongoDB
+    socket.on('sendMessage',function(data){
+             var senderMail=data.senderMail;
+             var receiverMail=data.receiverMail;
+             var senderName=data.senderName;
+             var receiverName=data.receiverName;
+             var message= data.msg;
+             var date=new Date().toString();
+             notificationCount++;
+                Chat.findOne({
+                   $and: [
+                     { $or: [ { 'senderMail': senderMail }, { 'receiverMail': senderMail } ] },
+                     { $or: [ { 'senderMail': receiverMail }, { 'receiverMail': receiverMail } ] }
+                   ]
+                },function(err,data){
+                  if(err)
+                  {
+                    throw err;
+                  }
+                   else {
+                     if(data){
+                       Chat.findOneAndUpdate({
+                         $and: [
+                           { $or: [ { 'senderMail': senderMail }, { 'receiverMail': senderMail } ] },
+                           { $or: [ { 'senderMail': receiverMail }, { 'receiverMail': receiverMail } ] }
+                         ]
+                      },{$push:{
+                        chat:{name:senderName,
+                          message:message
+                          }
+                      }},function(err,data){
+                        if(err){
+                          console.log(err);
+                        }
+                        else {
+                         console.log("pushing into chat...",data);
+                        }
+                      })
+                       if(data.senderMail === senderMail){
+                        Chat.findOneAndUpdate({
+                         $and: [
+                           { $or: [ { 'senderMail': senderMail }, { 'receiverMail': senderMail } ] },
+                           { $or: [ { 'senderMail': receiverMail }, { 'receiverMail': receiverMail } ] }
+                         ]
+                        },{$set:{
+                          senderCount: notificationCount
+                        }},function(err,data){
+                          if(err){
+                            console.log(err);
+                          }
+                           else {
+                            console.log("senderCount update...",data);
+                          }
+                        })
+                       }
+                       else{
+                         Chat.findOneAndUpdate({
+                         $and: [
+                           { $or: [ { 'senderMail': senderMail }, { 'receiverMail': senderMail } ] },
+                           { $or: [ { 'senderMail': receiverMail }, { 'receiverMail': receiverMail } ] }
+                         ]
+                        },{$set:{
+                          receiverCount: notificationCount
+                        }},function(err,data){
+                          if(err){
+                            console.log(err);
+                          }
+                           else {
+                           console.log("receiverCount update...",data);
+                          }
+                        })
+                       }
+                     }
+                     else{
+                       var chat=new Chat({
+                         senderMail:senderMail,
+                         receiverMail:receiverMail,
+                         senderName:senderName,
+                         receiverName:receiverName,
+                         chat:{name:senderName,
+                           message:message
+                           },
+                         senderCount: notificationCount
+                       });
+                       chat.save(function(err,data){
+                           if(err)
+                           {
+                             console.log(err);
+                         }
+                         else {
+                          console.log("Newdata into db...",data);
+                         }
+                       })
+                     }
+                   }
+            });
+
+           if(users[receiverMail] !== undefined){
+               console.log("receiever email...",receiverMail)
+               users[receiverMail].emit('count',{sender:senderName,count:notificationCount})
+               users[receiverMail].emit('recieverMessage',data);
+           }
+           else{
+            console.log("user is in offline...");
+           }
+    });
+
+    // @ChatBot : while clicking the username notification become disabled
+    socket.on('changeNotification',function(data){
+      if(data.senderName)
+          notificationCount=0;
+      else
+          channelNotification = 0;
+    });
+
+     // @ChatBot : while logout username should be removed
+    socket.on('disconnect',function(data){
+      if(!socket.nickname) return;
+      delete users[socket.nickname];
+      index = userNames.findIndex(x => x.email== socket.nickname);
+      userNames.splice(index, 1);
+      io.sockets.emit('usernames',userNames);
+      console.log("disconnecting...called", userNames);
+    });
 });

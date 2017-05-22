@@ -22,7 +22,7 @@ export default class UserTable extends React.Component
 
     componentDidMount() {
         let self = this;
-        let socket = io();
+        //let socket = io();
 
         // populating the user list for the first time
         Axios({url: 'http://localhost:8080/viewall', method: 'GET'}).then(function(response) {

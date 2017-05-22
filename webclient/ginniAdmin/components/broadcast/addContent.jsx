@@ -27,7 +27,7 @@ export default class AddContent extends React.Component {
         let date = new Date().toLocaleString();
         this.props.handleAdminInput(this.state.username, text, date);
         // to broadcast message to users logged in
-        let socket = io();
+        //let socket = io();
         socket.emit('client event', {
             username: this.state.username,
             value: text,

@@ -19,7 +19,7 @@ export default class InputUserMesaage extends React.Component {
         if(message.value.trim() === '') {
           return;
         }
-        let socket = io();
+        //let socket = io();
         socket.emit('newQuery', {i: 1});
         message.time = new Date().toLocaleString();
         this.props.handlerUserReply(message);

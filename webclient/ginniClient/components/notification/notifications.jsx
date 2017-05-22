@@ -16,7 +16,7 @@ export default class Notifications extends React.Component {
         this.processInputNotification = this.processInputNotification.bind(this);
     }
     componentDidMount() {
-        let socket = io();
+        //let socket = io();
         let url = Config.url + '/getbroadcastmessage';
         axios.get(url).then((response) => {
             this.state.messages = response.data.map((msg, index)=>{
