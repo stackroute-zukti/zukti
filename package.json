@@ -8,6 +8,7 @@
     "test": "mocha test"
   },
   "dependencies": {
+    "acl":"0.4.10",
     "axios": "^0.15.3",
     "babel-polyfill": "^6.23.0",
     "bad-words": "^1.5.0",

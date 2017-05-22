@@ -36,6 +36,11 @@ export default class SidebarBot extends Component {
                         <Icon name='book' color='teal'/>
                         {AdminMenu.AdminMenu.Topic1}
                     </Menu.Item>
+                    <Menu.Item name='Acl' active={activeItem === 'Acl'}
+                      onClick={this.handleItemClick}>
+                        <Icon name='lock' color='teal'/>
+                        Acl
+                    </Menu.Item>
                     <Menu.Item name='BroadCast' active={activeItem === 'BroadCast'}
                       onClick={this.handleItemClick}>
                         <Icon name='announcement' color='teal'/>
