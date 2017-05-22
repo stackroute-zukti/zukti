@@ -1,0 +1,24 @@
+#back{
+ background-image: url("../../../images/background.jpg");
+ height:800px;
+ font-size: 1.75em;
+ line-height: 1.75em;
+ animation: slide-in .3s ease;
+}
+#form{
+  padding-top: 50px;
+  margin-left: 150px;
+}
+
+#dd{
+  margin-top: 10px;
+  margin-left: 43px;
+}
+ #label{
+   margin-top: 15px;
+   margin-left: 165px;
+}
+#object{
+  margin-top: 15px;
+  margin-left: 150px;
+}

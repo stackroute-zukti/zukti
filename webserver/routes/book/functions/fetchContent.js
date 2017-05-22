@@ -1,13 +1,17 @@
 let getNeo4jDriver = require('../../../neo4j/connection');
 let log4js = require('log4js');
 let logger = log4js.getLogger();
-module.exports = function(resultCallback,domain) {
+module.exports = function(resultCallback,domain,keyword) {
     // get all intent which have same_as to themselves these are our baseIntents
     if(domain=='react')
     {
+    let domain_arr=[];
     let concept=[];
+    //let subConcept=[];
+    //let question=[];
+    let answer=[];
     console.log(domain);
-    let query = 'MATCH (d:domain {name:"'+domain+'"})-[:subconcept_of]-(c:concept)-[:subconcept_of]-(c1:concept)<-[q]-(n:question)-[r:answer]->(a:text)  RETURN distinct n.value,a.value';
+    let query = 'MATCH (d:domain {name:"'+domain+'"})-[:concept_of]-(c:concept)-[:definition]-(q:question)-[:answer_of]->(a:text) where d.name="'+keyword+'" or c.name="'+keyword+'" return d.name,c.name,a.value';
     let session = getNeo4jDriver().session();
 
     session.run(query)
@@ -18,10 +22,19 @@ module.exports = function(resultCallback,domain) {
               {
                 for(let j=0;j<result.records[i]._fields.length;j++)
                   {
+                    if(j==0)
+                    domain_arr.push(result.records[i]._fields[j])
+                    else if(j==1)
                 concept.push(result.records[i]._fields[j]);
+                // else if(j==2)
+                // subConcept.push(result.records[i]._fields[j]);
+                // else if(j==3)
+                // question.push(result.records[i]._fields[j]);
+                else
+                answer.push(result.records[i]._fields[j]);
               }
               }
-              resultCallback(concept);
+              resultCallback(domain_arr,concept,answer);
         })
         .catch((error) => {
             logger.debug(error);
