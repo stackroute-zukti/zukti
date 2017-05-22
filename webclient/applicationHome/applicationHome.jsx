@@ -7,7 +7,25 @@ import ApplicationHome from '../Multi_Lingual/Wordings.json';
 export default class Home extends React.Component {
     constructor() {
         super();
+        this.state = {message:''}
     }
+    componentDidMount()
+    {
+        if(this.props.location.query.response === 'facebook')
+        {
+            this.setState({message:"You have already registered using facbook account with same email id. Please login with facebook"});
+        }
+        else if(this.props.location.query.response === 'google')
+        {
+            this.setState({message:"You have already registered using google account with same email id. Please login with google"});
+        }
+        else if(this.props.location.query.response === 'local')
+        {
+            this.setState({message:"You have already registered with same email id. Please login with your userid and password"});
+        }
+
+    }
+
     render() {
         return (
             <div style={{
@@ -52,6 +70,9 @@ export default class Home extends React.Component {
                                 <h2 id='head3'>
                                     <i>{ApplicationHome.ApplicationContent.Line3}</i>
                                 </h2>
+                                <h3 id='head3'>
+                                    <i>{this.state.message}</i>
+                                </h3>
                             </div>
                         </Grid.Column>
                     </Grid.Row>

@@ -32,6 +32,17 @@ function setupZuktiRoutes(app) {
         res.redirect('/#/');
     };
 
+
+        console.log("inside server.js");
+        var aclvar = require('../acl/acl');
+        aclvar.aclpart(function(err) {
+            if (err) {
+                console.log(err);
+            } else {
+                global.acl = aclvar.getAcl();
+                console.log('In Server Js', global.acl);
+
+
     logger.debug('getLexicons called...');
     // getLexicons();
     getLexicons();
@@ -54,10 +65,15 @@ function setupZuktiRoutes(app) {
     app.use('/assessment',require('./routes/assessment/assessmentroute'));
     app.use('/dashboard',require('./routes/dashboard/dashboardroute'));
     app.use('/book',require('./routes/book/book'));
+    app.use('/assessmentQuestion',require('./routes/assessment/assessmentFetchQuestions'));
+    app.use('/assessmentLearner',require('./routes/assessment/assessmentLearner'));
     /* @ramvignesh: route to set user's current domain */
     app.use('/user', require('./routes/user/user'));
     /* @sangeetha: requiring the recommendations route */
     app.use('/recommendations', require('./routes/recommendations/recommendations'));
+    //assesment admin
+    app.use('/assesment',require('./routes/assessment/assesmentCreate'));
+    app.use('/aclroutes',require('./routes/acl/aclroutes'));
     // app.use('/redis', require('./routes/redis/redis'));
     /* @keerthana: route to test graph */
     app.get('/graphie', function(req, res) {
@@ -70,7 +86,67 @@ function setupZuktiRoutes(app) {
     app.get('*', function(req, res){
       res.sendfile('./webserver/views/pagenotfound.html', 404);
     });
+  }
+
+
+  app.post('/addAclRoles', function(req, res, next) {
+      console.log("inside route getjson", req.body);
+      console.log("inside roles ", req.body.role);
+      const fs = require('fs');
+      var theFile = fs.readFileSync('Testaclroles.json');
+      let myObj = [];
+      let fileLength = JSON.parse(theFile).length;
+      console.log("file length" + fileLength);
+      if (fileLength > 0) {
+          myObj = JSON.parse(theFile);
+          var index = myObj.map(function(x) {
+              return x.roles;
+          }).indexOf(req.body.role);
+        console.log("flag empty resource",req.body.flagEmptyResource);
+  console.log("flag empty resource",req.body.flagEmptyRemove);
+          if (req.body.flagEmptyResource == 1) {
+              if (index != -1) {
+                  myObj.splice(index, 1);
+                      console.log("after slicing for empty resource",myObj);
+              }
+          } else {
+              if (index != -1) {
+                  myObj.splice(index, 1);
+  console.log("after slicing for normal ",myObj);
+              }
+              myObj.push(JSON.parse(req.body.data_to_store));
+          }
+      } else {
+               myObj.push(JSON.parse(req.body.data_to_store));
+               }
+      if (req.body.flagEmptyRemove != 1) {
+console.log("toremove",JSON.parse(req.body.toremove));
+          for (let i = 0; i < JSON.parse(req.body.toremove).length; i++) {
+              acl.removeAllow(req.body.role, JSON.parse(req.body.toremove)[i], '*', function(err, data) {
+                  if (err) {
+                      console.log("error in removing");
+                  } else {
+                      console.log("removed");
+                  }
+              });
+          }
+      } //end of if
+      fs.writeFileSync('Testaclroles.json', JSON.stringify(myObj));
+      UserSchema.find({}, function(err, user) {
+          if (err) {
+              console.log(err)
+          } else {
+                  console.log("data user",user)
+              const readline = require('readline');
+              const fs = require('fs');
+              fs.writeFileSync('Id_Roles.json', JSON.stringify(user));
+          }
+      }); //end of find
+      res.send({"success": "created"});
+  });
+});//end of acl
     return app;
+
 }
 
 function setupMiddlewares(app) {

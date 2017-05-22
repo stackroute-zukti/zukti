@@ -35,21 +35,41 @@ import Assessment from './ginniClient/components/assessment/assessment.jsx'
 import Dashboard from './ginniClient/components/dashboard/dashboard';
 import TestInstruction from './ginniClient/components/assessment/testtimerinstruction.jsx'
 import Timer from './ginniClient/components/assessment/assessmenttimer.jsx'
-import Timeless from '././ginniClient/components/assessment/assessmenttimeless.jsx'
+import Timeless from './ginniClient/components/assessment/assessmenttimeless.jsx'
+import DecideDimmer from './ginniClient/components/assessment/decider.jsx'
 import './AssessmentStyle.css';
 
 injectTapEventPlugin();
 // route protection - if the token is empty then it should not move forward or backward into the application and it should not display any user information
 let requireAuth = function(nextState, replace) {
+    console.log("nextState", nextState);
+    console.log("replace", replace);
+    console.log("role got", Cookie.load('role'));
     let token = Cookie.load('token');
-    if (!token) {
+    console.log("token", !token);
+    console.log("token w/o !", token);
+    if (token) {
+        if (nextState.routes[0].path == "/react") {
+            if (Cookie.load('role') != "admin") {
+                console.log("not authenticated");
+                replace({
+                    pathname: '/',
+                    state: {
+                        nextPathname: nextState.location.pathname
+                    }
+                }); //end of replaace
+            } else {
+                console.log("authenticated");
+            }
+        }
+}else{
         replace({
             pathname: '/',
             state: {
                 nextPathname: nextState.location.pathname
             }
         });
-    }
+  }
 };
 ReactDOM.render(
     <MuiThemeProvider>
@@ -63,10 +83,13 @@ ReactDOM.render(
     </Route>
     <Route path='/dash' component={Dashboard} onEnter={requireAuth.bind(this)}/>
     <Route path='/decider' component={Decider} onEnter={requireAuth.bind(this)}/>
+    <Route path='/maindecider' component={DecideDimmer} onEnter={requireAuth.bind(this)}/>
+
     <Route path='/assess' component={Assessment} onEnter={requireAuth.bind(this)}/>
     <Route path='/timer' component={Timer} onEnter={requireAuth.bind(this)}/>
     <Route path='/timer1' component={Timeless} onEnter={requireAuth.bind(this)}/>
     <Route path='/testinstruction' component={TestInstruction} onEnter={requireAuth.bind(this)}/>
+
 
 
 

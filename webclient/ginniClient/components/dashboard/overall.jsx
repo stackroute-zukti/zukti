@@ -1,90 +1,54 @@
-import React from 'react';
-import {Line} from 'react-chartjs';
-import {Grid,Card,Button,Icon} from 'semantic-ui-react';
-import {Bar} from 'react-chartjs';
-import PieChart from 'react-simple-pie-chart';
-let styles = {
-    graphContainer: {
-        height: '90px',
-        width: '90',
-        marginTop: '5px',
-        padding: '7px'
-    }
-};
-let chartOptions = {
-    bezierCurve: false,
-    datasetFill: false,
-    pointDotStrokeWidth: 4,
-    scaleShowVerticalLines: false,
-    responsive: true
-};
+//import '../../Assessment.css'
+import React, {Component} from "react"
+import PieChart from "react-svg-piechart"
+
 export default class Overall extends React.Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super()
 
- }
+        this.state = {
+            expandedSector: null,
+        }
+
+        this.handleMouseEnterOnSector = this.handleMouseEnterOnSector.bind(this)
+    }
+
+    handleMouseEnterOnSector(sector) {
+        this.setState({expandedSector: sector})
+    }
+
     render() {
-                return (
+        let slice1 = this.props.slice1;
+        let slice2 = this.props.slice2;
+        const data = [
+            {label: "Total score", value: slice1, color: "#1589ff"},
+            {label: "Obtained score", value: slice2, color: "#43c6db"}
+        ]
 
-          <div>
-                            <h2>Performance of the user from the beginning</h2>
-                <div>
-                  <Card.Group>
-                    <Card>
+        const {expandedSector} = this.state
 
-                    <PieChart slices={[
-                          {
-                              color: 'purple',
-                              value: this.props.totalScore,
-                              label:"FLUKE"
-                          }, {
-                              color: 'red ',
-                              value: this.props.score,
-                              label:"totalQuestions"
-                          }
-                      ]}/>
-                        <Card.Content>
-                            <Card.Header>
-                                Score details
-                            </Card.Header>
-                            <Card.Description > <Icon loading color='purple' name='square'></Icon>
-                            :LeftOutScore
-                            </Card.Description>
-                            <Card.Description> <Icon loading color='red' name='square'></Icon>
-                            :ObtainedScore
-                            </Card.Description>
-                       </Card.Content>
-                    </Card>
-                    <Card>
-                      <PieChart slices={[
-                          {
-                              color: 'yellow',
-                              value: this.props.fluke,
-                              label:"FLUKE"
-                          }, {
-                              color: 'green',
-                              value: this.props.totalQuestions,
-                              label:"totalQuestions"
-                          }
-                      ]}/>
-                      <Card.Content>
-                          <Card.Header>
-                              Fluke details
-                          </Card.Header>
-                          <Card.Description > <Icon loading color='yellow' name='square'></Icon>
-                          :Fluke
-                          </Card.Description>
-                          <Card.Description> <Icon loading color='green' name='square'></Icon>
-                          :Attended questions
-                          </Card.Description>
-                     </Card.Content>
-                    </Card>
-
-                 </Card.Group>
-                <br/>
-                <br/>
+        return (
+            <div className="chart">
+                <PieChart
+                    data={ data }
+                    expandedSector={expandedSector}
+                    onSectorHover={this.handleMouseEnterOnSector}
+                    sectorStrokeWidth={2}
+                    expandOnHover
+                />
+							<div className="text">
+                {
+                    data.map((element, i) => (
+                        <div key={i}>
+                            <span style={{background: element.color}}></span>
+                            <span style={{color: this.state.expandedSector === i ? element.color : null}}>
+                                {element.label} : {element.value}
+                            </span>
+                        </div>
+                    ))
+                }
                 </div>
-           </div>
-        );
+            </div>
+        )
     }
 }

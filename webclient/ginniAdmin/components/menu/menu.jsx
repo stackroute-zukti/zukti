@@ -7,7 +7,7 @@ import {
     Image,
     Icon,
     Accordion
-  } from 'semantic-ui-react';
+} from 'semantic-ui-react';
 import './menu.css';
 import TopMenuBot from './topmenubot';
 import AdminMenu from '../../../Multi_Lingual/Wordings.json';
@@ -25,62 +25,67 @@ export default class SidebarBot extends Component {
             <div style={{
                 height: '100%'
             }}>
-                <Sidebar as={Menu} className='fixed' animation='slide along'
-                  width='thin' visible={true} icon='labeled' vertical inverted>
+                <Sidebar as={Menu} className='fixed' animation='slide along' width='thin' visible={true} icon='labeled' vertical inverted>
                     <Menu.Item name='Genie'>
-                        <a href="/#/adminhome"><Image src='../../images/ginianim.gif'
-                        size='tiny' avatar/></a>
+                        <a href="/#/adminhome"><Image src='../../images/ginianim.gif' size='tiny' avatar/></a>
                     </Menu.Item>
-                    <Menu.Item name='SetupAi' active={activeItem === 'SetupAi'}
-                      onClick={this.handleItemClick}>
-                        <Icon name='book' color='teal'/>
-                        {AdminMenu.AdminMenu.Topic1}
+                    <Menu.Item name='SetupAi' active={activeItem === 'SetupAi'} onClick={this.handleItemClick}>
+                        <Icon name='book' color='teal'/> {AdminMenu.AdminMenu.Topic1}
                     </Menu.Item>
-                    <Menu.Item name='BroadCast' active={activeItem === 'BroadCast'}
-                      onClick={this.handleItemClick}>
-                        <Icon name='announcement' color='teal'/>
-                        {AdminMenu.AdminMenu.Topic2}
+                    <Menu.Item name='Acl' active={activeItem === 'Acl'} onClick={this.handleItemClick}>
+                        <Icon name='lock' color='teal'/>
+                        ACL
                     </Menu.Item>
-                    <Menu.Item name='Users' active={activeItem === 'Users'}
-                      onClick={this.handleItemClick}>
-                        <Icon name='users' color='teal'/>
-                        {AdminMenu.AdminMenu.Topic3}
+                    <Menu.Item name='BroadCast' active={activeItem === 'BroadCast'} onClick={this.handleItemClick}>
+                        <Icon name='announcement' color='teal'/> {AdminMenu.AdminMenu.Topic2}
                     </Menu.Item>
-                    <Menu.Item name='Analyze' active={activeItem === 'Analyze'}
-                      onClick={this.handleItemClick}>
-                        <Icon name='spy' color='teal'/>
-                        {AdminMenu.AdminMenu.Topic4}
+                    <Menu.Item name='Users' active={activeItem === 'Users'} onClick={this.handleItemClick}>
+                        <Icon name='users' color='teal'/> {AdminMenu.AdminMenu.Topic3}
                     </Menu.Item>
-                    <Menu.Item name='TrainBot' active={activeItem === 'TrainBot'}
-                      onClick={this.handleItemClick}>
-                        <Icon name='child' color='teal'/>
-                        {AdminMenu.AdminMenu.Topic5}
-                    </Menu.Item>
-                  <Menu.Item name='Unanswered Queries' active={activeItem === 'Unanswered Queries'}
-                      onClick={this.handleItemClick}>
-                        <Icon name='help' color='teal'/>
-                        {AdminMenu.AdminMenu.Topic6}
+                    <Menu.Item name='Analyze' active={activeItem === 'Analyze'} onClick={this.handleItemClick}>
+                        <Icon name='spy' color='teal'/> {AdminMenu.AdminMenu.Topic4}
                     </Menu.Item>
                     <Menu.Item >
-                      <Accordion>
-                    <Accordion.Title id="accordian">
-                      {AdminMenu.AdminMenu.Topic8}
-                      <Icon name='dropdown' color='teal' />
-                    </Accordion.Title>
-                    <Accordion.Content >
-                      <Menu.Item name='Add Concept' active={activeItem === 'Add Concept'}
-                          onClick={this.handleItemClick}>
-                          <Icon color='teal' name='add' size='mini' />
-                      </Menu.Item>
-                      <Menu.Item name='Rename Concept' active={activeItem === 'Rename Concept'}
-                          onClick={this.handleItemClick}>
-                          <Icon color='teal' name='edit' size='mini'/>
+                        <Accordion>
+                            <Accordion.Title id="accordian">
+                                {AdminMenu.AdminMenu.Topic11}
+                                <Icon name='dropdown' color='teal'/>
+                            </Accordion.Title>
+                            <Accordion.Content >
+                                <Menu.Item name='Add Domain' active={activeItem === 'Add Domain'} onClick={this.handleItemClick}>
+                                    <Icon color='teal' name='add' size='mini'/>
+                                    Add Domain
+                                </Menu.Item>
+                                <Menu.Item name='Add Question' active={activeItem === 'Add Question'} onClick={this.handleItemClick}>
+                                    <Icon color='teal' name='edit' size='mini'/>
+                                    Add Question
+                                </Menu.Item>
+                            </Accordion.Content>
+                        </Accordion>
                     </Menu.Item>
-                    </Accordion.Content>
-                </Accordion>
+                    <Menu.Item name='TrainBot' active={activeItem === 'TrainBot'} onClick={this.handleItemClick}>
+                        <Icon name='child' color='teal'/> {AdminMenu.AdminMenu.Topic5}
                     </Menu.Item>
-                    <Menu.Item name='Test Graph' active={activeItem === 'Test Graph'}
-                      onClick={this.handleItemClick}>
+                    <Menu.Item name='Unanswered Queries' active={activeItem === 'Unanswered Queries'} onClick={this.handleItemClick}>
+                        <Icon name='help' color='teal'/> {AdminMenu.AdminMenu.Topic6}
+                    </Menu.Item>
+                    <Menu.Item >
+                        <Accordion>
+                            <Accordion.Title id="accordian">
+                                {AdminMenu.AdminMenu.Topic8}
+                                <Icon name='dropdown' color='teal'/>
+                            </Accordion.Title>
+                            <Accordion.Content >
+                                <Menu.Item name='Add Concept' active={activeItem === 'Add Concept'} onClick={this.handleItemClick}>
+                                    <Icon color='teal' name='add' size='mini'/>
+                                </Menu.Item>
+                                <Menu.Item name='Rename Concept' active={activeItem === 'Rename Concept'} onClick={this.handleItemClick}>
+                                    <Icon color='teal' name='edit' size='mini'/>
+                                </Menu.Item>
+                            </Accordion.Content>
+                        </Accordion>
+                    </Menu.Item>
+                    <Menu.Item name='Test Graph' active={activeItem === 'Test Graph'} onClick={this.handleItemClick}>
                         <Icon name='find' color='teal'/>{AdminMenu.AdminMenu.Topic10}
                     </Menu.Item>
                 </Sidebar>

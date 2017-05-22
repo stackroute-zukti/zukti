@@ -54,7 +54,7 @@ export default class LeftMenuContent extends React.Component {
                     {
                         return <Books/>
                     }
-                    case 'assessment':
+                    case 'Assessment':
                         {
 
                             return <DecideDimmer />

@@ -1,0 +1,35 @@
+[
+  {
+    "roles": "admin",
+    "allows": [
+      {
+        "resources": "/analytics",
+        "permissions": "*"
+      },
+      {
+        "resources": "/savebroadcastmessage",
+        "permissions": "*"
+      },
+      {
+        "resources": "/getbroadcastmessage",
+        "permissions": "*"
+      },
+      {
+        "resources": "/verifyQuestion",
+        "permissions": "*"
+      },
+      {
+        "resources": "/addQuestionAnswer",
+        "permissions": "*"
+      },
+      {
+        "resources": "/rateAnswer",
+        "permissions": "*"
+      },
+      {
+        "resources": "/analytics",
+        "permissions": "*"
+      }
+    ]
+  }
+]

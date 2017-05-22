@@ -5,8 +5,22 @@ let voteAnswer = require('./voteAnswer');
 let router = express.Router();
 let client = require('./redis');
 
+function get_user_id(req, response) {
+    // Since numbers are not supported by node_acl in this case, convert
+    //  them to strings, so we can use IDs nonetheless.
+console.log("request in analytsics",req.user);
+
+    return req.user._id.toString() || false;
+}
+
 // router to verify input question has keyword or not
 router.post('/verifyQuestion', function(req, res) {
+  global.acl.isAllowed(get_user_id(req, res), '/verifyQuestion', 'post', function(err, allowed) {
+        if (err) {
+            console.log(err);
+        } else if (allowed === false) {
+            res.send({'success': 'not authenticated'});
+        } else {
     let question = req.body.question;
     lexicon();
     let keywordLexicon = [];
@@ -46,9 +60,17 @@ router.post('/verifyQuestion', function(req, res) {
       res.json({isValidQuestion: true});
     }
   }
-});
+}//end of else
+});//end of acl
+});//end of route
 // router to add a question answer set to Ginni knowledge base
 router.post('/addQuestionAnswer', function(req, res) {
+  global.acl.isAllowed(get_user_id(req, res), '/addQuestionAnswer', 'post', function(err, allowed) {
+        if (err) {
+            console.log(err);
+        } else if (allowed === false) {
+            res.send({'success': 'not authenticated'});
+        } else {
     // callback when a new question answer will be created
     let questionsAnswerSavedCallback = function(id) {
         // unique id given to each questionsAnswerSet
@@ -58,9 +80,17 @@ router.post('/addQuestionAnswer', function(req, res) {
     };
     // function call to save question and answer in neo4j database
     saveQuestionAnswer(req, questionsAnswerSavedCallback);
-});
+  }//end of else
+});//end of acl
+});//end of route
   // router to rate answer which user liked
 router.post('/rateAnswer', function(req, res) {
+  global.acl.isAllowed(get_user_id(req, res), '/rateAnswer', 'post', function(err, allowed) {
+        if (err) {
+            console.log(err);
+        } else if (allowed === false) {
+            res.send({'success': 'not authenticated'});
+        } else {
   let action = req.body.action;
   let type = req.body.type;
   let value = req.body.value;
@@ -68,5 +98,7 @@ router.post('/rateAnswer', function(req, res) {
   // method to save user preference in neo4j
   voteAnswer(action, type, value, user);
   res.send('done');
-});
+}//end of else
+});//end of acl
+});//end of route
 module.exports = router;

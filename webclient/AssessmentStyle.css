@@ -4,26 +4,55 @@
 .qdisp
 {
  width: 90%;
- font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+ font-family:  'EB Garamond';
+ /*, 'Philosopher','Helvetica','Lobster',' Arial',' sans-serif'*/
  font-size: 6px;
  background: rgb(249,219,61);
  /*background:url('https://media.giphy.com/media/xTiTnI1mdyxsFKTFjW/giphy.gif');*/
  color: #222;
  margin: 0;
  padding: 0;
+ letter-spacing:1px;
  overflow-y: scroll;
 
  background:url('https://www.google.co.in/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=0ahUKEwjCps-IjerTAhUIK48KHR4jCbEQjRwIBw&url=https%3A%2F%2Fenglish.stackexchange.com%2Fquestions%2F287186%2Fdoes-the-word-green-board-exist&psig=AFQjCNFYOTYHbJW36gN1DgRhjHBirCYk5w&ust=1494669473593675');
 }
+
+.carddisp
+{
+  font-size: 12px;
+}
+#leftbar
+{
+  margin-top:0%;
+  padding:10px;
+  height:50px;
+  background-color:#4a8e9b ;
+
+}
+.timeheader
+{
+ float: right;
+ font-size: 27px;
+ color: white;
+}
+.reacthead
+{
+  font-size: 27px;
+  text-align: center;
+
+
+}
 .wrapper {
  width: 100%;
- font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+ font-family: 'Acme', sans-serif;
+ /*, 'Philosopher','Helvetica','Lobster',' Arial',' sans-serif'*/
  font-size: 6px;
  background: rgb(249,219,61);
  /*background:url('https://media.giphy.com/media/xTiTnI1mdyxsFKTFjW/giphy.gif');*/
  color: #222;
  margin: 0;
- padding: 0;
+ padding: 0;letter-spacing:1px;
 
 }
 h1 {
@@ -69,7 +98,14 @@ header {
 .question {
  font-size: 2em;
  width: 100%;
- height: 570px;
+ height: 550px;
+ font-family: 'Acme', sans-serif;
+
+}
+.buttoncenter
+{
+  align-items: center;
+  text-align: center;
 }
 .question-answers {
  padding-left: 1.2em;
@@ -111,15 +147,20 @@ header {
 {
  background-color: red;
 }
+#h1color
+{
+  color: red;
+}
 .results-container {
  width: 100%;
  margin: 0 auto;
  display: flex;
- align-items: center;
+ font-family: 'Acme', sans-serif;
+
+ /*align-items: center;
  justify-content: center;
- flex-direction: column;
-background-color: black;
-height:660px;
+ flex-direction: column;*/
+ height:660px;
  font-size: 1.75em;
  line-height: 1.75em;
  animation: slide-in .4s ease;

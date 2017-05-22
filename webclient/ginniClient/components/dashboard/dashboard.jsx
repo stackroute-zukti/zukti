@@ -73,13 +73,16 @@ export default class Dashboard extends React.Component
                             this.setState({fluke:response[0][authType].assessment.noOfFluke});
                             this.setState({percentageFluke:Math.round(response[0][authType].assessment.fluke)});
                             this.setState({rank:response[0][authType].assessment.rank})
+                            // this.setState({firstname:response[0].local.name})
+                            // console.log(this.state.firstname)
+
                           }.bind(this),
                           error: function(err) {
                                   console.log(err);
                           }.bind(this)
                   });
     }
-    
+
     handleChange = function handleChange(selectedDate) {
     this.setState({
           startDate: selectedDate
@@ -89,9 +92,9 @@ export default class Dashboard extends React.Component
     render() {
         const profilepicture = Cookie.load('profilepicture');
         const {open,activeItem} = this.state;
-        return ( 
+        return (
             <div className='dash'>
-            <Modal size='small' open={open} Icon='close' onClose={this.close}   onMount={this.fetchValuesFromDatabase}       
+            <Modal size='small' open={open} Icon='close' onClose={this.close}   onMount={this.fetchValuesFromDatabase}
                          closeOnRootNodeClick={false} size="tiny" closeIcon='close' id='modallogincss' >
                        <Modal.Header>
                        <Image avatar src={require('../../../../webserver/images/' + profilepicture)}/>
@@ -99,10 +102,10 @@ export default class Dashboard extends React.Component
                        </Modal.Header>
                          <Grid>
                            <Grid.Column width={4}>
-                               
+
                              <Menu fluid vertical tabular pointing secondary  >
                                <Menu.Item name='Stat' text='123' type='234\' active={activeItem === 'Stat'} onClick={this.handleItemClick}/>
-           
+
                                <Dropdown name='Performance Graph' text='Performance Graph' pointing='left' className='link item'>
                                <Dropdown.Menu>
                                <Dropdown.Item name='Overall' active={activeItem==='overall'} onClick={this.handleItemClick}>From the beginning</Dropdown.Item>
@@ -112,14 +115,14 @@ export default class Dashboard extends React.Component
                                 </Dropdown>
                              </Menu>
                            </Grid.Column>
-           
+
                            <Grid.Column stretched width={12}>
                            <DashboardContent item={activeItem} rank={this.state.rank} score={this.state.obtainedScore} totalScore={this.state.totalScore}
                              totalQuestions={this.state.totalQuestions} fluke={this.state.fluke} percentageFluke={this.state.percentageFluke} />
                            </Grid.Column>
                          </Grid>
                        </Modal>
-                       
+
             </div>
         );
     }

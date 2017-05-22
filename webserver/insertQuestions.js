@@ -1,4 +1,4 @@
-/* @santhosh: upload csv to add question and answers to neo4j graph */
+/*@santhosh: upload csv to add question and answers to neo4j graph */
 const fs = require('fs');
 const rl = require('readline');
 // let driver = require(__dirname + './neo4j/connection');

@@ -1,6 +1,8 @@
 let express = require('express');
 let router = express.Router();
 const RegisteredUser = require('../../models/user');
+
+//@Pavithra.N :to add assessment details in mongodb
  router.post('/add', function(req, res) {
         var authType=req.body.authType;
         var email=req.body.id;
@@ -11,6 +13,7 @@ const RegisteredUser = require('../../models/user');
         var set = {$set: {}};
         var query = {};
         query[str] = email;
+        var detail={};
         RegisteredUser.find(query, function(err, user)
         {
           var prevScore=user[0][authType].assessment.score;
@@ -18,7 +21,6 @@ const RegisteredUser = require('../../models/user');
           var prevNoOfFluke=user[0][authType].assessment.noOfFluke;
           var prevRank=user[0][authType].assessment.rank;
           currentScore=prevScore+currentScore;
-          console.log(currentScore);
           totalQuestionsAttempted=totalQuestionsAttempted+prevQuestions;
           noOfFluke=noOfFluke+prevNoOfFluke;
           var fluke=(noOfFluke/totalQuestionsAttempted)*100;
@@ -32,7 +34,6 @@ const RegisteredUser = require('../../models/user');
                  res.send(err);
              }
              else {
-                  console.log(success);
                    RegisteredUser.find({$or: [
                    {$and: [{'google.assessment.score':currentScore}, {'google.assessment.fluke':  { $lt :fluke}}]},
                    {$and: [{'local.assessment.score':currentScore}, {'local.assessment.fluke':  { $lt :fluke}}]},
@@ -43,19 +44,20 @@ const RegisteredUser = require('../../models/user');
                    RegisteredUser.find({$or: [{'google.assessment.score':{ $gt :currentScore}},{'local.assessment.score':{ $gt :currentScore}},{'facebook.assessment.score':{ $gt :currentScore}}]},function(err,user)
                    {
                      rank=rank+user.length;
-                     console.log("Prev"+prevRank);
-                     console.log("current"+rank);
+                     detail["rank"]=rank;
                      if(prevRank!=rank)
                      {
                          updateRank(prevRank,rank,authType);
                          updateRank1(email,rank,authType);
                      }
+                     res.send(detail);
                   });//end of finding users greater than currentScore
               });//end of finding rank by comparing score with other users
         }//end of else
        });//end of update
     });//end of find
     });//end of function
+
     //for updating rank for all users
     function updateRank(prevRank,currentRank,authType){
       if(prevRank<currentRank)//do -1

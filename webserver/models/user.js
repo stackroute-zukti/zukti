@@ -39,7 +39,9 @@ const userSchema = mongoose.Schema({
           noOfFluke:Number,
           fluke:Number,
           rank:Number
-        }
+        },
+        role:{type:String,
+        default:" "}
     },
     facebook: {
         id: String,
@@ -55,7 +57,8 @@ const userSchema = mongoose.Schema({
           noOfFluke:Number,
           fluke:Number,
           rank:Number
-        }
+        },  role:{type:String,
+          default:" "}
     },
     google: {
         id: String,
@@ -71,7 +74,8 @@ const userSchema = mongoose.Schema({
           noOfFluke:Number,
           fluke:Number,
           rank:Number
-        }
+        },  role:{type:String,
+          default:" "}
     },
 
 

@@ -11,14 +11,41 @@ let logger = log4js.getLogger();
 module.exports = function(app, passport) {
     let rand, mailOptions, host, link;
     app.post('/login', passport.authenticate('local', {failureRedirect: '/'}), (req, res) => {
-        res.cookie('token', req.user.token); // v2
-        res.cookie('username', req.user.name);
-        res.cookie('authType', req.user.authType);
-        res.cookie('profilepicture', req.user.photos);
-        res.cookie('email', req.user.email); // v2
-        res.cookie('domain', 'nil'); // v2
-        res.cookie('recommendations', 'true');
+
+
+      res.cookie('id',req.user._id);
+              res.cookie('token', req.user.token); // v2
+              res.cookie('username', req.user.name);
+              res.cookie('authType', req.user.authType);
+              res.cookie('profilepicture', req.user.photos);
+              res.cookie('email', req.user.email); // v2
+              res.cookie('domain', 'nil'); // v2
+              res.cookie('recommendations', 'true');
+                console.log("role outside",req.user.authType);
+      let role;
+      RegisteredUser.find({"_id":req.user._id},function(err,data){
+      console.log("user got in login",data);
+
+      console.log("got the user roel",data[0].local.role);
+      if(req.user.authType=="local"){
+      role=data[0].local.role;
+      res.cookie('role',data[0].local.role);
+      console.log("role saved",data[0].local.role);
+      }
+      else if(req.user.authType=="facebook"){
+      role=data[0].facebook.role;
+        res.cookie('role',data[0].facebook.role);
+        console.log("role saved",data[0].facebook.role);
+      }
+      else if(req.user.authType="google"){
+      role=data[0].google.role;
+        res.cookie('role',data[0].google.role);
+        console.log("role saved",data[0].google.role);
+      }
+      console.log("role var",role);
         res.send(req.user);
+      });
+
     });
     /* logout - all the user informations will be
     cleared in cookie and loggedin status will be changed to false */
@@ -41,6 +68,7 @@ module.exports = function(app, passport) {
                 logger.debug('status not updated');
             } else {
                 req.logout();
+                req.session.destroy();
             }
         });
     });
@@ -68,7 +96,7 @@ module.exports = function(app, passport) {
         }
       });
     });
-  
+
     app.get('/viewallonlineuser', function(req, res) {
             RegisteredUser.find(
               {'local.loggedinStatus': 'true', 'local.localType': 'Customer'},
@@ -380,6 +408,7 @@ module.exports = function(app, passport) {
             }
         });
     });
+    //Indhu_(10-05-17)
     // check whether the user already exists or not during signup
     app.post('/checkuser', function(req, res) {
         RegisteredUser.find({
@@ -389,13 +418,37 @@ module.exports = function(app, passport) {
             if (profile.length) {
                 res.json({ userexists: true});
             } else {
-                res.json({ userexists: false});
-            }
-            if (err) {
-                res.send(err);
-            }
+                RegisteredUser.find({
+                    'facebook.email': req.body.email
+                }, function(err, profile) {
+                    // checks email already exist or not
+                        if (profile.length) {
+                            res.json({ userexists: true});
+                        } else {
+                            RegisteredUser.find({
+                            'google.email': req.body.email
+                            }, function(err, profile) {
+                                // checks email already exist or not
+                                if (profile.length) {
+                                    res.json({ userexists: true});
+                                } else {
+                                    res.json({ userexists: false});
+                                }
+                                if (err) {
+                                    res.send(err);
+                                }
+                            });
+                        }
+                        if (err) {
+                            res.send(err);
+                        }
+                    });
+                }
+                if (err) {
+                    res.send(err);
+                }
+            });
         });
-    });
     // profileupdation for both user and admin
     app.put('/updateprofile', function(req, res) {
         String.prototype.capitalizeFirstLetter = function() {
@@ -502,34 +555,58 @@ module.exports = function(app, passport) {
         res.json(req.user);
     });
 
+    //Indhu_(10-05-17)
     // handle the callback after facebook has authenticated the user
     app.get('/auth/facebook/callback',
     passport.authenticate('facebook', {failureRedirect: '/#/'}), (req, res) => {
-        res.cookie('token', req.user.facebook.token);
-        res.cookie('authType', req.user.facebook.authType);
-        res.cookie('username', req.user.facebook.displayName);
-        res.cookie('profilepicture', req.user.facebook.photos);
-        res.cookie('email', req.user.facebook.email);
-        res.cookie('recommendations', 'true');
-        RegisteredUser.update({
-            'facebook.email': req.user.facebook.email
-        }, {
-            $set: {
-                'local.loggedinStatus': true
-            }
-        }, function(error) {
-            if (error) {
-                logger.debug('status not updated');
-            } else {
-                logger.debug('LoginStatus updated Successfully');
-            }
-        });
-        res.redirect('/#/clienthome');
-        var query = 'merge (n:learner {emailid : "' + req.user.facebook.email + '"})';
-        let session = getNeo4jDriver().session();
-        session.run(query).then(function(result){
-          console.log("fbemail" + result)
-        });
+        console.log("IN FB callback");
+        console.log("request getting printing", req.user.local.authType);
+        console.log("request getting printing", req.user.google.authType);
+        console.log("request getting printing", req.user.facebook.authType);
+        if(req.user.local.authType != undefined)
+        {
+            console.log("inside Local");
+            var authType = req.user.local.authType;
+            req.logout();
+            req.session.destroy();
+            console.log("inside Local2");
+            res.redirect('/#/loginredirect?response='+authType);
+        }
+        else if(req.user.google.authType != undefined)
+        {
+            console.log("inside google");
+            var authType = req.user.google.authType;
+            req.logout();
+            req.session.destroy();
+            res.redirect('/#/loginredirect?response='+authType);
+            console.log("inside google1");
+        }
+        else
+        {
+            console.log("inside FB");
+
+
+            res.cookie('token', req.user.facebook.token);
+            res.cookie('authType', req.user.facebook.authType);
+            res.cookie('username', req.user.facebook.displayName);
+            res.cookie('profilepicture', req.user.facebook.photos);
+            res.cookie('email', req.user.facebook.email);
+            res.cookie('recommendations', 'true');
+            RegisteredUser.update({
+                'facebook.email': req.user.facebook.email
+            }, {
+                $set: {
+                    'local.loggedinStatus': true
+                }
+            }, function(error) {
+                if (error) {
+                    logger.debug('status not updated');
+                } else {
+                    logger.debug('LoginStatus updated Successfully');
+                }
+            });
+            res.redirect('/#/clienthome');
+        };
     });
     // userprofile-in which all the user informations will be stored
     app.get('/userProfile', function(req, res) {
@@ -546,35 +623,53 @@ module.exports = function(app, passport) {
         res.json(req.user);
     });
 
-    // the callback after google has authorized the user
-    app.get('/auth/google/callback',
-    passport.authenticate('google', {failureRedirect: '/#/'}), (req, res) => {
-        res.cookie('token', req.user.google.token);
-        res.cookie('username', req.user.google.name);
-        res.cookie('authType', req.user.google.authType);
-        res.cookie('profilepicture', req.user.google.photos);
-        res.cookie('email', req.user.google.email);
-        res.cookie('recommendations', 'true');
-        RegisteredUser.update({
-          'google.email': req.user.google.email
-        }, {
-            $set: {
-                'local.loggedinStatus': true
-            }
-        }, function(error) {
-            if (error) {
-                logger.debug('status not updated');
-            } else {
-                logger.debug('LoginStatus updated Successfully');
-            }
-        });
-        res.redirect('/#/clienthome');
-        var query = 'merge (n:learner {emailid : "' + req.user.google.email + '"})';
-        let session = getNeo4jDriver().session();
-        session.run(query).then(function(result){
-          console.log("gemail" + result)
-        });
-    });
+    //Indhu_(10-05-17)
+      // the callback after google has authorized the user
+      app.get('/auth/google/callback',
+      passport.authenticate('google', {failureRedirect: '/#/'}), (req, res) => {
+          console.log("request getting printing", req.user.local.authType);
+          console.log("request getting printing", req.user.google.authType);
+          console.log("request getting printing", req.user.facebook.authType);
+          if(req.user.local.authType != undefined)
+          {
+              var authType = req.user.local.authType;
+              req.logout();
+              req.session.destroy();
+              res.redirect('/#/loginredirect?response='+authType);
+          }
+          else if(req.user.facebook.authType != undefined)
+          {
+              var authType = req.user.facebook.authType;
+              req.logout();
+              req.session.destroy();
+              res.redirect('/#/loginredirect?response='+authType);
+          }
+          else
+          {
+              res.cookie('token', req.user.google.token);
+              res.cookie('username', req.user.google.name);
+              res.cookie('authType', req.user.google.authType);
+              res.cookie('profilepicture', req.user.google.photos);
+              res.cookie('email', req.user.google.email);
+              res.cookie('recommendations', 'true');
+              RegisteredUser.update({
+                'google.email': req.user.google.email
+              }, {
+                  $set: {
+                      'local.loggedinStatus': true
+                  }
+              }, function(error) {
+                  if (error) {
+                      logger.debug('status not updated');
+                  } else {
+                      logger.debug('LoginStatus updated Successfully');
+                  }
+              });
+              res.redirect('/#/clienthome');
+
+          };
+
+      });
 
     let storage = multer.diskStorage({
      destination: function(req, file, cb) {

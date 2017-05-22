@@ -1,62 +1,97 @@
-import React, { PropTypes ,Component} from 'react';
-import {Card,Button,Segment,Grid} from 'semantic-ui-react'
-
+import React from 'react';
+import {
+    Card,
+    Button,
+    Segment,
+    Grid,
+    Table,
+    Header,
+    Label,
+    Icon
+} from 'semantic-ui-react';
+import ResultPie from './resultpie';
 import tally from './helpers/tally';
-const Results = ({ userAnswers, score, restartQuiz, flukeCount,fullscoreresult,totallengthques,totalQuestions }) => {
-  // console.log(userAnswers);
-  // console.log(score)
-  const triesTotal = tally(userAnswers);
-  const oneTries = triesTotal[1] && <div><strong>{triesTotal[1]}</strong> on the first try.</div>;
-  const twoTries = triesTotal[2] && <div><strong>{triesTotal[2]}</strong> on the second try.</div>;
-  const threeTries = triesTotal[3] && <div><strong>{triesTotal[3]}</strong> on the third try.</div>;
-  const fourTries = triesTotal[4] && <div><strong>{triesTotal[4]}</strong> on the fourth try.</div>;
+var triesTotal = [0];
+var temp = 0;
+export default class Results extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {};
+        this.handleMount = this.handleMount.bind(this);
+    }
+    componentWillMount()
+    {
+        this.handleMount();
+    }
+    handleMount = function handleMount() {
+        // body...
+        triesTotal = tally(this.props.userAnswers);
+        temp = this.props.flukeCount(triesTotal[3], triesTotal[4]);
+    }
+    render() {
+        let tries1 = 0;
+        let tries2 = 0;
+        let tries3 = 0;
+        let tries4 = 0;
+        if (triesTotal[1])
+            tries1 = triesTotal[1];
+        if (triesTotal[2])
+            tries2 = triesTotal[2];
+        if (triesTotal[3])
+            tries3 = triesTotal[3];
+        if (triesTotal[4])
+            tries4 = triesTotal[4];
+        return (
+            <div >
+                <Card raised centered>
+                    <Card.Content extra>
+                        <Segment inverted fluid>
+                            <Header as='h4' inverted color='teal'>Assessment Result</Header>
+                        </Segment>
+                        <Table color='violet' inverted>
+                            <Table.Body>
+                                <Table.Row>
+                                    <Table.Cell>User Name</Table.Cell>
+                                    <Table.Cell>{this.props.firstname}</Table.Cell>
+                                </Table.Row>
+                                <Table.Row>
+                                    <Table.Cell>Domain Name</Table.Cell>
+                                    <Table.Cell>React</Table.Cell>
+                                </Table.Row>
+                            </Table.Body>
+                        </Table>
 
-{
-   flukeCount(triesTotal[3],triesTotal[4])};
-  return (
-   <div className="results-container">
-   <div>
-     <Card fluid>
-     <Card.Content>
-     <Card.Header>
+                        {this.props.flag1 == 'practice'
+                            ? <div>
+                                    <ResultPie tries={triesTotal}/></div>
 
-<strong>
-   Quiz Results
-   </strong><br/>
- </Card.Header>
+                            : ''}
 
-</Card.Content>
+                        <Label align='center' inverted color='purple'>Your total Score is:{this.props.score}/{this.props.totalQuestions}</Label>
+                    </Card.Content>
 
-<Card.Content extra>
+                    <Card.Content extra>
+                        <div >
+                            <a href="#/chat/react">
+                                <Button animated='fade' color='teal'>
+                                    <Button.Content visible>End Assessment</Button.Content>
+                                    <Button.Content hidden><Icon name='power'/></Button.Content>
+                                </Button>
+                            </a>
+                            <a>
+                                <Button animated='fade' color='teal' floated='right' onClick={this.props.restartQuiz}>
+                                    <Button.Content visible>Restart</Button.Content>
+                                    <Button.Content hidden>
+                                        <Icon name='repeat'/>
+                                    </Button.Content>
+                                </Button>
+                            </a>
+                        </div>
+                    </Card.Content>
 
-<strong>You answered...</strong><br/>
-   <strong> {oneTries} </strong>
-   <strong>{twoTries} </strong>
-   <strong> {threeTries}  </strong>
-   <strong> {fourTries}</strong>
+                </Card>
+            </div>
 
-
-<div className="results-total"><strong>Your Total Score is </strong><strong>{score}/{totalQuestions}</strong></div>
-   <a><Button  color='green' align='center' onClick={restartQuiz}>Restart Assessment</Button></a> <br/><br/>
-
-  <a href="#/chat/react" ><Button color='red' align='center' icon='ticket'>End Assessment</Button></a>
-
-
-</Card.Content>
-
-</Card>
-
-
-  </div>
-   </div>
-
-);
+        );
+    }
 }
-
-Results.propTypes = {
-  userAnswers: PropTypes.array.isRequired,
-  score: PropTypes.number.isRequired,
-  restartQuiz: PropTypes.func.isRequired
-};
-
-export default Results;
