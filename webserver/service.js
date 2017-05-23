@@ -9,6 +9,7 @@ let getLexicons = require('./lexicon/getLexicons');
 let request = require('request');
 let zlib = require('zlib');
 let fs = require('fs');
+let UserSchema=require('./models/user');
 let log4js = require('log4js');
 let logger = log4js.getLogger();
 function createApp() {
