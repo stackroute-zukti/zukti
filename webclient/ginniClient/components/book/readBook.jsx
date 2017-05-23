@@ -15,7 +15,6 @@ import Cookie from 'react-cookie';
 import Dropzone from 'react-dropzone';
 import Config from '../../../../config/url';
 import './readBook.css';
-import AlertContainer from 'react-alert'
 import ReadBooksPage from '../../../Multi_Lingual/Wordings.json';
 const ReactToastr = require('react-toastr');
 const {ToastContainer} = ReactToastr;
