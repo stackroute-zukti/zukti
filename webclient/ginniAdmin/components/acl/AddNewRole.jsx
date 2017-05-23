@@ -577,30 +577,7 @@ export default class AddNewRole extends React.Component {
                     <Grid.Column>
                       <Label floating color='red'>
                           {this.state.counter}</Label>
-                        <Modal open={this.state.AssignNewRole} trigger={< Button secondary onClick = {
-                            this.AssignNewRole
-                        } > Add roles to new User</Button>}>
-                            <Header icon='lock' content='Assign Role to New User'/>
-                            <Modal.Content>
-                                <Segment inverted>
-                                    <Dropdown placeholder='Select User' onChange={this.dropdownSelectUser} fluid search selection options={this.state.newEmailForDropDown}/>{this.state.flagDropDown
-                                        ? <Dropdown placeholder='Select role' onChange={this.dropdownSelectRoles} fluid search selection options={this.state.rolesForDropDown}/>
-                                        : ''}
-                                    <Button disabled={!this.state.flagDropDown} color='green' onClick={this.saveuserroles}>
-                                        Save
-                                    </Button>
-                                    <Button color='red' onClick={this.modalOff}>
-                                        <Icon name='close'/>
-                                        Close
-                                    </Button>
-                                </Segment>
-                            </Modal.Content>
-                        </Modal>
-
-                    </Grid.Column>
-
-                    <Grid.Column>
-                        <Modal open={this.state.AddrolemodalSwitch} trigger={< Button secondary onClick = {
+                         <Modal open={this.state.AddrolemodalSwitch} trigger={< Button secondary onClick = {
                             this.addNewRole
                         } > Add New Role < /Button>}>
                             <Header icon='lock' content='Create New Role'/>
@@ -626,6 +603,28 @@ export default class AddNewRole extends React.Component {
                                         Close
                                     </Button>
 
+                                </Segment>
+                            </Modal.Content>
+                        </Modal>
+
+                    </Grid.Column>
+                                <Grid.Column>
+                                <Modal open={this.state.AssignNewRole} trigger={< Button secondary onClick = {
+                            this.AssignNewRole
+                        } > Add roles to new User</Button>}>
+                            <Header icon='lock' content='Assign Role to New User'/>
+                            <Modal.Content>
+                                <Segment inverted>
+                                    <Dropdown placeholder='Select User' onChange={this.dropdownSelectUser} fluid search selection options={this.state.newEmailForDropDown}/>{this.state.flagDropDown
+                                        ? <Dropdown placeholder='Select role' onChange={this.dropdownSelectRoles} fluid search selection options={this.state.rolesForDropDown}/>
+                                        : ''}
+                                    <Button disabled={!this.state.flagDropDown} color='green' onClick={this.saveuserroles}>
+                                        Save
+                                    </Button>
+                                    <Button color='red' onClick={this.modalOff}>
+                                        <Icon name='close'/>
+                                        Close
+                                    </Button>
                                 </Segment>
                             </Modal.Content>
                         </Modal>
