@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form, Grid,Modal, Button, Dropdown, Input, Icon, Divider} from 'semantic-ui-react';
+import {Form, Grid,Modal, Button, Dropdown,Divider} from 'semantic-ui-react';
 import Config from '../../../../config/url';
 import Axios from 'axios';
 import Snackbar from 'material-ui/Snackbar';

@@ -14,7 +14,9 @@ router.get('/getTestDomain',function(req,res){
 
 // To get TestConcept in DropDown based on testDomain
 router.post('/getTestConcept',function(req,res){
-  let query = 'Match (n:testdomain)-[:testconcept]->(b) where n.name="'+req.body.TestDomainvalue+'" return collect (b.name) as tconcept';
+  let query = 'Match (n:testdomain)-[:testconcept]->(b)\
+   where n.name="'+req.body.TestDomainvalue+'" \
+   return collect (b.name) as tconcept';
   let session = getNeo4jDriver().session();
     session.run(query).then(function(result){
       res.send(result.records[0]);
@@ -23,11 +25,12 @@ router.post('/getTestConcept',function(req,res){
 });
 
 
-// To get TestConcept in DropDown based on testDomain
+// To get TestQuestion details based on testquestion
 router.post('/getTestQdetails',function(req,res){
   let query = 'Match (n:testquestion) where n.question="'+req.body.TestQuestion+'" \
   return collect (n.question) as q,collect (n.answer) as tanswer,\
   collect (n.hint) as hint,collect (n.option) as options,collect (n.type) as type';
+  console.log("in router",query);
   let session = getNeo4jDriver().session();
     session.run(query).then(function(result){
       res.send(result.records[0]);
@@ -35,13 +38,13 @@ router.post('/getTestQdetails',function(req,res){
           });
 });
 
-// To set TestConcept in DropDown based on testDomain
+// To set TestQuestion details in Edit-TestQuestion based on testquestion
 router.post('/setTestQdetails',function(req,res){
+  console.log(req.body.testanswer);
   let query = 'Match (n:testquestion) where n.question="'+req.body.TestQuestion+'" \
   set n.answer='+JSON.stringify(req.body.testanswer)+',n.option='+ JSON.stringify(req.body.testoptions)+', \
   n.hint="'+req.body.testhint+'",\
   n.question="'+req.body.testquestion+'"';
-  console.log(query);
   let session = getNeo4jDriver().session();
     session.run(query).then(function(result){
       res.send("result");
@@ -49,7 +52,7 @@ router.post('/setTestQdetails',function(req,res){
           });
 });
 
-//to delete test question
+//To delete testquestion in Edit-TestQuestion
 router.post('/deleteTestQdetails',function(req,res){
   let query = 'Match (n:testquestion) where n.question="'+req.body.TestQuestion+'" detach delete n';
   let session = getNeo4jDriver().session();
@@ -61,7 +64,7 @@ router.post('/deleteTestQdetails',function(req,res){
 
 // To get TestQuestion in DropDown based on testDomain and TestConcept
 router.post('/getTestQuestion',function(req,res){
-    let query = 'Match (n:testdomain)-[:testconcept]->(b:testconcept)-[:testquestion]->(c:testquestion)\
+  let query = 'Match (n:testdomain)-[:testconcept]->(b:testconcept)-[:testquestion]->(c:testquestion)\
    where n.name="'+req.body.TestDomainvalue+'"  and b.name="'+req.body.TestConceptvalue+'"\
    return collect (c.question) as question';
   let session = getNeo4jDriver().session();
@@ -97,11 +100,11 @@ router.post('/createTestConcept',function(req,res){
 router.post('/createTestQuestions',function(req,res){
   let query = 'match (d:testdomain {name:"'+req.body.TestDomain+'"}),\
   (a:testconcept {name:"'+req.body.TestConcept+'"})\
-  create (c:testquestion {question:"'+req.body.TestQuestion+'",\
-   option: '+ JSON.stringify(req.body.TestOptions)+',\
-   answer:'+JSON.stringify(req.body.TestAnswer)+',type:"'+req.body.TestType+'",\
-  hint:"'+req.body.TestHint+'"}),\
-  (a)-[:testquestion]->(c)';
+  merge (c:testquestion {question:"'+req.body.TestQuestion+'",\
+   option: '+ JSON.stringify(req.body.Testoptions)+',\
+   answer:'+JSON.stringify(req.body.TestAnswer)+',MAQ:"'+req.body.MAQ+'",\
+  hint:"'+req.body.TestHint+'"})\
+  create(a)-[:testquestion]->(c)';
   let session = getNeo4jDriver().session();
     session.run(query).then(function(result){
       res.send(result);

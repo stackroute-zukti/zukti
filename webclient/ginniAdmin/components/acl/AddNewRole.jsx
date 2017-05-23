@@ -17,6 +17,9 @@ import {
 import Saveaclroutes from './saveaclroutes.jsx';
 import RoutesDropDown from './routesdropdown.jsx';
 var temp = [];
+const ReactToastr = require('react-toastr');
+const {ToastContainer} = ReactToastr;
+const ToastMessageFactory = React.createFactory(ReactToastr.ToastMessage.animation);
 var RoutesSelected = [];
 var Resource = [],
     RemoveResource = []; //to get the deleted resources;
@@ -418,7 +421,19 @@ export default class AddNewRole extends React.Component {
                     'authType': this.state.rolesUpdate[i].authType
                 },
                 success: function(data) {
-                    this.setState({counter: "0"})
+                    this.setState({counter: "0"});
+
+
+this.refs.container.warning('Give proper article', '',
+{
+
+timeOut: 3000,
+
+extendedTimeOut: 100
+
+});
+
+
                     console.log("success");
                 }.bind(this),
                 error: function(error) {
@@ -563,6 +578,16 @@ export default class AddNewRole extends React.Component {
             },
             success: function(data) {
 
+this.refs.container.warning('saved', '',
+{
+
+timeOut: 3000,
+
+extendedTimeOut: 100
+
+});
+
+
                 this.roleInput.value = ''
             }.bind(this),
             error: function(error) {}.bind(this)
@@ -675,6 +700,11 @@ export default class AddNewRole extends React.Component {
 
                     </Grid.Column>
                 </Grid.Row>
+                <div>
+
+       <ToastContainer ref='container' toastMessageFactory=            {ToastMessageFactory} className='toast-top-center'/>
+
+   </div>
             </Grid>
         );
     }
