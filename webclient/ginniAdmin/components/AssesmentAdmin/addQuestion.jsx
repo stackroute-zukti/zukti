@@ -44,7 +44,6 @@ export default class AddQuestion extends React.Component {
         }
         // remove option textbox and values
         removeOption(type, index,name) {
-          e.preventDefault();
             this.state.Testoptions.splice(index, 1);
             this.setState({Testoptions: this.state.Testoptions});
 

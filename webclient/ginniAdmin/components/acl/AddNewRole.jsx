@@ -270,35 +270,49 @@ export default class AddNewRole extends React.Component {
         this.dropdownSelectRoutes = this.dropdownSelectRoutes.bind(this);
         this.getResourceRoles = this.getResourceRoles.bind(this); //to get allocated resource for a role
         this.removeRoute = this.removeRoute.bind(this); //to remove the resource
+        this.saveAlert=this.saveAlert.bind(this);
     };
     componentWillMount() {
         this.getEmail(); //called in componenwillmount also to show the counter values and inside some functions to get the updated values
 
     }
+    saveAlert()
+    {
+      this.refs.container.success('saved', '',
+      {
+
+        timeOut: 3000,
+
+        extendedTimeOut: 100
+
+      });
+    }
+
     //for assigning role to new user
     AssignNewRole() {
-        this.getEmail(); //for getting new email entries
-        this.getroles(); //for getting list roles from db
-        this.setState({EditResourcemodalSwitch: false});
-        this.setState({AddrolemodalSwitch: false});
-        this.setState({ChangeRolemodalSwitch: false});
-        this.setState({AssignNewRole: true});
+      this.getEmail(); //for getting new email entries
+      this.getroles(); //for getting list roles from db
+      this.setState({EditResourcemodalSwitch: false});
+      this.setState({AddrolemodalSwitch: false});
+      this.setState({ChangeRolemodalSwitch: false});
+      this.setState({AssignNewRole: true});
     }
     //for adding new role
     addNewRole() {
-        this.setState({EditResourcemodalSwitch: false});
-        this.setState({AddrolemodalSwitch: true});
-        this.setState({ChangeRolemodalSwitch: false});
-        this.setState({AssignNewRole: false});
+      this.setState({EditResourcemodalSwitch: false});
+      this.setState({AddrolemodalSwitch: true});
+      this.setState({ChangeRolemodalSwitch: false});
+      this.setState({AssignNewRole: false});
     }
     //for edit resource functionality
     EditResource() {
-        this.getroles(); //for getting roles
-        this.setState({EditResourcemodalSwitch: true});
-        this.setState({AddrolemodalSwitch: false});
-        this.setState({ChangeRolemodalSwitch: false});
-        this.setState({AssignNewRole: false});
+      this.getroles(); //for getting roles
+      this.setState({EditResourcemodalSwitch: true});
+      this.setState({AddrolemodalSwitch: false});
+      this.setState({ChangeRolemodalSwitch: false});
+      this.setState({AssignNewRole: false});
     }
+
     //for changing existing role
     ChangeRole() {
 
@@ -421,17 +435,10 @@ export default class AddNewRole extends React.Component {
                     'authType': this.state.rolesUpdate[i].authType
                 },
                 success: function(data) {
+                  this.saveAlert();
+
                     this.setState({counter: "0"});
 
-
-this.refs.container.warning('Give proper article', '',
-{
-
-timeOut: 3000,
-
-extendedTimeOut: 100
-
-});
 
 
                     console.log("success");
@@ -578,15 +585,7 @@ extendedTimeOut: 100
             },
             success: function(data) {
 
-this.refs.container.warning('saved', '',
-{
-
-timeOut: 3000,
-
-extendedTimeOut: 100
-
-});
-
+               this.saveAlert();
 
                 this.roleInput.value = ''
             }.bind(this),
@@ -607,6 +606,11 @@ extendedTimeOut: 100
                         } > Add New Role < /Button>}>
                             <Header icon='lock' content='Create New Role'/>
                             <Modal.Content>
+                            <div>
+
+                   <ToastContainer ref='container' toastMessageFactory=            {ToastMessageFactory} className='toast-top-center'/>
+
+               </div>
                                 <Segment inverted>
                                     <Form id='New Role'>
                                         <input placeholder='add role' width='100%' ref={(input1) => {
@@ -639,6 +643,11 @@ extendedTimeOut: 100
                         } > Add roles to new User</Button>}>
                             <Header icon='lock' content='Assign Role to New User'/>
                             <Modal.Content>
+                            <div>
+
+                   <ToastContainer ref='container' toastMessageFactory=            {ToastMessageFactory} className='toast-top-center'/>
+
+               </div>
                                 <Segment inverted>
                                     <Dropdown placeholder='Select User' onChange={this.dropdownSelectUser} fluid search selection options={this.state.newEmailForDropDown}/>{this.state.flagDropDown
                                         ? <Dropdown placeholder='Select role' onChange={this.dropdownSelectRoles} fluid search selection options={this.state.rolesForDropDown}/>
@@ -661,6 +670,11 @@ extendedTimeOut: 100
                         } > Edit Resource < /Button>}>
                             <Header icon='lock' content='Edit Resource'/>
                             <Modal.Content>
+                            <div>
+
+                   <ToastContainer ref='container' toastMessageFactory=            {ToastMessageFactory} className='toast-top-center'/>
+
+               </div>
                                 <Segment inverted>
                                     <Dropdown placeholder='Select role' onChange={this.dropdownSelectRoles} fluid search selection options={this.state.rolesForDropDown}/> {this.state.flagDropDown && this.state.roleChangedFlag
                                         ? <RoutesDropDown toDelete={this.removeRoute} ResourceSelected={Resource} routes={this.state.routes} selectedRoutes={this.dropdownSelectRoutes}/>
@@ -682,6 +696,11 @@ extendedTimeOut: 100
                         } > Change Role < /Button>}>
                             <Header icon='lock' content='Change Role'/>
                             <Modal.Content>
+                            <div>
+
+                   <ToastContainer ref='container' toastMessageFactory=            {ToastMessageFactory} className='toast-top-center'/>
+
+               </div>
                                 <Segment inverted>
                                     <Dropdown placeholder='Select User' onChange={this.dropdownSelectUser} fluid search selection options={this.state.emailForDropDown}/>{this.state.flagDropDown
                                         ? <Dropdown placeholder='Select role' defaultValue={PreviousEmail} onChange={this.dropdownSelectRoles} fluid search selection options={this.state.rolesForDropDown}/>
@@ -700,11 +719,7 @@ extendedTimeOut: 100
 
                     </Grid.Column>
                 </Grid.Row>
-                <div>
 
-       <ToastContainer ref='container' toastMessageFactory=            {ToastMessageFactory} className='toast-top-center'/>
-
-   </div>
             </Grid>
         );
     }
