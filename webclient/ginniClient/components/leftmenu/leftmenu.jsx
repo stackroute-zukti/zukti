@@ -485,7 +485,7 @@ export default class LeftMenu extends Component {
                     </Menu.Item>
 
 
-                    <Menu.Item name='Book' active={activeItem === 'Book'}
+                    <Menu.Item name='Articles/Book' active={activeItem === 'Articles/Book'}
                       onClick={this.handleItemClick}>
                         <Icon name='leanpub' color='teal'/>
                         {LeftMenuPage.LeftMenu.Menu6}
