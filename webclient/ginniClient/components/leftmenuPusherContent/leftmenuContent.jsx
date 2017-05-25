@@ -75,7 +75,7 @@ export default class LeftMenuContent extends React.Component {
                 {
                     return <LogOut/>
                 }
-            case 'Book':
+            case 'Articles/Book':
                 {
                     return <Books/>
                 }
