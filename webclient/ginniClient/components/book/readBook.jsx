@@ -27,9 +27,10 @@ export default class Books extends React.Component {
         this.state = {
             options: [],
             allFiles: [],
-            bookname: '',
+            articlename: '',
             zynlaBook:[],
-            bookOptions:[]
+            bookOptions:[],
+            bookname:'',
         };
         this.getZynlaBook=this.getZynlaBook.bind(this);
         this.handleUserBookInput = this.handleUserBookInput.bind(this);
@@ -38,6 +39,7 @@ export default class Books extends React.Component {
         this.domainAlert = this.domainAlert.bind(this);
         this.generateBook = this.generateBook.bind(this);
         this.getUserBook = this.getUserBook.bind(this);
+        this.handleBookDropdownChange=this.handleBookDropdownChange.bind(this);
         //this.onDocxDrop=this.onDocxDrop.bind(this);
     }
       keywordAlert()
@@ -75,31 +77,21 @@ export default class Books extends React.Component {
        method:'get',
        url :'http://localhost:8081/book/sendFileLength',
          }).then((response) => {
-     let books = response.data.flength;
-     //response.download(response.data);
-     console.log(books);
-     for(let i=0;i<books;i++)
-       {
-         Axios({
-            method:'post',
-            data:{index:i},
-            url :'http://localhost:8081/book/sendFile',
-              }).then((response) => {
-                console.log("file");
-                // Axios({
-                //    method:'post',
-                //    data:{file:response},
-                //    url :'http://localhost:8080/book/saveFile',
-                //      }).then((response) => {
-                //        console.log(response.data);
-                //      })
+     let books =response.data.filearr ;
+         console.log(books);
+      books.forEach((books) => {
+          this.state.bookOptions.push({text: books, value: books});
+        console.log(response.data);
+      }).
+    catch((error) => {
+        console.log(error);
+   });
+   });
+   }
 
-              })
-            }
-            })
-       }
   handleBookDropdownChange(e, {value}) {
   this.setState({bookname:value});
+  this.setState({articlename:''});
 }
     componentDidMount() {
         this.getUserBook();
@@ -173,7 +165,8 @@ export default class Books extends React.Component {
         });
     }
     handleDropdownChange(e, {value}) {
-        this.setState({bookname: value});
+        this.setState({articlename: value});
+        this.setState({bookname:''});
     }
     getUserBook()
     {
@@ -186,17 +179,17 @@ export default class Books extends React.Component {
             }
         }).then((response) => {
             let books = response.data.book_arr;
-            if (books.length > 0) {
+          //  if (books.length > 0) {
                 books.forEach((books) => {
                     this.state.options.push({text: books, value: books});
                     //console.log(response.data);
                 }).catch((error) => {
                     console.log(error);
                 });
-            } else {
-                let data = 'Books are not available'
-                this.domainAlert(data);
-            }
+            // } else {
+            //     let data = 'Books are not available'
+            //     this.domainAlert(data);
+            // }
         });
 
     }
@@ -214,7 +207,7 @@ export default class Books extends React.Component {
                 <Form>
 
                         <Label id='label' color='violet' size='large'>
-                            Choose your artice here &nbsp;&nbsp;
+                            Choose article/Book here &nbsp;&nbsp;
                             <Icon name='clone'/>
                         </Label>  &nbsp;
                         <Input>
@@ -226,18 +219,28 @@ export default class Books extends React.Component {
 
                 </Form>
                 <div>
-                    {this.state.bookname
-                        ? <object id="object" data={require('../../../../PDF/' + this.state.bookname)} width='900' height='580' type="application/pdf">
-                                {/* <iframe src={require('../../../../PDF/'+this.state.bookname)} width='900' height='500' title={this.state.bookname}  type='application/pdf'/> */}
+                    {this.state.articlename!=''?
+                        <object id="object" data={require('../../../../PDF/' + this.state.articlename)} width='900' height='580' type="application/pdf">
+                                {/* <iframe src={require('../../../../PDF/'+this.state.articlename)} width='900' height='500' title={this.state.articlename}  type='application/pdf'/> */}
                             </object>
 
-                        : ''}
+                        :  ''}
+                </div>
+                <div>
+                  {this.state.bookname!=''?
+                      <object id="object" data={require('../../../../../../zynlaCopy/BookDocs/pdf/'+this.state.bookname)} width='900' height='580' type="application/pdf">
+                              {/* <iframe src={require('../../../../PDF/'+this.state.articlename)} width='900' height='500' title={this.state.articlename}  type='application/pdf'/> */}
+                          </object>
+
+                      :  ''}
+
+
                 </div>
 
 
                 {/* <div>
-           {this.state.bookname?
-           <a href={require('../../../../PDF/'+this.state.bookname)} download={this.state.bookname}>Click to Open and Download</a>
+           {this.state.articlename?
+           <a href={require('../../../../PDF/'+this.state.articlename)} download={this.state.articlename}>Click to Open and Download</a>
             :''}
        </div> */}
                 <div>

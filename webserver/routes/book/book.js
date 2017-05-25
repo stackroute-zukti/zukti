@@ -57,11 +57,8 @@ router.post('/', function(req, res) {
                     count++;
                 }
             });
-            //console.log(count);
-            //console.log("outside" + count);
+
             if (count < 4) {
-                //console.log("inside if" + count);
-                //console.log(count);
                 flag = 1;
                 for (let i = 0; i < concepts.length; i++) {
                     if (keyword == concepts[i]) {
@@ -124,5 +121,4 @@ router.post('/getBook', function(req, res) {
         res.json({book_arr});
     });
 });
-
 module.exports = router;
