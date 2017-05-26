@@ -45,7 +45,8 @@ class SecondDecider extends Component {
                                                 <div className='carddisp'>
                                                     <Card.Description>
                                                         <br/>
-                                                        A time limit of 5 minutes will be given to you for the completetion of 10 questions on your selected domain REACT
+                                                        A time limit will be given to you for the completetion of given 5 questions on your selected domain REACT
+                                                        <br/>
                                                         <br/>
                                                     </Card.Description>
                                                 </div>
@@ -77,7 +78,7 @@ class SecondDecider extends Component {
                                                 </Card.Header>
                                                 <div className='carddisp'>
                                                     <Card.Description><br/>
-                                                        No time limit is given to you for the completetion of 10 questions on your selected domain REACT
+                                                        No time limit is given to you for the completetion of 5 questions on your selected domain REACT
                                                         <br/><br/>
                                                     </Card.Description>
                                                 </div>

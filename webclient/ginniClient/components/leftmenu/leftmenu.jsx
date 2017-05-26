@@ -172,7 +172,7 @@ export default class LeftMenu extends Component {
         socket.emit('send_to_channel',{channelName:this.state.activeUser,
           newMsg:{date:date,message:senderMsg.message,
           senderName:this.state.socketUser}});
-        msgArray.push({date:data.date,message:data.message,senderName:data.senderName});
+        //msgArray.push({date:data.date,message:data.message,senderName:data.senderName});
         this.setState({chatDetails:msgArray});
       }
       else

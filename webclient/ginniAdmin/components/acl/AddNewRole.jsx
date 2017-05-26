@@ -357,8 +357,7 @@ export default class AddNewRole extends React.Component {
     }
     //for getting the selected roles-used in assign new role and change role
     dropdownSelectRoles(e, data) {
-        console.log("role selected", data);
-        console.log("authtype", EmailAuthType);
+
         var arr = [];
         rolesForHeader = data.value;
         Resource = [];
@@ -406,7 +405,6 @@ export default class AddNewRole extends React.Component {
                 role: rolesForHeader
             },
             success: function(data) {
-                console.log("getResourceRoles", data);
                 for (let i = 0; i < data.length; i++) {
                     var res = data[i].resources;
 
@@ -424,7 +422,6 @@ export default class AddNewRole extends React.Component {
 
     //for updating user roles in db
     saveuserroles() {
-        console.log("rolesUpdatae got", this.state.rolesUpdate);
         for (var i = 0; i < this.state.rolesUpdate.length; i++) {
             $.ajax({
                 url: '/aclroutes/updateUserRole',
@@ -441,10 +438,8 @@ export default class AddNewRole extends React.Component {
 
 
 
-                    console.log("success");
                 }.bind(this),
                 error: function(error) {
-                    console.log("error", error);
                 }.bind(this)
             })
 
@@ -456,7 +451,6 @@ export default class AddNewRole extends React.Component {
             url: '/aclroutes/getroles',
             type: 'GET',
             success: function(data) {
-                console.log("data roles", data);
                 var rolesfordropdown = [];
                 var rolesnew = [];
                 var count = 0;
@@ -490,8 +484,7 @@ export default class AddNewRole extends React.Component {
             url: '/aclroutes/getnewemail',
             type: 'GET',
             success: function(data) {
-                //var rolesnew = [];
-                console.log("data got in getnewemailroute", data);
+            
                 var count = 0;
                 var emailForDropDown = [];
                 var arr = [];
@@ -515,7 +508,6 @@ export default class AddNewRole extends React.Component {
                             "role": data[i]["facebook"]["role"],
                             "authType": "facebook"
                         };
-                        console.log("data pushed", samp);
                         emailForDropDown.push(samp);
 
                     }
@@ -537,7 +529,6 @@ export default class AddNewRole extends React.Component {
                             "role": data[i]["local"]["role"],
                             "authType": "local"
                         };
-                        console.log("data pushed", samp);
                         emailForDropDown.push(samp);
 
                     }
@@ -559,12 +550,10 @@ export default class AddNewRole extends React.Component {
                             "role": data[i]["google"]["role"],
                             "authType": "google"
                         };
-                        console.log("data pushed", samp);
                         emailForDropDown.push(samp);
 
                     }
                 } //end of for
-                console.log("emailForDropDown", this.state.emailForDropDown);
                 this.setState({emailForDropDown: emailForDropDown}); //for displaying user email having role in dropdown
                 this.setState({newEmailForDropDown: arr}); //for displaying new entry email in dropdown
                 this.setState({counter: count}); //for showing number of new entries

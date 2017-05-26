@@ -18,9 +18,7 @@ class DecideDimmer extends Component {
     }
 
     show = (dimmer) => () => this.setState({dimmer, open: true})
-    // close () {
-    //   hashHistory.push('/chat/react');
-    //  }
+
     close()
     {
         window.location.reload();

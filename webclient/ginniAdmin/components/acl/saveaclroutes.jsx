@@ -14,8 +14,6 @@ export default class Saveaclroutes extends React.Component {
         this.createJSON = this.createJSON.bind(this);
     }
     saveAclRoutes() {
-        console.log("role selected ", this.props.role);
-        console.log("routes selected", this.props.routes_Selected);
         this.createJSON(this.props.routes_Selected);
 
         // this.arrangeRoutes(this.props.assigned_Roles);

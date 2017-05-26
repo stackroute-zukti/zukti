@@ -221,28 +221,24 @@ export default class Books extends React.Component {
                 <div>
                     {this.state.articlename!=''?
                         <object id="object" data={require('../../../../PDF/' + this.state.articlename)} width='900' height='580' type="application/pdf">
-                                {/* <iframe src={require('../../../../PDF/'+this.state.articlename)} width='900' height='500' title={this.state.articlename}  type='application/pdf'/> */}
+
                             </object>
 
                         :  ''}
                 </div>
-                <div>
+        {/*    <div>
                   {this.state.bookname!=''?
-                      <object id="object" data={require('../../../../../../zynlaCopy/BookDocs/pdf/'+this.state.bookname)} width='900' height='580' type="application/pdf">
-                              {/* <iframe src={require('../../../../PDF/'+this.state.articlename)} width='900' height='500' title={this.state.articlename}  type='application/pdf'/> */}
-                          </object>
+                      <object id="object" data={require('../../../../../../zynlaCopy/BookDocs/pdf/'+this.state.bookname)} width='900' height='580' type="application/pdf"/>
+
+
 
                       :  ''}
 
+               </div>*/}
 
-                </div>
 
 
-                {/* <div>
-           {this.state.articlename?
-           <a href={require('../../../../PDF/'+this.state.articlename)} download={this.state.articlename}>Click to Open and Download</a>
-            :''}
-       </div> */}
+
                 <div>
                     <ToastContainer ref='container' toastMessageFactory={ToastMessageFactory} className='toast-top-center'/>
                 </div>

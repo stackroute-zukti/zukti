@@ -8,13 +8,4 @@ const tally = arr => {
   }, {});
 };
 
-// const tally = function(arr){
-// 	return arr.map(function(item){
-// 		return item.tries;
-// 	}).reduce(function(acc, item){
-// 		acc[item] =(acc[item] || 0) + 1;
-// 		return acc;
-// 	}, {});
-// };
-
 exports.default=tally;

@@ -6,9 +6,9 @@ var countwrong = [];
 var array1 = [];
 var array2 = [];
 
-//@Pavithra.N :to fetch the questions from ne04j
+//@pavithra.n :to fetch the questions from ne04j
 router.post('/getAssesmentQuestion', function(req, res) {
-    let query = 'match (n:testdomain {name:"' + req.body.domain + '"})-[*]->(j:testquestion)\
+    let query = 'match (n:testdomain {name:"' + req.body.domain + '"})-[*]->(j:testquestion{MAQ:"false"})\
   return collect (distinct j) as question,id(j)';
     let session = getNeo4jDriver().session();
     var question = [];
@@ -17,18 +17,23 @@ router.post('/getAssesmentQuestion', function(req, res) {
             var obj = {};
             var answer = result.records[i]._fields["0"]["0"].properties.answer;
             var option = result.records[i]._fields["0"]["0"].properties.option;
-            var correct = option.indexOf(answer);
+            var MAQ=result.records[i]._fields["0"]["0"].properties.MAQ;
+            var correct = [];
             obj["question"] = result.records[i]._fields["0"]["0"].properties.question;
             obj["answers"] = option;
+            for(let j=0;j<answer.length;j++)
+            {
+              correct.push(option.indexOf(answer[j]))
+            }
             obj["correct"] = correct;
             obj["id"] = result.records[i]._fields["0"]["0"].identity.low;
+            obj["MAQ"]=MAQ;
             question.push(obj);
         }
         res.send(question);
         session.close();
     });
 });
-
 //@Pavithra.n:to calculate the difficulty level of the questions
 router.post('/setDifficulty', function(req, res) {
     countcorrect = [];

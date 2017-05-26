@@ -34,14 +34,11 @@ function setupZuktiRoutes(app) {
     };
 
 
-        console.log("inside server.js");
         var aclvar = require('../acl/acl');
         aclvar.aclpart(function(err) {
             if (err) {
-                console.log(err);
             } else {
                 global.acl = aclvar.getAcl();
-                console.log('In Server Js', global.acl);
 
 
     logger.debug('getLexicons called...');
@@ -95,29 +92,22 @@ function setupZuktiRoutes(app) {
 
 
   app.post('/addAclRoles', function(req, res, next) {
-      console.log("inside route getjson", req.body);
-      console.log("inside roles ", req.body.role);
       const fs = require('fs');
       var theFile = fs.readFileSync('Testaclroles.json');
       let myObj = [];
       let fileLength = JSON.parse(theFile).length;
-      console.log("file length" + fileLength);
       if (fileLength > 0) {
           myObj = JSON.parse(theFile);
           var index = myObj.map(function(x) {
               return x.roles;
           }).indexOf(req.body.role);
-        console.log("flag empty resource",req.body.flagEmptyResource);
-  console.log("flag empty resource",req.body.flagEmptyRemove);
           if (req.body.flagEmptyResource == 1) {
               if (index != -1) {
                   myObj.splice(index, 1);
-                      console.log("after slicing for empty resource",myObj);
               }
           } else {
               if (index != -1) {
                   myObj.splice(index, 1);
-  console.log("after slicing for normal ",myObj);
               }
               myObj.push(JSON.parse(req.body.data_to_store));
           }
@@ -125,13 +115,10 @@ function setupZuktiRoutes(app) {
                myObj.push(JSON.parse(req.body.data_to_store));
                }
       if (req.body.flagEmptyRemove != 1) {
-console.log("toremove",JSON.parse(req.body.toremove));
           for (let i = 0; i < JSON.parse(req.body.toremove).length; i++) {
               acl.removeAllow(req.body.role, JSON.parse(req.body.toremove)[i], '*', function(err, data) {
                   if (err) {
-                      console.log("error in removing");
                   } else {
-                      console.log("removed");
                   }
               });
           }
@@ -139,9 +126,7 @@ console.log("toremove",JSON.parse(req.body.toremove));
       fs.writeFileSync('Testaclroles.json', JSON.stringify(myObj));
       UserSchema.find({}, function(err, user) {
           if (err) {
-              console.log(err)
           } else {
-                  console.log("data user",user)
               const readline = require('readline');
               const fs = require('fs');
               fs.writeFileSync('Id_Roles.json', JSON.stringify(user));

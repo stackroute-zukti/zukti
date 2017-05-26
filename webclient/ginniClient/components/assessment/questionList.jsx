@@ -1,13 +1,14 @@
 import React, {PropTypes} from 'react';
 import Question from './question';
+import {Container} from 'semantic-ui-react'
 
-const QuestionList = ({questions, handleAnswerClick}) => {
+const QuestionList = ({step, checkedValue, questions, handleAnswerClick}) => {
     return (
-        <div className="question-list">
+        <Container fluid>
             {questions.map(question => {
-                return (<Question key={question.question} question={question.question} answers={question.answers} handleAnswerClick={handleAnswerClick}/>);
+                return (<Question key={question.question} step={step} checkedValue={checkedValue} question={question.question} answers={question.answers} handleAnswerClick={handleAnswerClick}/>);
             })}
-        </div>
+        </Container>
     );
 }
 

@@ -164,35 +164,7 @@ export default class Pomodoro extends React.Component {
             : false;
     }
 
-    // alert() {
-    //   // vibration
-    //   if(this.refs.vibrate.checked) {
-    //     window.navigator.vibrate(1000);
-    //   }
-    //   // audio
-    //   if(this.refs.audio.checked) {
-    //     let audio = new Audio('songs/alarm.mp3');
-    //     audio.play();
-    //     setTimeout(()=> audio.pause(), 1400);
-    //   }
-    //   // notification
-    //   if(this.refs.notification.checked) {
-    //     if (this.state.timeType === 1500) {
-    //       let notification = new Notification("Relax :)", {
-    //         icon: "img/coffee.png",
-    //         lang: "en",
-    //         body: "Go talk or drink a coffee."
-    //       });
-    //     } else {
-    //       let notification = new Notification("The time is over!", {
-    //         icon: "img/code.png",
-    //         lang: "en",
-    //         body: "Hey, back to code!"
-    //       });
-    //     }
-    //   }
-    // }
-
+    
     render() {
 
         return (
@@ -210,10 +182,10 @@ export default class Pomodoro extends React.Component {
                     </div>
 
                     <div className="container display types">
-                        //
+
                         <button className="btn code" onClick={this.setTimeForCode}>Code</button>
                         <button className="btn social" onClick={this.setTimeForSocial}>Social</button>
-                        //
+
                         <button className="btn coffee" onClick={this.setTimeForCoffee}>Coffee</button>
                     </div>
 

@@ -253,7 +253,7 @@ deleteTestQdetails(e){
              onChange={this.handleChangeQuestion}
             placeholder='Type question here...'/>
             <br />
-
+<br/><br/>
               <Grid.Row>
                  <Grid.Column width={1}/>
                  <Grid.Column width={11}>

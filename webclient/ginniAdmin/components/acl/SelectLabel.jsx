@@ -23,7 +23,6 @@ this.deleteLabel=this.deleteLabel.bind(this);
 deleteLabel()
 {
 this.props.toDelete(this.props.resource);
-console.log("this.to detelte",this.props.resource);
 this.setState({default:true});
 }
     render() {

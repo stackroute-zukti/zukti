@@ -21,28 +21,21 @@ module.exports = function(app, passport) {
               res.cookie('email', req.user.email); // v2
               res.cookie('domain', 'nil'); // v2
               res.cookie('recommendations', 'true');
-                console.log("role outside",req.user.authType);
       let role;
       RegisteredUser.find({"_id":req.user._id},function(err,data){
-      console.log("user got in login",data);
 
-      console.log("got the user roel",data[0].local.role);
       if(req.user.authType=="local"){
       role=data[0].local.role;
       res.cookie('role',data[0].local.role);
-      console.log("role saved",data[0].local.role);
       }
       else if(req.user.authType=="facebook"){
       role=data[0].facebook.role;
         res.cookie('role',data[0].facebook.role);
-        console.log("role saved",data[0].facebook.role);
       }
       else if(req.user.authType="google"){
       role=data[0].google.role;
         res.cookie('role',data[0].google.role);
-        console.log("role saved",data[0].google.role);
       }
-      console.log("role var",role);
         res.send(req.user);
       });
 
@@ -111,7 +104,6 @@ module.exports = function(app, passport) {
     /* LOCAL SIGNUP*/
     // local sign up route -  all the details entered by the user will be saved in database
     app.post('/signup', function(req, res) {
-        console.log("inside signup");
         var rank=1;
           let newUser = new RegisteredUser();
           String.prototype.capitalizeFirstLetter = function() {
@@ -135,9 +127,7 @@ module.exports = function(app, passport) {
           newUser.local.assessment.noOfFluke=0;
           newUser.local.assessment.fluke=0;
           RegisteredUser.count(function(err, c) {
-           console.log('Count is ' + c);
            rank=c+rank;
-           console.log(rank);
            newUser.local.assessment.rank=rank;
            newUser.save(function(err) {
                if (err) {

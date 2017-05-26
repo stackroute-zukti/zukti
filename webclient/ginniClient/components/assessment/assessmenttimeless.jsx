@@ -56,14 +56,14 @@ export default class Assessment extends Component {
             success: function(response) {
 
                 this.setState({
-                    questions: response,
-                    userAnswers: response.map(question => {
+                    questions: shuffleQuestions(response),
+                    userAnswers: shuffleQuestions(response).map(question => {
                         return {tries: 0}
                     }),
                     step: 1,
                     score: 0,
                     flag: 'timeless',
-                    questionLength: response.length,
+                    questionLength:shuffleQuestions(response).length,
                     graphQuestions: response
                 });
 
@@ -77,11 +77,44 @@ export default class Assessment extends Component {
     {
         this.getQuestions();
     }
-    handleAnswerClick(e) {
+    handleAnswerClick = (e, {value}) =>  {
+        this.setState({value});
+
         correct = 0;
         const {questions, step, userAnswers} = this.state;
-        const isCorrect = questions[0].answers[questions[0].correct] === e.target.innerText;
+        var isCorrect;
+        // const isCorrect = questions[0].answers[questions[0].correct] === e.target.innerText;
         const answersFromUser = userAnswers.slice();
+        if(questions[0].MAQ=="true")
+        {
+            var temp=0;
+            for(let i=0;i<e.target.innerText.length;i++)
+            {
+              if(questions[0].correct.indexOf(questions[0].answers.indexOf(e.target.innerText[i]))!=-1)
+              {
+               temp++;
+              }
+            }
+            if(temp==e.target.innerText.length)
+            {
+              isCorrect=true;
+            }
+            else
+            {
+              isCorrect=false;
+            }
+        }
+
+     else {
+        if(questions[0].correct.indexOf(questions[0].answers.indexOf(e.target.innerText))==-1)
+        {
+          isCorrect=false;
+        }
+        else
+        {
+          isCorrect=true;
+      }
+    }
         const currentStep = step - 1;
         if (!isCorrect) {
             set1.add(questions[0].id);
@@ -91,21 +124,12 @@ export default class Assessment extends Component {
             set.add(questions[0].id);
         }
         if (e.target.innerText) {
-            document.querySelector('.question:first-child').style.pointerEvents = 'none';
+            //document.querySelector('.question:first-child').style.pointerEvents = 'none';
 
             answersFromUser[currentStep] = {
                 //tries: tries + 1
             };
-
             this.setState({userAnswers: answersFromUser});
-
-            setTimeout(() => {
-                const praise = document.querySelector('.praise');
-
-            }, 750);
-
-            setTimeout(this.nextStep, 500);
-
         }
     }
     setDifficultyDetails()
@@ -120,7 +144,6 @@ export default class Assessment extends Component {
                 wrongquestion: JSON.stringify(wrongarr)
             },
             success: function(response) {
-                console.log(response);
                 this.setd();
             }.bind(this),
             error: function(err) {
@@ -134,7 +157,6 @@ export default class Assessment extends Component {
             url: '/assessmentQuestion/setDifficulty',
             type: 'GET',
             success: function(response) {
-                console.log(response);
 
             }.bind(this),
             error: function(err) {
@@ -157,7 +179,7 @@ export default class Assessment extends Component {
                 wrongquestion: JSON.stringify(wrongarr)
             },
             success: function(response) {
-                console.log(response);
+
                 this.setDifficultyDetails();
 
             }.bind(this),
@@ -168,7 +190,6 @@ export default class Assessment extends Component {
     }
     setLearnerDetails()
     {
-        console.log("inside setLearnerDetails");
         var date = moment().format('L');
         var time = moment().format('LTS');
         var email = Cookie.load("email");
@@ -185,7 +206,7 @@ export default class Assessment extends Component {
                 date: date
             },
             success: function(response) {
-                console.log(response);
+
                 this.setUserAttemptedDetails();
             }.bind(this),
             error: function(err) {
@@ -209,7 +230,7 @@ export default class Assessment extends Component {
                 noOfFluke: totalFluke
             },
             success: function(response) {
-                console.log(response);
+
                 rank = response.rank;
                 this.setLearnerDetails();
             }.bind(this),
@@ -249,10 +270,8 @@ export default class Assessment extends Component {
     }
 
     nextStep() {
-
         const {questions, userAnswers, step, score} = this.state;
         const restOfQuestions = questions.slice(1);
-
         const currentStep = step - 1;
         const tries = userAnswers[currentStep];
         this.setState({
@@ -273,7 +292,9 @@ export default class Assessment extends Component {
         totalScore = 0;
         set.clear();
         set1.clear();
-        this.setState({questions: q, step: 1, score: 0, time: 60});
+        this.setState({questions: shuffleQuestions(q),userAnswers: shuffleQuestions(q).map(question => {
+                        return {tries: 0}
+                    }), step: 1, score: 0, time: 60});
 
     }
     flukeCount(a, b)
@@ -292,7 +313,7 @@ export default class Assessment extends Component {
                         return (<Results score={score} flag1={this.state.flag1} firstname={this.state.firstname} totalQuestions={this.state.questionLength * 10} flukeCount={this.flukeCount.bind(this)} restartQuiz={this.restartQuiz.bind(this)} userAnswers={userAnswers}/>);
                     } else {
                         if (this.state.questionLength > 0) {
-                            return (<Quiz flag={this.state.flag} flag1={this.state.flag1} step={step} questions={questions} totalQuestions={this.state.questionLength} score={score} handleAnswerClick={this.handleAnswerClick}/>);
+                            return (<Quiz flag={this.state.flag} flag1={this.state.flag1} step={step} questions={questions} totalQuestions={this.state.questionLength} score={score} checkedValue={this.state.value} nextStep={this.nextStep} handleAnswerClick={this.handleAnswerClick}/>);
                         }
                     }
                 })()}

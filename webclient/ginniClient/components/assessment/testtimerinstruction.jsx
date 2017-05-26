@@ -6,7 +6,8 @@ import {
     Header,
     Image,
     Modal,
-    Icon
+    Icon,
+    Card
 } from 'semantic-ui-react'
 import {hashHistory} from 'react-router';
 
@@ -30,25 +31,37 @@ class TestInstruction extends Component {
                     <Modal.Content image>
                         <Image wrapped size='large' src='../images/readins.jpg'/>
                         <Modal.Description>
-                            <Header>Read the instructions below carefully:</Header>
-                            <p>1.)Malpractice is strictly prohibited.</p>
-                            <p>2.)This is an ADAPTIVE TEST(User cannot return back to the attended questions again).</p>
-                            <p>3.)Usage of any type of electronic gadgets(pendrive,mobileb,bluetooth,etc.,)during the exam time is an punishable offence.</p>
-                            <p>4.)Feel free to ask your doubts only to the examiner at any point of time during exam.</p>
-                        </Modal.Description>
-                    </Modal.Content>
-                    <Modal.Actions>
-                        <a href="#timer">
-                            <Button animated='fade' color='blue' floated='right' onClick={this.props.restartQuiz}>
-                                <Button.Content visible>Start</Button.Content>
-                                <Button.Content hidden>
-                                    <Icon name='edit'/>
-                                </Button.Content>
-                            </Button>
-                        </a>
+                            <Card fluid color='orange'>
+                                <Card.Content>
 
-                        <br/>
-                    </Modal.Actions>
+                                    <div className='carddisp'>
+                                        <Card.Description>
+                                            <Header>Read the instructions below carefully:</Header>
+                                            <p>1.)Malpractice is strictly prohibited.</p>
+                                            <p>2.)This is an SINGLE WAY test(User cannot return back to the attended questions again).</p>
+                                            <p>3.)Usage of any type of electronic gadgets(pendrive,mobileb,bluetooth,etc.,)during the exam time is an punishable offence.</p>
+                                            <p>4.)Feel free to ask your doubts only to the examiner at any point of time during exam.</p>
+                                            <br/>
+                                        </Card.Description>
+                                    </div>
+                                </Card.Content>
+                                <Card.Content extra>
+                                    <a href="#timer">
+                                        <Button animated='fade' color='blue' floated='right' onClick={this.props.restartQuiz}>
+                                            <div clasName='buttoncenter'>
+                                                <Button.Content visible>Start</Button.Content>
+                                            </div>
+                                            <Button.Content hidden>
+                                                <Icon name='edit'/>
+                                            </Button.Content>
+                                        </Button>
+                                    </a>
+
+                                </Card.Content>
+                            </Card>
+                        </Modal.Description>
+
+                    </Modal.Content>
 
                 </Modal>
             </div>

@@ -1,18 +1,19 @@
 import React, {PropTypes} from 'react';
 import Answer from './answer';
+import {List} from 'semantic-ui-react'
 
-const Question = ({question, answers, handleAnswerClick}) => {
+const Question = ({step, checkedValue, question, answers, handleAnswerClick}) => {
     return (
-        <li className="question">
-            <h2 className="question-title">
-                {question}
-            </h2>
-            <ol className="question-answers">
+        <List className="question">
+            <List.Item>
+                <List.Header className="question-title">{step + ". " + question}</List.Header>
+            </List.Item>
+            <List.Item className="question-answers">
                 {answers.map(answer => {
-                    return (<Answer key={answer} answer={answer} handleAnswerClick={handleAnswerClick}/>);
+                    return (<Answer key={answer} checkedValue={checkedValue} answer={answer} handleAnswerClick={handleAnswerClick}/>);
                 })}
-            </ol>
-        </li>
+            </List.Item>
+        </List>
     );
 }
 

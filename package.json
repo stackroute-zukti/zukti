@@ -8,7 +8,7 @@
     "test": "mocha test"
   },
   "dependencies": {
-    "acl":"0.4.10",
+    "acl": "0.4.10",
     "axios": "^0.15.3",
     "babel-polyfill": "^6.23.0",
     "bad-words": "^1.5.0",
@@ -80,8 +80,8 @@
     "react-simple-pie-chart": "^0.4.0",
     "react-svg-piechart": "^1.2.3",
     "react-tap-event-plugin": "^2.0.1",
-    "react-toastr": "^2.8.2",
     "react-title-component": "^1.0.1",
+    "react-toastr": "^2.8.2",
     "react-user-tour": "^2.5.0",
     "read-json": "^1.0.3",
     "redis": "^2.7.1",
@@ -94,8 +94,8 @@
     "sentiment": "^3.0.1",
     "socket.io": "^1.7.2",
     "striptags": "^3.0.1",
-      "unoconv": "^0.1.2",
     "supertest": "^3.0.0",
+    "unoconv": "^0.1.2",
     "validator": "^6.2.1",
     "zlib": "^1.0.5"
   },

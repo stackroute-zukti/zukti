@@ -24,10 +24,8 @@ this.deleteLabel=this.deleteLabel.bind(this);
 
 dropdownSelectRoutes(e,data){
 this.props.selectedRoutes(e,data);
-//console.log()
 }
 deleteLabel(data){
-console.log("to delte",data);
 this.props.toDelete(data);
 }
     render() {

@@ -1,20 +1,12 @@
-// const shuffleQuestions = array => {
-//   return array
-//     .map((item, index, array) => {
-//       return array[Math.floor(Math.random() * array.length)];
-//     })
-//     .filter((item, index, array) => {
-//       return index === array.indexOf(item);
-//     })
-//     .slice(0,10);
-// };
+
+//To ShuffletheQuestion based on mathrandom
 Object.defineProperty(exports,"__esModule",{value:true});
 var shuffleQuestions=function shuffleQuestions(array){
-  var ques=array.default
+  var ques=array
   return ques.map(function(item,index,array){
     return array[Math.floor(Math.random() * ques.length)]
   }).filter(function(item,index,array){
     return index === array.indexOf(item);
-  }).slice(0,5);
+  }).slice(0,3);
 };
 exports.default= shuffleQuestions;

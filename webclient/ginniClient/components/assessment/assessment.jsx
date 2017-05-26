@@ -5,7 +5,6 @@ import leftmenuContent from '../leftmenuPusherContent/leftmenuContent';
 import leftmenu from '../leftmenu/leftmenu';
 import shuffleQuestions from './helpers/shuffleQuestions';
 import Cookie from 'react-cookie';
-
 import Title from 'react-title-component';
 import Mousetrap from 'mousetrap';
 import GithubCorner from 'react-github-corner';
@@ -45,28 +44,26 @@ export default class Assessment extends Component {
         this.nextStep = this.nextStep.bind(this);
         this.fetchValuesFromDatabase = this.fetchValuesFromDatabase.bind(this);
     }
-
+//Getting all the the question from Neo4j
     getQuestions()
     {
-        console.log("inside getW")
-        $.ajax({
+            $.ajax({
             url: '/assessmentQuestion/getAssesmentQuestion',
             type: 'POST',
             data: {
                 domain: "react"
             },
             success: function(response) {
-                console.log("here: " + response);
 
                 this.setState({
-                    questions: response,
-                    userAnswers: response.map(question => {
+                    questions: shuffleQuestions(response),
+                    userAnswers: shuffleQuestions(response).map(question => {
                         return {tries: 0}
                     }),
                     step: 1,
                     score: 0,
                     flag: 'assessment',
-                    questionLength: response.length,
+                    questionLength: shuffleQuestions(response).length,
                     graphQuestions: response
                 });
 
@@ -80,9 +77,45 @@ export default class Assessment extends Component {
     {
         this.getQuestions();
     }
-    handleAnswerClick(e) {
+    handleAnswerClick = (e, {value}) =>  {
+        this.setState({value});
+        var isCorrect;
         const {questions, step, userAnswers} = this.state;
-        const isCorrect = questions[0].answers[questions[0].correct] === e.target.innerText;
+        if(questions[0].MAQ=="true")
+        {
+
+            var temp=0;
+            for(let i=0;i<e.target.innerText.length;i++)
+            {
+              if(questions[0].correct.indexOf(questions[0].answers.indexOf(e.target.innerText[i]))!=-1)
+              {
+               temp++;
+              }
+            }
+            if(temp==e.target.innerText.length)
+            {
+              isCorrect=true;
+            }
+            else
+            {
+              isCorrect=false;
+            }
+        }
+
+     else {
+
+        if(questions[0].correct.indexOf(questions[0].answers.indexOf(e.target.innerText))==-1)
+        {
+
+          isCorrect=false;
+        }
+        else
+        {
+
+          isCorrect=true;
+      }
+    }
+        // const isCorrect = questions[0].answers[questions[0].correct] === e.target.innerText;
         const answersFromUser = userAnswers.slice();
         const currentStep = step - 1;
         const tries = answersFromUser[currentStep].tries;
@@ -93,33 +126,7 @@ export default class Assessment extends Component {
                 tries: tries + 1
             };
             this.setState({userAnswers: answersFromUser});
-            setTimeout(() => {
-                const praise = document.querySelector('.praise');
-                const bonus = document.querySelector('.bonus');
-                if (tries === 0) {
-                    praise.textContent = '1st Try!';
-                    bonus.textContent = '+10';
-                    set.add(questions[0].id);
-                }
-                if (tries === 1) {
-                    praise.textContent = '2nd Try!';
-                    bonus.textContent = '+5';
-                    set1.add(questions[0].id);
-                }
-                if (tries === 2) {
-                    praise.textContent = 'Correct!';
-                    bonus.textContent = '+2';
-                    set1.add(questions[0].id);
-                }
-                if (tries === 3) {
-                    praise.textContent = 'Correct!';
-                    bonus.textContent = '+1';
-                    set1.add(questions[0].id);
-                }
-                document.querySelector('.correct-modal').classList.add('modal-enter');
-                document.querySelector('.bonus').classList.add('show');
-            }, 750);
-            setTimeout(this.nextStep, 2750);
+
         } else {
             e.target.style.pointerEvents = 'none';
             e.target.classList.add('wrong');
@@ -129,6 +136,7 @@ export default class Assessment extends Component {
             this.setState({userAnswers: answersFromUser});
         }
     }
+
     flukeCount(tries3, tries4)
     {
         if (tries3 == undefined) {
@@ -140,7 +148,7 @@ export default class Assessment extends Component {
         totalFluke = tries3 + tries4;
         this.storeData(totalScore);
     }
-
+//Setting difficulty to the appropriate question based on the user response
     setDifficultyDetails()
     {
         var correctarr = Array.from(set);
@@ -166,7 +174,6 @@ export default class Assessment extends Component {
             url: '/assessmentQuestion/setDifficulty',
             type: 'GET',
             success: function(response) {
-                console.log(response);
 
             }.bind(this),
             error: function(err) {
@@ -174,10 +181,9 @@ export default class Assessment extends Component {
             }.bind(this)
         });
     }
+
     setUserAttemptedDetails()
     {
-        console.log("set1", set1);
-        console.log("set", set);
         var correctarr = Array.from(set);
         var wrongarr = Array.from(set1);
         var email = Cookie.load("email");
@@ -191,8 +197,7 @@ export default class Assessment extends Component {
                 wrongquestion: JSON.stringify(wrongarr)
             },
             success: function(response) {
-                console.log(response);
-                this.setDifficultyDetails();
+              this.setDifficultyDetails();
 
             }.bind(this),
             error: function(err) {
@@ -218,7 +223,6 @@ export default class Assessment extends Component {
                 date: date
             },
             success: function(response) {
-                console.log(response);
                 this.setUserAttemptedDetails();
             }.bind(this),
             error: function(err) {
@@ -229,7 +233,6 @@ export default class Assessment extends Component {
 
     storeData(score)
     {
-        console.log(totalFluke);
         var email = Cookie.load("email");
         var authType = Cookie.load("authType");
         $.ajax({
@@ -243,7 +246,6 @@ export default class Assessment extends Component {
                 noOfFluke: totalFluke
             },
             success: function(response) {
-                console.log(response);
                 rank = response.rank;
                 this.setLearnerDetails();
             }.bind(this),
@@ -269,6 +271,8 @@ export default class Assessment extends Component {
             },
             success: function(response) {
                 this.setState({firstname: response[0].local.name})
+                //this.setState({firstname: response[0].google.name})
+
             }.bind(this),
             error: function(err) {
                 console.log(err);
@@ -282,8 +286,6 @@ export default class Assessment extends Component {
     }
 
     nextStep() {
-        document.querySelector('.correct-modal').classList.remove('modal-enter');
-        document.querySelector('.bonus').classList.remove('show');
         const {questions, userAnswers, step, score} = this.state;
         const restOfQuestions = questions.slice(1);
         const currentStep = step - 1;
@@ -297,7 +299,11 @@ export default class Assessment extends Component {
                     return score + 5;
                 if (tries === 3)
                     return score + 2;
+                if(tries === 4)
                 return score + 1;
+
+              return score;
+
             })(),
             questions: restOfQuestions
         });
@@ -310,12 +316,15 @@ export default class Assessment extends Component {
         totalScore = 0;
         set.clear();
         set1.clear();
-        this.setState({questions: q, step: 1, score: 0, time: 60});
+        this.setState({questions:shuffleQuestions(q), userAnswers: shuffleQuestions(q).map(question => {
+                        return {tries: 0}
+                    }),step: 1, score: 0, time: 60});
 
     }
 
     render() {
         const {step, questions, userAnswers, score} = this.state;
+
         return (
             <div>
                 {(() => {
@@ -326,8 +335,9 @@ export default class Assessment extends Component {
                         }
                         return (<Results score={score} flag1={this.state.flag1} firstname={this.state.firstname} totalQuestions={this.state.questionLength * 10} flukeCount={this.flukeCount.bind(this)} restartQuiz={this.restartQuiz.bind(this)} userAnswers={userAnswers}/>);
                     } else {
+
                         if (this.state.questionLength > 0) {
-                            return (<Quiz flag={this.state.flag} flag1={this.state.flag1} step={step} questions={questions} totalQuestions={this.state.questionLength} score={score} handleAnswerClick={this.handleAnswerClick}/>);
+                            return (<Quiz flag={this.state.flag} flag1={this.state.flag1} step={step} questions={questions} totalQuestions={this.state.questionLength} score={score} checkedValue={this.state.value} nextStep={this.nextStep} handleAnswerClick={this.handleAnswerClick}/>);
                         }
                     }
                 })()}

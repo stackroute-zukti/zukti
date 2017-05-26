@@ -15,25 +15,24 @@ const Quiz = ({
     questions,
     totalQuestions,
     score,
+    checkedValue,
+    nextStep,
     handleAnswerClick,
     format,
     flag,
     settimer
 }) => {
     return (
-        <div className="wrapper">
+        <Container>
             <Card fluid>
                 <Card.Content>
                     <Card.Header>
                         <Segment id="leftbar">
-
                             <div className='timeheader'>
-
                                 <span className="time">
                                     <strong>{format}</strong>
                                 </span>
                             </div>
-
                             {/* <Button onClick={settimer}>Start test</Button> */}
                             <div className="reacthead">
 
@@ -43,27 +42,24 @@ const Quiz = ({
                         </Segment>
                     </Card.Header>
                     <Card.Description>
-                        <QuestionList questions={questions} handleAnswerClick={handleAnswerClick}/>
+                        <QuestionList step={step} checkedValue={checkedValue} questions={questions} handleAnswerClick={handleAnswerClick}/>
                     </Card.Description>
                 </Card.Content>
                 <Card.Content extra>
-                    <div className='ui two buttons'>
-
+                    <div className='labelheeader'>
                         <Label color='blue'>Question {step}
                             of {totalQuestions}</Label>
                         {flag == 'assessment'
                             ? <Label color='teal'>Current Score = {score}</Label>
-                            : ''}
-
-                    </div>
-                    <div className="correct-modal">
-                        <div className="praise">Correct!</div>
-                        <div className="bonus"></div>
+                            : null}
+                        {questions.length === 1
+                            ? <Label color='blue' className="next-label" onClick={nextStep}>End Test</Label>
+                            : <Label color='blue' className="next-label" onClick={nextStep}>Next</Label>}
                     </div>
                 </Card.Content>
 
             </Card>
-        </div>
+        </Container>
     );
 }
 
@@ -72,7 +68,8 @@ Quiz.propTypes = {
     questions: PropTypes.array.isRequired,
     totalQuestions: PropTypes.number.isRequired,
     score: PropTypes.number.isRequired,
-    handleAnswerClick: PropTypes.func.isRequired
+    handleAnswerClick: PropTypes.func.isRequired,
+    nextStep: PropTypes.func.isRequired
 };
 
 export default Quiz;
