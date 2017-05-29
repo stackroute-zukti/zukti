@@ -7,6 +7,6 @@ var shuffleQuestions=function shuffleQuestions(array){
     return array[Math.floor(Math.random() * ques.length)]
   }).filter(function(item,index,array){
     return index === array.indexOf(item);
-  }).slice(0,3);
+  }).slice(0,5);
 };
 exports.default= shuffleQuestions;

@@ -78,7 +78,7 @@ class DecideDimmer extends Component {
                                             <Card.Content>
                                                 <Card.Header>
                                                     <Image shape='circular' align='center' wrapped size='small' src='../images/taketest.jpg'/><br/>
-                                                    <strong>Take Test</strong>
+                                                    <strong>Graded Test</strong>
                                                     <br/>
                                                 </Card.Header>
                                                 <div className='carddisp'>
@@ -93,7 +93,7 @@ class DecideDimmer extends Component {
 
                                                     <a href="#decider">
                                                         <Button animated='fade' align='center' color='teal' floated='right' onClick={this.props.restartQuiz}>
-                                                            <Button.Content visible>TakeTest</Button.Content>
+                                                            <Button.Content visible>Graded Test</Button.Content>
                                                             <Button.Content hidden>
                                                                 <Icon name='time'/>
                                                             </Button.Content>

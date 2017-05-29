@@ -68,7 +68,7 @@ export default class Assessment extends Component {
                 authType: authType
             },
             success: function(response) {
-                this.setState({firstname: response[0].local.name})
+                this.setState({firstname: response[0][authType].name})
             }.bind(this),
             error: function(err) {
                 console.log(err);
