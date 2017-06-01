@@ -83,7 +83,7 @@ io.on('connection', function(socket) {
 
    // @ChatBot: sending all usernames
     socket.on('sendSocketName',function(data){
-        if(data in users)
+        if((data.email in users)||(data.name===''))
         {
             io.sockets.emit('usernames',userNames);
         }
