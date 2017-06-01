@@ -83,10 +83,18 @@ io.on('connection', function(socket) {
 
    // @ChatBot: sending all usernames
     socket.on('sendSocketName',function(data){
-      socket.nickname=data.email;
-      users[socket.nickname]=socket;
-      userNames.push({email:socket.nickname,name:data.name});
-      io.sockets.emit('usernames',userNames);
+        if(data in users)
+        {
+            io.sockets.emit('usernames',userNames);
+        }
+        else
+        {
+            socket.nickname=data.email;
+            users[socket.nickname]=socket;
+            userNames.push({email:socket.nickname,name:data.name});
+            io.sockets.emit('usernames',userNames);
+        }
+      
     });
 
     // @ChatBot: getting receiver name and socket name
