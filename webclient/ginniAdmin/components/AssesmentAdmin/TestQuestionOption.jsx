@@ -42,7 +42,7 @@ export default class TestQuestionOption extends React.Component {
                   <Grid.Column width={13}>
                     <TextArea value={input}
                       id={index} onChange={this.getInputData}
-                      placeholder='Enter a text Option' autoHeight />
+                      placeholder='Type option here...' autoHeight />
                     </Grid.Column>
                     <Grid.Column width={1}>
                     {this.props.options.length === 1 ? '' :
@@ -67,11 +67,20 @@ export default class TestQuestionOption extends React.Component {
               <Form>
                 {inputs}
               </Form>
-              <Popup offset={10} inverted positioning='left center'
-                trigger={<Button onClick={this.addNewOption} icon
+
+              <Grid.Row>
+                <Grid.Column width={8}>
+                <Popup offset={10} inverted positioning='left center'
+                  trigger={<Button onClick={this.addNewOption}
                   style={{backgroundColor: 'white', color: 'blue', marginLeft: '85%'}}>
-                  <Icon name='plus' circular/></Button>} content='Add' size='mini'></Popup>
-              {this.state.emptyInput ? <p style = {{color: 'red'}}>Fill the above input field first</p> : ''}
+                 <Icon name='plus' circular/> </Button>}
+                 content='Add' size='mini'></Popup>
+                {this.state.emptyInput ? <p style = {{color: 'red'}}>
+                Fill the above input field first</p> : ''}
+
+                </Grid.Column>
+              </Grid.Row>
+
             </div>
         );
     }

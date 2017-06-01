@@ -29,7 +29,7 @@ class SecondDecider extends Component {
         return (
             <div>
                 <Modal dimmer={dimmer} open={open} onClose={this.close.bind(this)} onMount={this.fetchValuesFromDatabase} closeOnRootNodeClick={false} size="tiny" closeIcon='close' id='modallogincss'>
-                    <Modal.Header>Timed Test Decider!</Modal.Header>
+                    <Modal.Header>Timed Test Decider</Modal.Header>
                     <Modal.Content image>
                         <Modal.Description>
                             <Grid columns={2} padded='horizontally'>
@@ -39,7 +39,7 @@ class SecondDecider extends Component {
                                             <Card.Content>
                                                 <Card.Header>
                                                     <Image shape='circular' wrapped size='small' src='../images/timedtest.jpg'/>
-                                                    <strong>TIMElimited Test</strong>
+                                                 <br/><strong>TIME-Bounded </strong>
                                                     <br/>
                                                 </Card.Header>
                                                 <div className='carddisp'>
@@ -54,7 +54,7 @@ class SecondDecider extends Component {
                                             <Card.Content extra>
                                                 <a href="#testinstruction">
                                                     <Button animated='fade' color='red' floated='right' onClick={this.props.restartQuiz}>
-                                                        <Button.Content visible>TIMElimited(60 secs)</Button.Content>
+                                                        <Button.Content visible>Start</Button.Content>
                                                         <Button.Content hidden>
                                                             <Icon name='hourglass start'/>
                                                         </Button.Content>
@@ -73,7 +73,7 @@ class SecondDecider extends Component {
                                             <Card.Content>
                                                 <Card.Header>
                                                     <Image shape='circular' align-items='centered' wrapped size='small' src='../images/notime.jpg'/><br/>
-                                                    <strong>TIMEless Test</strong>
+                                                    <strong>TIME-UnBounded </strong>
                                                     <br/>
                                                 </Card.Header>
                                                 <div className='carddisp'>
@@ -86,7 +86,7 @@ class SecondDecider extends Component {
                                             <Card.Content extra>
                                                 <a href="#timer1">
                                                     <Button animated='fade' color='blue' floated='right' onClick={this.props.restartQuiz}>
-                                                        <Button.Content visible>TIMEless</Button.Content>
+                                                        <Button.Content visible>Start</Button.Content>
                                                         <Button.Content hidden>
                                                             <Icon name='hourglass empty'/>
                                                         </Button.Content>

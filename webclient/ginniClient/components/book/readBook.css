@@ -18,6 +18,12 @@
    margin-top: 15px;
    margin-left: 165px;
 }
+#artLabel,#bookLabel{
+  margin-top: 15px;
+  margin-left: 500px;
+  color: Blue;
+}
+
 #object{
   margin-top: 15px;
   margin-left: 150px;

@@ -8,7 +8,8 @@ var array2 = [];
 
 //@pavithra.n :to fetch the questions from ne04j
 router.post('/getAssesmentQuestion', function(req, res) {
-    let query = 'match (n:testdomain {name:"' + req.body.domain + '"})-[*]->(j:testquestion{MAQ:"false"})\
+    console.log("inside getAssesmentQuestion");
+    let query = 'match (n:domain {name:"' + req.body.domain + '"})<-[:concept_of]-(b:concept)-[*]->(j:testquestion{MAQ:"false"})\
   return collect (distinct j) as question,id(j)';
     let session = getNeo4jDriver().session();
     var question = [];

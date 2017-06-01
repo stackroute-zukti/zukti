@@ -11,7 +11,8 @@ module.exports = function(resultCallback,domain,keyword) {
     //let question=[];
     let answer=[];
     console.log(domain);
-    let query = 'MATCH (d:domain {name:"'+domain+'"})-[:concept_of]-(c:concept)-[:definition]-(q:question)-[:answer_of]->(a:text) where d.name="'+keyword+'" or c.name="'+keyword+'" return d.name,c.name,a.value';
+    //let query = 'MATCH (d:domain {name:"'+domain+'"})-[:concept_of]-(c:concept)-[:definition]-(q:question)-[:answer_of]->(a:text) where d.name="'+keyword+'" or c.name="'+keyword+'" return d.name,c.name,a.value';
+    let query = 'MATCH (d:domain {name:"'+domain+'"})-[:concept_of]-(c:concept)-[:article]-(a:article) where d.name="'+keyword+'" or c.name="'+keyword+'" return d.name,c.name,a.value';
     let session = getNeo4jDriver().session();
 
     session.run(query)

@@ -77,7 +77,7 @@ const userSchema = mongoose.Schema({
         },  role:{type:String,
           default:" "}
     },
-
+date:{type:String,default:new Date().toLocaleString()}
 
 });
 // generating a hash

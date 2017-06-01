@@ -4,7 +4,7 @@ let getNeo4jDriver = require('../../neo4j/connection');
 
 // To get TestDomain in DropDown
 router.get('/getTestDomain',function(req,res){
-  let query = 'MATCH(n:testdomain) RETURN COLLECT ( distinct n.name)AS domain';
+  let query = 'MATCH(n:domain) RETURN COLLECT ( distinct n.name)AS domain';
   let session = getNeo4jDriver().session();
     session.run(query).then(function(result){
       res.send(result.records[0]);
@@ -14,7 +14,7 @@ router.get('/getTestDomain',function(req,res){
 
 // To get TestConcept in DropDown based on testDomain
 router.post('/getTestConcept',function(req,res){
-  let query = 'Match (n:testdomain)-[:testconcept]->(b)\
+  let query = 'Match (n:domain)-[:concept_of]-(b)\
    where n.name="'+req.body.TestDomainvalue+'" \
    return collect (b.name) as tconcept';
   let session = getNeo4jDriver().session();
@@ -64,7 +64,7 @@ router.post('/deleteTestQdetails',function(req,res){
 
 // To get TestQuestion in DropDown based on testDomain and TestConcept
 router.post('/getTestQuestion',function(req,res){
-  let query = 'Match (n:testdomain)-[:testconcept]->(b:testconcept)-[:testquestion]->(c:testquestion)\
+  let query = 'Match (n:domain)-[:concept_of]-(b:concept)-[:testquestion]->(c:testquestion)\
    where n.name="'+req.body.TestDomainvalue+'"  and b.name="'+req.body.TestConceptvalue+'"\
    return collect (c.question) as question';
   let session = getNeo4jDriver().session();
@@ -77,7 +77,7 @@ router.post('/getTestQuestion',function(req,res){
 // Router to create TestDomain
 router.post('/createTestDomain',function(req,res){
   let query = 'match (n:assesment) \
-  merge (a:testdomain {name:"'+req.body.newTestDomain+'"}) create (n)-[:testdomain]->(a)';
+  merge (a:domain {name:"'+req.body.newTestDomain+'"}) create (n)-[:domain]->(a)';
   let session = getNeo4jDriver().session();
     session.run(query).then(function(result){
       session.close();
@@ -87,8 +87,8 @@ router.post('/createTestDomain',function(req,res){
 
 // Router to create TestConcept
 router.post('/createTestConcept',function(req,res){
-  let query = 'match (n:testdomain {name:"'+req.body.TestDomain+'"}) \
-  create(a:testconcept {name:"'+req.body.TestConcept+'"}) ,(n)-[:testconcept]->(a)';
+  let query = 'match (n:domain {name:"'+req.body.TestDomain+'"}) \
+  create(a:concept {name:"'+req.body.TestConcept+'"}) ,(n)-[:concept]->(a)';
   let session = getNeo4jDriver().session();
     session.run(query).then(function(result){
       session.close();
@@ -98,8 +98,8 @@ router.post('/createTestConcept',function(req,res){
 
 // Router to create TestQuestions with Options,hint,answer
 router.post('/createTestQuestions',function(req,res){
-  let query = 'match (d:testdomain {name:"'+req.body.TestDomain+'"}),\
-  (a:testconcept {name:"'+req.body.TestConcept+'"})\
+  let query = 'match (d:domain {name:"'+req.body.TestDomain+'"}),\
+  (a:concept {name:"'+req.body.TestConcept+'"})\
   merge (c:testquestion {question:"'+req.body.TestQuestion+'",\
    option: '+ JSON.stringify(req.body.Testoptions)+',\
    answer:'+JSON.stringify(req.body.TestAnswer)+',MAQ:"'+req.body.MAQ+'",\

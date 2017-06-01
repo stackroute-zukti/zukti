@@ -1,5 +1,5 @@
 import React , {Component} from 'react';
-import {Form, Grid, Button, Dropdown, Input, Divider} from 'semantic-ui-react';
+import {Form, Grid, Button, Dropdown, Input, Divider,Checkbox} from 'semantic-ui-react';
 import Config from '../../../../config/url';
 import Axios from 'axios';
 import Snackbar from 'material-ui/Snackbar';
@@ -10,6 +10,7 @@ import TestQuestionOption from './TestQuestionOption'
 export default class AddQuestion extends React.Component {
     constructor(props) {
       super(props);
+      this.getCheckBoxStatus=this.getCheckBoxStatus.bind(this);
       this.saveOptionToState = this.saveOptionToState.bind(this);
       this.saveAnswerToState = this.saveAnswerToState.bind(this);
       this.removeOption = this.removeOption.bind(this);
@@ -53,7 +54,17 @@ export default class AddQuestion extends React.Component {
 
             }
           }
-
+          getCheckBoxStatus(e,data) {
+            let option1=this.refs.Option1.value;
+            if(data.checked){
+              this.state.TestAnswer.push(option1);
+              this.setState({TestAnswer: this.state.TestAnswer});
+            }
+            else if(this.state.TestAnswer.indexOf(option1)!=-1){
+              this.state.TestAnswer.splice(this.state.TestAnswer.indexOf(option1),1);
+              this.setState({TestAnswer: this.state.TestAnswer});
+            }
+          }
         //save options to  Testoptions as Array
         saveOptionToState(type, Option, i) {
                 this.state.Testoptions[i] = Option;
@@ -106,6 +117,8 @@ export default class AddQuestion extends React.Component {
       createTestQuestion(e) {
         e.preventDefault();
         // Getting values of the testdomain,testconcept,testquestion,testanswer,testhint from textfield
+        let option1=this.refs.Option1.value;
+        this.state.Testoptions.push(option1);
         let TestDomain = this.state.TestDomainValue;
         let TestConcept = this.state.TestConceptValue;
         let TestQuestion = this.refs.TestQuestion.value;
@@ -136,7 +149,8 @@ export default class AddQuestion extends React.Component {
                 TestAnswer:TestAnswer,
                 TestHint:TestHint
               }).then((response) => {
-             this.refs.TestHint.value = '';
+            this.refs.TestHint.value = '';
+            this.refs.Option1.value = '';
              this.refs.TestQuestion.value = '';
              this.setState({TestDomainValue: ''});
              this.setState({TestConceptValue: ''});
@@ -218,10 +232,17 @@ export default class AddQuestion extends React.Component {
                         </Grid.Row>
                         <Grid.Row>
                           <Grid.Column width={1}/>
-                          <Grid.Column width={8}>
-                          <label>
-                          <h4 align="left">Enter options</h4>
+                          <Grid.Column width={9}>
+                          <Form>
+                          <Form.Field>
+                        <label>
+                          <h4 align="left">Enter Options</h4>
                          </label>
+                         <input autoComplete='off' type='text' ref='Option1'
+                         placeholder='Type Option here...'/><br/>
+                         <Checkbox label='Add as answer' onChange={this.getCheckBoxStatus} />
+                         </Form.Field>
+                         </Form>
                        </Grid.Column>
                        </Grid.Row>
                        <Grid.Row>
@@ -243,8 +264,8 @@ export default class AddQuestion extends React.Component {
                             <label>
                             <h4>Answer</h4>
                             </label>
-                            <input autoComplete='off' type='text' value={this.state.TestAnswer}
-                            placeholder='Type answer here...'/>
+                            <input error autoComplete='off' type='text' value={this.state.TestAnswer}
+                            placeholder='Select from checkbox'/>
                             <label>
                                 <h4>Hint</h4>
                             </label>
@@ -255,7 +276,7 @@ export default class AddQuestion extends React.Component {
                         </Grid.Column>
                         </Grid.Row>
                         <Grid.Row>
-                          <Grid.Column width={5}/>
+                          <Grid.Column width={6}/>
                             <Grid.Column width={4}>
                         <Button color='green' fluid onClick={this.createTestQuestion}>Add</Button>
                       </Grid.Column>

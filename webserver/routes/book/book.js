@@ -53,7 +53,7 @@ router.post('/', function(req, res) {
             files.map(function(file) {
                 var resp = file.split('_');
                 console.log(resp[0] + resp[1]);
-                if (resp[0] == id && resp[1] == time) {
+                if (resp[2] == id && resp[1] == time) {
                     count++;
                 }
             });
@@ -80,7 +80,7 @@ router.post('/', function(req, res) {
                                 doc.text('')
                                 doc.text('***---***---***---***---***---***---***---***');
                             }
-                            doc.pipe(fs.createWriteStream(path.resolve(".") + '/PDF/' + id + "_" + time + "_" + keyword + '.pdf'));
+                            doc.pipe(fs.createWriteStream(path.resolve(".") + '/PDF/' + keyword + "_" + time + "_" + id + "_"+ count+'.pdf'));
                             doc.end();
                             console.log(time + keyword);
                         };
@@ -113,7 +113,8 @@ router.post('/getBook', function(req, res) {
         }
         files.map(function(file) {
             var resp = file.split('_');
-            if (resp[0] == username) {
+            //var filter=resp[2].split('.')
+            if (resp[2] == username) {
                 book_arr.push(file);
             }
             console.log(resp);

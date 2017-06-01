@@ -54,7 +54,7 @@ module.exports = function(keywords, email, types, sendResponse, otherDomainRespo
 OPTIONAL MATCH (n)-[r:same_as]-(main)
           WITH COLLECT(main) AS baseWords
           UNWIND baseWords AS token
-          MATCH p=(token)-[:concept_of*]-(:concept{name:"react"})
+          MATCH p=(token)-[:concept_of*]-(concept:concept) where concept.name='${domain}'
           MATCH (n)-[:answer_of]-(q:question)-[:definition]-(token) where n:blog or n:video or n:text
           RETURN LABELS(n) AS contentType, COLLECT(DISTINCT[n.value, ANY(user IN n.likes WHERE user='${email}'), ANY(user IN n.dislikes WHERE user='${email}')]),
               CASE
@@ -72,7 +72,7 @@ OPTIONAL MATCH (n)-[r:same_as]-(main)
 OPTIONAL MATCH (n)-[r:same_as]-(main)
           WITH COLLECT(main) AS baseWords
           UNWIND baseWords AS token
-          MATCH p=(token)-[:concept_of*]-(:concept{name:"react"})
+          MATCH p=(token)-[:concept_of*]-(concept:concept) where concept.name='${domain}'
           MATCH (n)-[:answer_of]-(q:question)-[:definition]-(token) WHERE LABELS(n)='${type[0]}'
             RETURN LABELS(n) AS contentType, COLLECT(DISTINCT[n.value, ANY(user IN n.likes WHERE user='${email}'), ANY(user IN n.dislikes WHERE user='${email}')]),
             CASE

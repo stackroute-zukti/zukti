@@ -78,11 +78,12 @@ export default class Assessment extends Component {
 
     getQuestions()
     {
+        var domain=Cookie.load("domain").toLowerCase();
         $.ajax({
             url: '/assessmentQuestion/getAssesmentQuestion',
             type: 'POST',
             data: {
-                domain: "react"
+                domain:domain
             },
             success: function(response) {
 
@@ -284,6 +285,7 @@ export default class Assessment extends Component {
 
     //# Pradeep Kumar.R(2-5-2017){used to restart the quiz by callling the previous assesement component}
     restartQuiz() {
+      this.setState({value:''});
         var q = this.state.graphQuestions;
         i = 0;
         this.format(60);

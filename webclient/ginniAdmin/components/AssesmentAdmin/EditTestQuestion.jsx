@@ -1,5 +1,5 @@
 import React from 'react';
-import {Form, Grid,Modal, Button, Dropdown,Divider} from 'semantic-ui-react';
+import {Form, Grid,Modal, Button, Dropdown,Divider,Label} from 'semantic-ui-react';
 import Config from '../../../../config/url';
 import Axios from 'axios';
 import Snackbar from 'material-ui/Snackbar';
@@ -21,13 +21,15 @@ export default class EditTestQuestion extends React.Component {
       this.state = {
         opensnackbar: false,
         snackbarMsg: '',
+        display:false,
         TestDomainValue: '',
         TestConceptValue: '',
         TestQuestionValue: '',
         TestDomain: [],
         TestConcept: [],
         TestQuestion:[],
-        editmodal:false
+        editmodal:false,
+        length:0
           };
         };
         componentDidMount() {
@@ -68,6 +70,9 @@ export default class EditTestQuestion extends React.Component {
 
             }).then((response) => {
                       let TestQuestion = response.data._fields[0];
+
+                      this.setState({length:TestQuestion.length})
+                      this.setState({display:true})
                       TestQuestion.forEach((TestQuestion) => {
                            this.state.TestQuestion.push({text: TestQuestion, value: TestQuestion});
                        });
@@ -97,6 +102,7 @@ export default class EditTestQuestion extends React.Component {
         }else{
         this.setState({opensnackbar: true, snackbarMsg: 'Fill all the fields'});
         }
+        this.setState({display:false})
         this.setState({TestDomainValue: ''});
         this.setState({TestConcept:[]});
         this.setState({TestQuestion:[]});
@@ -138,27 +144,40 @@ export default class EditTestQuestion extends React.Component {
                             <TestConceptDropdown TestConcept={this.state.TestConcept}
                               handleTestConcept={this.getTestConcept}
                             value={this.state.TestConceptValue}/>
+                            </Form.Field>
+                          </Form>
+                          </Grid.Column>
 
+                          </Grid.Row>
+                          <Grid.Row>
+                            <Grid.Column width={1}/>
+                          <Grid.Column width={6}>
+                          <Form>
+                                    <Form.Field>
                             <TestQuestionDropdown TestQuestion={this.state.TestQuestion}
                               handleTestQuestion={this.getTestQuestion}
                             value={this.state.TestQuestionValue}/>
+                            </Form.Field>
+                          </Form>
+                            </Grid.Column>
+                            <Grid.Column width={2}>
+ <br/> <br/>
+                            {this.state.display?<div><Label as='a'  color='teal' tag>
+                              Questions in {this.state.TestConceptValue}:{this.state.length}</Label>                                  </div>:null}
+                                   </Grid.Column>
 
-
-                </Form.Field>
-              </Form>
-
-                  </Grid.Column>
                   </Grid.Row>
 
                   <Grid.Row>
                     <Grid.Column width={1}/>
                       <Grid.Column width={6}>
+
                       <Button color='facebook' fluid onClick={this.getTestAnswerfun}>EDIT</Button>
                 </Grid.Column>
                   </Grid.Row>
           </Grid>
-          {
-            this.state.editmodal
+
+          {this.state.editmodal
       ?<EditQuestionModal
       changeEdit={this.changeEdit}
       edit={this.state.editmodal}

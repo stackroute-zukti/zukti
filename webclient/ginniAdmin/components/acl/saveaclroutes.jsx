@@ -1,6 +1,8 @@
 import React from 'react';
 import {Button} from 'semantic-ui-react';
-
+const ReactToastr = require('react-toastr');
+const {ToastContainer} = ReactToastr;
+const ToastMessageFactory = React.createFactory(ReactToastr.ToastMessage.animation);
 var temp = [];
 var flagEmptyResource = 0;
 var flagEmptyRemove = 0;
@@ -12,29 +14,22 @@ export default class Saveaclroutes extends React.Component {
         };
         this.saveAclRoutes = this.saveAclRoutes.bind(this);
         this.createJSON = this.createJSON.bind(this);
+        this.Alert = this.Alert.bind(this);
+    }
+    Alert()
+    {
+        this.refs.container.success('saved', '', {
+
+            timeOut: 3000,
+
+            extendedTimeOut: 100
+
+        });
     }
     saveAclRoutes() {
         this.createJSON(this.props.routes_Selected);
 
-        // this.arrangeRoutes(this.props.assigned_Roles);
     }
-    //     }
-    //
-    //     arrangeRoutes(e) {
-    //         temp = e;
-    //         console.log("array got in save acl", temp);
-    //         for (let i = 0; i < temp.length; i++) {
-    //             for (let j = i; j < temp.length; j++) {
-    //                 if (temp[i].role > temp[j].role) {
-    //                     var t = temp[i];
-    //                     temp[i] = temp[j];
-    //                     temp[j] = t;
-    //                 }
-    //             }
-    //         }
-    //         console.log("sorted ", temp);
-    //         this.createJSON(temp);
-    //     }
 
     createJSON(e) {
         flagEmptyResource = 0;
@@ -54,29 +49,25 @@ export default class Saveaclroutes extends React.Component {
             allows_arr.push(allows_obj);
         }
         roles_obj.allows = allows_arr;
-        console.log("to remove", this.props.toremove);
+
         if (this.props.toremove.length == 0) {
             flagEmptyRemove = 1;
         }
-        console.log("to remove length", this.props.toremove.length);
-          console.log("to remove value",this.props.toremove);
-        console.log("final json", roles_obj.allows);
-        console.log("to write", roles_obj);
-        console.log("falg emptyREsource", flagEmptyResource);
-        console.log("flag emptyremove", flagEmptyRemove);
+
         $.ajax({
             url: '/addAclRoles',
             type: 'POST',
             dataType: 'json',
             data: {
-                "data_to_store":JSON.stringify(roles_obj),
+                "data_to_store": JSON.stringify(roles_obj),
                 "role": this.props.role,
-                "toremove":JSON.stringify(this.props.toremove),
+                "toremove": JSON.stringify(this.props.toremove),
                 "flagEmptyRemove": flagEmptyRemove,
                 "flagEmptyResource": flagEmptyResource
             },
             success: function(data) {
-                console.log("success");
+                this.Alert();
+
             }.bind(this),
             error: function(data) {
                 console.log("inside error")
@@ -85,9 +76,12 @@ export default class Saveaclroutes extends React.Component {
     }
     render() {
         return (
+            <div>
 
-            <Button disabled={this.props.disabled} primary onClick={this.saveAclRoutes}>Save Routes</Button>
-
+                <ToastContainer ref='container' toastMessageFactory={ToastMessageFactory} className='toast-top-center'/>
+                <br/>
+                <Button disabled={this.props.disabled} primary onClick={this.saveAclRoutes}>Save Routes</Button>
+            </div>
         );
     }
 } //end of class

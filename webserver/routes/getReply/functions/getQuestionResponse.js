@@ -184,7 +184,7 @@ module.exports = function(intents, keywords, email, types, answerFoundCallback, 
                           WITH COLLECT(main) AS baseWords
                           UNWIND baseWords AS token
                           MATCH p=(token)-[:concept_of*]-(:concept{name:"react"})
-                          MATCH (n)-[:answer_of]-(q:question)-[r]-(token) where type(r)="${primaryIntent}", LABELS(n)='${type[0]}'
+                          MATCH (n)-[:answer_of]-(q:question)-[r]-(token) where type(r)="${primaryIntent}" and LABELS(n)='${type[0]}'
                           RETURN LABELS(n) AS contentType, COLLECT(DISTINCT[n.value, ANY(user IN n.likes WHERE user='${email}'), ANY(user IN n.dislikes WHERE user='${email}')]),
                               CASE
                                   WHEN SIZE(n.likes)=0 AND SIZE(n.dislikes)=0 THEN 0

@@ -206,7 +206,7 @@ export default class Books extends React.Component {
                 </Form>
                 <Form>
 
-                        <Label id='label' color='violet' size='large'>
+                        <Label id='label' color='teal' size='large'>
                             Choose article/Book here &nbsp;&nbsp;
                             <Icon name='clone'/>
                         </Label>  &nbsp;
@@ -214,25 +214,35 @@ export default class Books extends React.Component {
                             <Dropdown id="dd" text='Article' search selection onChange={this.handleDropdownChange} options={this.state.options}/>
                         </Input>
                         <Input>
-          <Dropdown id="dd" text='book' search selection onChange={this.handleBookDropdownChange}  options={this.state.bookOptions} />
-    </Input>
+                            <Dropdown id="dd" text='book' search selection onChange={this.handleBookDropdownChange}  options={this.state.bookOptions} />
+                        </Input>
 
                 </Form>
                 <div>
                     {this.state.articlename!=''?
+                    <div>
+                    <h1 id='artLabel'>
+                        Zukti Articles &nbsp;&nbsp;
+
+                    </h1>
                         <object id="object" data={require('../../../../PDF/' + this.state.articlename)} width='900' height='580' type="application/pdf">
 
                             </object>
 
-                        :  ''}
+                      </div>  :  ''}
                 </div>
-        {/*    <div>
+      {/*     <div>
                   {this.state.bookname!=''?
+                  <div>
+                  <h1 id='bookLabel'>
+                      Zynla Books &nbsp;&nbsp;
+
+                  </h1>
                       <object id="object" data={require('../../../../../../zynlaCopy/BookDocs/pdf/'+this.state.bookname)} width='900' height='580' type="application/pdf"/>
 
 
 
-                      :  ''}
+                  </div>    :  ''}
 
                </div>*/}
 
