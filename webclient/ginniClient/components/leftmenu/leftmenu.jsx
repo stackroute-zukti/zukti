@@ -8,7 +8,7 @@ import Tour from "react-user-tour"
 import './leftmenu.css';
 import LeftMenuPage from '../../../Multi_Lingual/Wordings.json';
 // @ChatBot :  components import starting from here
-import DisplayListUs from '../discussion/DisplayListUs.jsx';
+import DisplayListUs from '../discussion/displayListUs.jsx';
 import DisplayListCh from '../discussion/displayListCh.jsx';
 import '../discussion/sidebar.css';
 import ReactDOM from 'react-dom';
