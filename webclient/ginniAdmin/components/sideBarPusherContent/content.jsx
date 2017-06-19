@@ -7,7 +7,7 @@ import TrainBot from '../trainbot/trainbot';
 import AddConcept from '../manageConcept/addConcepts';
 import RenameConcept from '../manageConcept/rename';
 import AddDomain from '../AssesmentAdmin/addDomain';
-import AddQuestion from '../AssesmentAdmin/AddQuestion';
+import AddQuestion from '../AssesmentAdmin/addQuestion';
 import EditTestQuestion from '../AssesmentAdmin/EditTestQuestion';
 
 import UnansweredQueries from '../unansweredqueries/unansweredqueries';
